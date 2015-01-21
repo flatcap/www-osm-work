@@ -21,7 +21,7 @@ window.search = function search() {
 	s.src = 'http://nominatim.openstreetmap.org/'
 		+ '?json_callback=cb'
 		+ '&format=json'
-		+ '&viewbox=-5.5,59,1.5,50'
+		+ '&viewbox=-5.5,59,1.5,50'	// Hint: UK first
 		+ '&q=oxford'
 	;
 
