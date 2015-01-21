@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+	<Document>
+		<name>Wey Navigations (20 miles)</name>
+		<Style id="start">
+			<IconStyle>
+				<scale>1.0</scale>
+				<Icon>
+					<href>https://maps.google.com/mapfiles/kml/paddle/go.png</href>
+				</Icon>
+				<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+			</IconStyle>
+			<LabelStyle>
+				<color>ffffffff</color>
+				<scale>0.0</scale>
+			</LabelStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h1>$[name]</h1>$[description]]]></text>
+			</BalloonStyle>
+		</Style>
+		<Placemark>
+			<name>Wey Navigations</name>
+			<description>
+			<![CDATA[
+				<ul>
+					<li>20 miles (82% done)</li>
+					<li>Started: 8 February 2013</li>
+					<li>Hiked: 2 days</li>
+				</ul>
+			]]>
+			</description>
+			<styleUrl>#start</styleUrl>
+			<Point>
+				<coordinates>-0.608230,51.188042</coordinates>
+			</Point>
+		</Placemark>
+	</Document>
+</kml>
