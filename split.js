@@ -55,8 +55,13 @@ map.on('click', function(evt) {
 	var feature = new ol.Feature(pt);
 
 	feature.setStyle (new ol.style.Style({
-		image: new ol.style.Circle({
-				radius: 20,
+		image: new ol.style.RegularShape({
+				opacity: 0.8,
+				scale: 1.0,
+				points: 6,
+				radius1: 20,
+				radius2: 10,
+				angle: 1.4,
 				fill: new ol.style.Fill({
 					color: 'rgba(66, 150, 79, 0.8)'
 				}),
