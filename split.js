@@ -54,6 +54,20 @@ map.on('click', function(evt) {
 	var pt = new ol.geom.Point([evt.coordinate[0], evt.coordinate[1]]);
 	var feature = new ol.Feature(pt);
 
+	feature.setStyle (new ol.style.Style({
+		image: new ol.style.Circle({
+				radius: 20,
+				fill: new ol.style.Fill({
+					color: 'rgba(66, 150, 79, 0.8)'
+				}),
+				stroke: new ol.style.Stroke({
+					color: 'rgba(255, 255, 255, 0.9)',
+					width: 1
+				}),
+			})
+		})
+	);
+
 	var layers = map.getLayers();
 
 	var l = layers.item(layer_num+1);
