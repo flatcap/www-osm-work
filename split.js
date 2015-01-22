@@ -23,11 +23,6 @@ for (i = 0; i < count; i++) {
 		new ol.layer.Vector({
 			title: i,
 			source: vectorSource
-			// source: new ol.source.KML({
-			// 	projection: projection,
-			// 	url: 'wey/' + layer_names[i] + '.kml',
-			// 	// extractStyles: false
-			// })
 		})
 	);
 }
@@ -36,8 +31,8 @@ var map = new ol.Map({
 	target: 'map',
 	layers: layers,
 	view: new ol.View({
-		center: ol.proj.transform([-0.7, 51.1], 'EPSG:4326', 'EPSG:3857'),
-		zoom: 9
+		center: ol.proj.transform([-0.7, 54.1], 'EPSG:4326', 'EPSG:3857'),
+		zoom: 7
 	})
 });
 
@@ -48,40 +43,95 @@ var visible_4 = new ol.dom.Input(document.getElementById('visible_4')); visible_
 var visible_5 = new ol.dom.Input(document.getElementById('visible_5')); visible_5.bindTo('checked', layers[5],  'visible');
 
 var layer_num = 0;
+var projection = ol.proj.get('EPSG:3857');
+var listenerKey;
 
 map.on('click', function(evt) {
-	var coordinate = evt.coordinate;
-	var pt = new ol.geom.Point([evt.coordinate[0], evt.coordinate[1]]);
-	var feature = new ol.Feature(pt);
 
-	feature.setStyle (new ol.style.Style({
-		image: new ol.style.RegularShape({
-				opacity: 0.8,
-				scale: 1.0,
-				points: 6,
-				radius1: 20,
-				radius2: 10,
-				angle: 1.4,
-				fill: new ol.style.Fill({
-					color: 'rgba(66, 150, 79, 0.8)'
-				}),
-				stroke: new ol.style.Stroke({
-					color: 'rgba(255, 255, 255, 0.9)',
-					width: 1
-				}),
-			})
+	var vector = new ol.layer.Vector({
+		source: new ol.source.KML({
+			projection: projection,
+			url: 'split.kml'
 		})
-	);
+	});
 
-	var layers = map.getLayers();
+	// vector.events.register('loadend', vector, function () {
+	// 	alert ("layer loaded");
+	// });
 
-	var l = layers.item(layer_num+1);
+	var src = vector.getSource();
 
-	var src = l.getSource();
+	listenerKey = src.on('change', function(e) {
+		// alert ('event');
+		if (src.getState() == 'ready') {
+			// hide loading icon
+			// ...
+			// and unregister the "change" listener
+			// ol.Observable.unByKey(listenerKey);
+			src.unByKey(listenerKey);
+			// alert ('loaded');
 
-	src.addFeature(feature);
+			var f = src.getFeatures();
+			// alert (f.length + ' features');
 
-	layer_num = (layer_num+1) % 5;
-	var x = 42;
+			var features = [];
+			src.forEachFeature(function(feature) {
+				var id = feature.getId();
+				if (id) {
+					features.push(id);
+				}
+				// var id2 = feature.get('id');
+				// if (id2) {
+				// 	features.push(id2);
+				// }
+				var name = feature.get('name');
+				if (name) {
+					features.push(name);
+				}
+
+				var clone = feature.clone();
+				clone.setId(feature.getId());
+
+				var layers = map.getLayers();
+
+				var l = layers.item(layer_num+1);
+
+				var src = l.getSource();
+
+				var colour = 0;
+				if (layer_num == 0) {
+					colour = '#ff0000';	// red
+				} else if (layer_num == 1) {
+					colour = '#ffff00';	// yellow
+				} else if (layer_num == 2) {
+					colour = '#00ff00';	// green
+				} else if (layer_num == 3) {
+					colour = '#00ffff';	// cyan
+				} else {
+					colour = '#ff00ff';	// magenta
+				}
+
+				feature.setStyle (new ol.style.Style({
+						stroke: new ol.style.Stroke({
+							// color: 'rgba(255, 0, 0, 1.0)',
+							color: colour,
+							width: 3
+						}),
+					})
+				);
+
+				src.addFeature(feature);
+
+				layer_num = (layer_num+1) % 5;
+			});
+
+			// if (features.length > 0) {
+			// 	alert (features.join(', '));
+			// } else {
+			// 	alert ("no data");
+			// }
+		}
+	});
+
 });
 
