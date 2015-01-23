@@ -10,37 +10,35 @@ layers.push(new ol.layer.Tile({
 	})
 );
 
-var createLineStyleFunction = function() {
-	return function(feature, resolution) {
-		var colour = 0;
-		var random = Math.random() * 5;
-		if (random < 1) {
-			colour = '#ff0000';	// red
-		} else if (random < 2) {
-			colour = '#ffff00';	// yellow
-		} else if (random < 3) {
-			colour = '#00ff00';	// green
-		} else if (random < 4) {
-			colour = '#00ffff';	// cyan
-		} else {
-			colour = '#ff00ff';	// magenta
-		}
+function createLineStyle (feature, resolution) {
+	var colour = 0;
+	var random = Math.random() * 5;
+	if (random < 1) {
+		colour = '#ff0000';	// red
+	} else if (random < 2) {
+		colour = '#ffff00';	// yellow
+	} else if (random < 3) {
+		colour = '#00ff00';	// green
+	} else if (random < 4) {
+		colour = '#00ffff';	// cyan
+	} else {
+		colour = '#ff00ff';	// magenta
+	}
 
-		var width = 2;
-		if (resolution < 100) { width = 4; }
-		else if (resolution < 500) { width = 3; }
-		else if (resolution < 1000) { width = 2; }
-		else { width = 1; }
+	var width = 2;
+	if (resolution < 100) { width = 4; }
+	else if (resolution < 500) { width = 3; }
+	else if (resolution < 1000) { width = 2; }
+	else { width = 1; }
 
-		var style = new ol.style.Style({
-			stroke: new ol.style.Stroke({
-				color: colour,
-				width: width,
-			}),
-		});
-		return [style];
-	};
-};
+	var style = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: colour,
+			width: width,
+		}),
+	});
+	return [style];
+}
 
 var projection = ol.proj.get('EPSG:3857');
 layers.push(
@@ -50,7 +48,7 @@ layers.push(
 			url: 'style.kml',
 			extractStyles: false
 		}),
-		style: createLineStyleFunction(),
+		style: createLineStyle,
 	})
 );
 
