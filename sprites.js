@@ -39,10 +39,9 @@ var e = 25000000;
 for (i = 0; i < featureCount; ++i) {
 	geometry = new ol.geom.Point([2 * e * Math.random() - e, 2 * e * Math.random() - e]);
 	feature = new ol.Feature(geometry);
-	feature.setStyle(
-			new ol.style.Style({
-				image: icons[i % (iconCount - 1)]
-			})
+	feature.setStyle(new ol.style.Style({
+			image: icons[i % iconCount]
+		})
 	);
 	features[i] = feature;
 }
@@ -55,27 +54,11 @@ var vector = new ol.layer.Vector({
 });
 
 var map = new ol.Map({
-	// renderer: 'webgl',
 	layers: [vector],
 	target: document.getElementById('map'),
 	view: new ol.View({
 		center: [0, 0],
 		zoom: 5
 	})
-});
-
-var overlayFeatures = [];
-for (i = 0; i < featureCount; i += 30) {
-	var clone = features[i].clone();
-	clone.setStyle(null);
-	overlayFeatures.push(clone);
-}
-
-var featureOverlay = new ol.FeatureOverlay({
-	map: map,
-	style: new ol.style.Style({
-		image: icons[iconCount - 1]
-	}),
-	features: overlayFeatures
 });
 
