@@ -11,25 +11,34 @@ layers.push(new ol.layer.Tile({
 );
 
 function createLineStyle (feature, resolution) {
-	var colour = 0;
+	var red   = 0;
+	var green = 0;
+	var blue  = 0;
 	var random = Math.random() * 5;
 	if (random < 1) {
-		colour = '#ff0000';	// red
+		red = 255;
 	} else if (random < 2) {
-		colour = '#ffff00';	// yellow
+		red = 255;
+		green = 255;
 	} else if (random < 3) {
-		colour = '#00ff00';	// green
+		green = 255;
 	} else if (random < 4) {
-		colour = '#00ffff';	// cyan
+		green = 255;
+		blue = 255;
 	} else {
-		colour = '#ff00ff';	// magenta
+		red = 255;
+		blue = 255;
 	}
 
-	var width = 2;
-	if (resolution < 100) { width = 4; }
-	else if (resolution < 500) { width = 3; }
+	var opacity = Math.random();
+
+	var colour = "rgba(" + red + "," + green + "," + blue + "," + opacity + ")";
+
+	var width;
+	if      (resolution <  100) { width = 4; }
+	else if (resolution <  500) { width = 3; }
 	else if (resolution < 1000) { width = 2; }
-	else { width = 1; }
+	else                        { width = 1; }
 
 	var style = new ol.style.Style({
 		stroke: new ol.style.Stroke({
