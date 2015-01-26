@@ -53,13 +53,13 @@ layers.push (new ol.layer.Vector({
 
 layers.push (new ol.layer.Vector({
 	source: new ol.source.GeoJSON({
-		projection: 'EPSG:3857',
+		projection: proj,
 		url: 'metadata.geojson',
 	}),
 	style: new ol.style.Style({
 		stroke: new ol.style.Stroke({
 			color: '#ffff00',
-			width: 3
+			width: 2
 		}),
 	}),
 }));
