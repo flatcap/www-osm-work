@@ -1,8 +1,7 @@
 
-var layers = [];
-
 var proj = ol.proj.get('EPSG:3857');
 
+var layers = [];
 layers.push(new ol.layer.Tile({
 		preload: Infinity,
 		source: new ol.source.BingMaps({
@@ -52,48 +51,11 @@ layers.push (new ol.layer.Vector({
 	}),
 }));
 
-
-// var src = new ol.source.GeoJSON({
-// 	object: {
-// 		'type': 'FeatureCollection',
-// 		'features': [
-// 			{
-// 				'type': 'Feature',
-// 				'geometry': {
-// 					'type': 'LineString',
-// 					'coordinates': [
-// 						[ 0.978846,51.005991 ],
-// 						[ 0.985711,51.014840 ],
-// 						[ 0.994678,51.023083 ],
-// 						[ 1.004872,51.030592 ],
-// 						[ 1.016682,51.036984 ],
-// 						[ 1.028208,51.043596 ],
-// 						[ 1.037116,51.050573 ],
-// 						[ 1.046141,51.058065 ],
-// 						[ 1.057605,51.063913 ],
-// 						[ 1.069176,51.070074 ],
-// 						[ 1.084375,51.070037 ],
-// 						[ 1.100853,51.070622 ],
-// 						[ 1.116180,51.071326 ],
-// 						[ 1.132036,51.072044 ],
-// 						[ 1.148544,51.074128 ],
-// 						[ 1.164041,51.076350 ],
-// 						[ 1.180028,51.079537 ],
-// 						[ 1.196611,51.083504 ],
-// 					]
-// 				}
-// 			},
-// 		]
-// 	}
-// });
-
-var src = new ol.source.GeoJSON({
-	projection: 'EPSG:3857',
-	url: 'metadata.geojson',
-});
-
 layers.push (new ol.layer.Vector({
-	source: src,
+	source: new ol.source.GeoJSON({
+		projection: 'EPSG:3857',
+		url: 'metadata.geojson',
+	}),
 	style: new ol.style.Style({
 		stroke: new ol.style.Stroke({
 			color: '#ffff00',
@@ -102,17 +64,6 @@ layers.push (new ol.layer.Vector({
 	}),
 }));
 
-
-// alert ("wait");
-// var s = layers[3].getSource();
-// var f = s.getFeatures();
-// var l = f[0];
-// if (l) {
-// 	var g = l.getGeometry();
-// 	g.transform ('EPSG:4326', 'EPSG:3857');
-// } else {
-// 	alert ("no l");
-// }
 
 var map = new ol.Map({
 	target: 'map',
@@ -123,66 +74,52 @@ var map = new ol.Map({
 	})
 });
 
-// alert (layers.length);
+map.on('click', function(evt) {
+	var l = layers[1];
+	var s = l.getSource();
+	var f = s.getFeatures();
+	var d = f[0];
+	alert (
+		"Id: "        + d.getId()           + "\n" +
+		"Name: "      + d.get('name')       + "\n" +
+		"Layer: "     + d.get('layer')      + "\n" +
+		"Elevation: " + d.get('elevation')  + "\n" +
+		"Length: "    + d.get('shape_leng') + "\n" +
+		"Area: "      + d.get('shape_area') + "\n" +
+		"Key: "       + d.get('key')        + "\n" +
+		"Zone: "      + d.get('zone')       + "\n"
+	);
 
-var key = src.on('change', function(e) {
-	alert ("event");
-	if (src.getState() == 'ready') {
-		alert ("ready");
-		// hide loading icon
-		// ...
-		// and unregister the "change" listener
-		// ol.Observable.unByKey(key);
-		// or src.unByKey(key) if
-		// you don't use the current master branch
-		// of ol3
-	}
+	var l = layers[2];
+	var s = l.getSource();
+	var f = s.getFeatures();
+	var d = f[0];
+	alert (
+		"Id: "      + d.getId()            + "\n" +
+		"Name: "    + d.get('name')        + "\n" +
+		"Number: "  + d.get('holeNumber')  + "\n" +
+		"Par: "     + d.get('holePar')     + "\n" +
+		"Yardage: " + d.get('holeYardage') + "\n"
+	);
+
+	var l = layers[3];
+	var s = l.getSource();
+	var f = s.getFeatures();
+	var d = f[0];
+	alert (
+		"Id: "     + d.getId()       + "\n" +
+		"Name: "   + d.get('name')   + "\n" +
+		"Wibble: " + d.get('wibble') + "\n" +
+		"Number: " + d.get('number') + "\n" +
+		"George: " + d.get('george') + "\n"
+	);
 });
 
-// map.on('click', function(evt) {
-// 	var l = layers[1];
-// 	var s = l.getSource();
-// 	var f = s.getFeatures();
-// 	var d = f[0];
-// 	alert (
-// 		"Id: "        + d.getId()           + "\n" +
-// 		"Name: "      + d.get('name')       + "\n" +
-// 		"Layer: "     + d.get('layer')      + "\n" +
-// 		"Elevation: " + d.get('elevation')  + "\n" +
-// 		"Length: "    + d.get('shape_leng') + "\n" +
-// 		"Area: "      + d.get('shape_area') + "\n" +
-// 		"Key: "       + d.get('key')        + "\n" +
-// 		"Zone: "      + d.get('zone')       + "\n"
-// 	);
+
+// var key = src.on('change', function(e) {
+// 	if (src.getState() == 'ready') {
+// 		// alert ("ready");
+// 		src.unByKey(key);
+// 	}
 // });
 
-// map.on('click', function(evt) {
-// 	var l = layers[2];
-// 	var s = l.getSource();
-// 	var f = s.getFeatures();
-// 	var d = f[0];
-// 	alert (
-// 		"Id: "      + d.getId()            + "\n" +
-// 		"Name: "    + d.get('name')        + "\n" +
-// 		"Number: "  + d.get('holeNumber')  + "\n" +
-// 		"Par: "     + d.get('holePar')     + "\n" +
-// 		"Yardage: " + d.get('holeYardage') + "\n"
-// 	);
-// });
-
-// map.on('click', function(evt) {
-// 	var l = layers[3];
-// 	var s = l.getSource();
-// 	var f = s.getFeatures();
-// 	var d = f[0];
-// 	alert (
-// 		"Id: "      + d.getId()            + "\n" +
-// 		"Name: "    + d.get('name')        + "\n" //+
-// 		// "Number: "  + d.get('holeNumber')  + "\n" +
-// 		// "Par: "     + d.get('holePar')     + "\n" +
-// 		// "Yardage: " + d.get('holeYardage') + "\n"
-// 	);
-// });
-
-
-var dummy = 42;
