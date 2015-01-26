@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+	<Document>
+		<Schema id="buildings_1" name="buildings_1">
+			<SimpleField name="layer" type="string" />
+			<SimpleField name="elevation" type="double" />
+			<SimpleField name="shape_leng" type="double" />
+			<SimpleField name="shape_area" type="double" />
+			<SimpleField name="key" type="bool" />
+			<SimpleField name="zone" type="int" />
+		</Schema>
+		<Placemark id="buildings.1">
+			<ExtendedData>
+				<SchemaData schemaUrl="#buildings_1">
+					<SimpleData name="layer">S-BUILDING</SimpleData>
+					<SimpleData name="elevation">1714.697</SimpleData>
+					<SimpleData name="shape_leng">205.996104678</SimpleData>
+					<SimpleData name="shape_area">2643.38635228</SimpleData>
+					<SimpleData name="key">true</SimpleData>
+					<SimpleData name="zone">42</SimpleData>
+				</SchemaData>
+			</ExtendedData>
+			<name>Hostel - Dover</name>
+			<Point>
+				<coordinates>1.315772,51.125442</coordinates>
+			</Point>
+		</Placemark>
+	</Document>
+</kml>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+	<Document>
+		<Placemark id="golf">
+			<name>Club house</name>
+			<ExtendedData>
+				<Data name="holeNumber">
+					<displayName>This is hole</displayName>
+					<value>1</value>
+				</Data>
+				<Data name="holePar">
+					<displayName>The par for this hole is</displayName>
+					<value>4</value>
+				</Data>
+				<Data name="holeYardage">
+					<displayName>The yardage is</displayName>
+					<value>234</value>
+				</Data>
+			</ExtendedData>
+			<name>Kent</name>
+			<Point>
+				<coordinates>1.215772,51.135442</coordinates>
+			</Point>
+		</Placemark>
+	</Document>
+</kml>
