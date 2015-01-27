@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+	<Document>
+		<Placemark> <Point> <coordinates>1.315772,51.125442</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>0.920175,51.186557</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>0.564278,51.302789</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>0.282995,51.312887</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-0.101859,51.268486</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-0.527353,51.224963</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-0.487547,51.397620</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-0.713093,51.569325</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-0.999423,51.469977</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-1.152989,51.635351</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-1.277531,51.778367</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-1.583436,51.865030</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-1.747134,51.980209</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-1.819434,52.145086</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-1.793643,52.289314</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-1.617942,52.465020</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-1.783227,52.652994</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-1.998470,52.763225</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-1.867354,52.879218</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-1.987293,53.030883</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.103054,53.221056</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.047681,53.372544</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-1.972233,53.524503</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.056475,53.755806</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.061775,53.910507</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.155683,54.065336</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.293589,54.145201</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.185682,54.300627</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.159982,54.455885</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.083586,54.618564</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.475524,54.618098</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.441826,54.808947</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.547657,54.972432</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.298458,55.081774</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.290694,55.242017</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.290694,55.242017</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.310762,55.409846</coordinates> </Point> </Placemark>
+		<Placemark> <Point> <coordinates>-2.274693,55.546693</coordinates> </Point> </Placemark>
+	</Document>
+</kml>
