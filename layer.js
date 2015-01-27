@@ -22,7 +22,7 @@ layers.push(new ol.layer.Tile({
 var projection = ol.proj.get('EPSG:3857');
 
 var i;
-var count = layer_names.length
+var count = layer_names.length;
 for (i = 0; i < count; i++) {
 	layers.push(
 		new ol.layer.Vector({

@@ -55,24 +55,11 @@ map.on('click', function(evt) {
 		})
 	});
 
-	// vector.events.register('loadend', vector, function () {
-	// 	alert ("layer loaded");
-	// });
-
 	var src = vector.getSource();
 
 	listenerKey = src.on('change', function(e) {
-		// alert ('event');
 		if (src.getState() == 'ready') {
-			// hide loading icon
-			// ...
-			// and unregister the "change" listener
-			// ol.Observable.unByKey(listenerKey);
 			src.unByKey(listenerKey);
-			// alert ('loaded');
-
-			var f = src.getFeatures();
-			// alert (f.length + ' features');
 
 			var features = [];
 			src.forEachFeature(function(feature) {
@@ -80,10 +67,6 @@ map.on('click', function(evt) {
 				if (id) {
 					features.push(id);
 				}
-				// var id2 = feature.get('id');
-				// if (id2) {
-				// 	features.push(id2);
-				// }
 				var name = feature.get('name');
 				if (name) {
 					features.push(name);
@@ -99,7 +82,7 @@ map.on('click', function(evt) {
 				var src = l.getSource();
 
 				var colour = 0;
-				if (layer_num == 0) {
+				if (layer_num === 0) {
 					colour = '#ff0000';	// red
 				} else if (layer_num == 1) {
 					colour = '#ffff00';	// yellow

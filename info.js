@@ -61,7 +61,7 @@ var displayFeatureInfo = function(pixel) {
 	var feature = map.forEachFeatureAtPixel(pixel, function(feature, layer) {
 		return feature;
 	});
-	var name = "&nbsp;"
+	var name = "&nbsp;";
 	if (feature) {
 		name = feature.get('name');
 		info.tooltip('hide')
@@ -102,5 +102,5 @@ document.onkeydown = function(e) {
 		closer.blur();
 		e.preventDefault();
 	}
-}
+};
 

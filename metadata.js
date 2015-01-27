@@ -90,10 +90,10 @@ map.on('click', function(evt) {
 		"Zone: "      + d.get('zone')       + "\n"
 	);
 
-	var l = layers[2];
-	var s = l.getSource();
-	var f = s.getFeatures();
-	var d = f[0];
+	l = layers[2];
+	s = l.getSource();
+	f = s.getFeatures();
+	d = f[0];
 	alert (
 		"Id: "      + d.getId()            + "\n" +
 		"Name: "    + d.get('name')        + "\n" +
@@ -102,10 +102,10 @@ map.on('click', function(evt) {
 		"Yardage: " + d.get('holeYardage') + "\n"
 	);
 
-	var l = layers[3];
-	var s = l.getSource();
-	var f = s.getFeatures();
-	var d = f[0];
+	l = layers[3];
+	s = l.getSource();
+	f = s.getFeatures();
+	d = f[0];
 	alert (
 		"Id: "     + d.getId()       + "\n" +
 		"Name: "   + d.get('name')   + "\n" +

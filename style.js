@@ -62,9 +62,9 @@ layers.push(
 );
 
 var view = new ol.View({
-		center: ol.proj.transform([-2.0, 54.5], 'EPSG:4326', 'EPSG:3857'),
-		zoom: 7
-	})
+	center: ol.proj.transform([-2.0, 54.5], 'EPSG:4326', 'EPSG:3857'),
+	zoom: 7
+});
 var map = new ol.Map({
 	target: 'map',
 	layers: layers,
