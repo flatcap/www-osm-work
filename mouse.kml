@@ -1,43 +1,396 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
 	<Document>
-		<Placemark> <Point> <coordinates>1.315772,51.125442</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>0.920175,51.186557</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>0.564278,51.302789</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>0.282995,51.312887</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-0.101859,51.268486</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-0.527353,51.224963</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-0.487547,51.397620</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-0.713093,51.569325</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-0.999423,51.469977</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-1.152989,51.635351</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-1.277531,51.778367</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-1.583436,51.865030</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-1.747134,51.980209</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-1.819434,52.145086</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-1.793643,52.289314</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-1.617942,52.465020</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-1.783227,52.652994</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-1.998470,52.763225</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-1.867354,52.879218</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-1.987293,53.030883</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.103054,53.221056</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.047681,53.372544</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-1.972233,53.524503</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.056475,53.755806</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.061775,53.910507</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.155683,54.065336</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.293589,54.145201</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.185682,54.300627</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.159982,54.455885</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.083586,54.618564</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.475524,54.618098</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.441826,54.808947</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.547657,54.972432</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.298458,55.081774</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.290694,55.242017</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.290694,55.242017</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.310762,55.409846</coordinates> </Point> </Placemark>
-		<Placemark> <Point> <coordinates>-2.274693,55.546693</coordinates> </Point> </Placemark>
+		<name>E2 Dover to Stranraer (38 nights)</name>
+		<Style id="map_hotel">
+			<IconStyle>
+				<scale>0.6</scale>
+				<Icon>
+					<href>https://flatcap.org/gfx/map_hotel.png</href>
+				</Icon>
+				<hotSpot x="25" y="1" xunits="pixels" yunits="pixels" />
+			</IconStyle>
+			<LabelStyle>
+				<color>ffffffff</color>
+				<scale>0.0</scale>
+			</LabelStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h1>$[name]</h1>$[description]]]></text>
+			</BalloonStyle>
+		</Style>
+		<Style id="map_hut">
+			<IconStyle>
+				<scale>0.6</scale>
+				<Icon>
+					<href>https://flatcap.org/gfx/map_hut.png</href>
+				</Icon>
+				<hotSpot x="25" y="1" xunits="pixels" yunits="pixels" />
+			</IconStyle>
+			<LabelStyle>
+				<color>ffffffff</color>
+				<scale>0.0</scale>
+			</LabelStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h1>$[name]</h1>$[description]]]></text>
+			</BalloonStyle>
+		</Style>
+		<Style id="map_tent">
+			<IconStyle>
+				<scale>0.6</scale>
+				<Icon>
+					<href>https://flatcap.org/gfx/map_tent.png</href>
+				</Icon>
+				<hotSpot x="25" y="1" xunits="pixels" yunits="pixels" />
+			</IconStyle>
+			<LabelStyle>
+				<color>ffffffff</color>
+				<scale>0.0</scale>
+			</LabelStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h1>$[name]</h1>$[description]]]></text>
+			</BalloonStyle>
+		</Style>
+		<Placemark>
+			<name>Hostel - Dover</name>
+			<description><![CDATA[12 January 2013<br />Castle Inn<br />TR 321 415 (9m)]]></description>
+			<TimeStamp><when>2013-01-12T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_hotel</styleUrl>
+			<Point>
+				<coordinates>1.315772,51.125442,9</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[3 February 2013<br />Overgrown field<br />TR 042 471 (44m)]]></description>
+			<TimeStamp><when>2013-02-03T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>0.920175,51.186557,44</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[4 February 2013<br />Grassy field<br />TQ 788 591 (186m)]]></description>
+			<TimeStamp><when>2013-02-04T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>0.564278,51.302789,186</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[5 February 2013<br />Light woodland<br />TQ 592 596 (161m)]]></description>
+			<TimeStamp><when>2013-02-05T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>0.282995,51.312887,161</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[6 February 2013<br />Light woodland<br />TQ 325 539 (227m)]]></description>
+			<TimeStamp><when>2013-02-06T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-0.101859,51.268486,227</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[7 February 2013<br />Woodland on top of hill<br />TQ 029 483 (163m)]]></description>
+			<TimeStamp><when>2013-02-07T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-0.527353,51.224963,163</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[19 February 2013<br />Hiding behind a bush<br />TQ 053 676 (15m)]]></description>
+			<TimeStamp><when>2013-02-19T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-0.487547,51.397620,15</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[20 February 2013<br />Middle of field<br />SU 893 864 (26m)]]></description>
+			<TimeStamp><when>2013-02-20T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-0.713093,51.569325,26</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[21 February 2013<br />By riverside<br />SU 696 750 (37m)]]></description>
+			<TimeStamp><when>2013-02-21T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-0.999423,51.469977,37</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[22 February 2013<br />By riverside<br />SU 587 933 (45m)]]></description>
+			<TimeStamp><when>2013-02-22T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-1.152989,51.635351,45</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[23 February 2013<br />By the canal<br />SP 499 091 (59m)]]></description>
+			<TimeStamp><when>2013-02-23T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-1.277531,51.778367,59</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[21 December 2012<br />Overgrown track<br />SP 288 186 (114m)]]></description>
+			<TimeStamp><when>2012-12-21T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-1.583436,51.865030,114</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[20 December 2012<br />Soggy grassy hill<br />SP 175 313 (164m)]]></description>
+			<TimeStamp><when>2012-12-20T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-1.747134,51.980209,164</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[19 December 2012<br />Trackside next to millionaire's statue park<br />SP 125 497 (51m)]]></description>
+			<TimeStamp><when>2012-12-19T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-1.819434,52.145086,51</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[18 December 2012<br />Middle of a field<br />SP 142 657 (88m)]]></description>
+			<TimeStamp><when>2012-12-18T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-1.793643,52.289314,88</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[17 December 2012<br />Field above the M6<br />SP 261 853 (171m)]]></description>
+			<TimeStamp><when>2012-12-17T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-1.617942,52.465020,171</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[16 December 2012<br />Corner of a field<br />SK 148 062 (109m)]]></description>
+			<TimeStamp><when>2012-12-16T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-1.783227,52.652994,109</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[15 December 2012<br />Edge of woodland<br />SK 002 184 (179m)]]></description>
+			<TimeStamp><when>2012-12-15T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-1.998470,52.763225,179</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[14 December 2012<br />Secluded corner of field<br />SK 090 313 (132m)]]></description>
+			<TimeStamp><when>2012-12-14T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-1.867354,52.879218,132</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[13 December 2012<br />Bank of canal<br />SK 009 482 (143m)]]></description>
+			<TimeStamp><when>2012-12-13T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-1.987293,53.030883,143</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[12 December 2012<br />Soggy grassy hill<br />SJ 932 693 (313m)]]></description>
+			<TimeStamp><when>2012-12-12T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.103054,53.221056,313</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[11 December 2012<br />Grassy riverbank<br />SJ 969 862 (160m)]]></description>
+			<TimeStamp><when>2012-12-11T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.047681,53.372544,160</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[10 December 2012<br />Grassy hill above reservoir<br />SE 019 031 (244m)]]></description>
+			<TimeStamp><when>2012-12-10T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-1.972233,53.524503,244</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Camp site - Hebden Bridge</name>
+			<description><![CDATA[22 September 2010<br />At Highgate Farm<br />SD 964 288 (338m)]]></description>
+			<TimeStamp><when>2010-09-22T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.056475,53.755806,338</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Camp site - Lothersdale</name>
+			<description><![CDATA[23 September 2010<br />On some woman's front lawn<br />SD 960 460 (202m)]]></description>
+			<TimeStamp><when>2010-09-23T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.061775,53.910507,202</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Camp site - Malham</name>
+			<description><![CDATA[24 September 2010<br />SD 899 633 (211m)]]></description>
+			<TimeStamp><when>2010-09-24T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.155683,54.065336,211</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Camp site - Horton in Ribblesdale</name>
+			<description><![CDATA[25 September 2010<br />SD 809 722 (235m)]]></description>
+			<TimeStamp><when>2010-09-25T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.293589,54.145201,235</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Camp site - Hawes</name>
+			<description><![CDATA[4 August 2011<br />SD 880 895 (266m)]]></description>
+			<TimeStamp><when>2011-08-04T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.185682,54.300627,266</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Camp site - Tan Hill Inn</name>
+			<description><![CDATA[5 August 2011<br />NY 897 067 (523m)]]></description>
+			<TimeStamp><when>2011-08-05T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.159982,54.455885,523</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Camp site - Middleton-in-Teesdale</name>
+			<description><![CDATA[6 August 2011<br />NY 947 248 (238m)]]></description>
+			<TimeStamp><when>2011-08-06T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.083586,54.618564,238</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Camp site - Dufton</name>
+			<description><![CDATA[7 August 2011<br />Behind a B&B<br />NY 694 249 (195m)]]></description>
+			<TimeStamp><when>2011-08-07T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.475524,54.618098,195</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>YHA - Alston</name>
+			<description><![CDATA[8 August 2011<br />NY 717 461 (284m)]]></description>
+			<TimeStamp><when>2011-08-08T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_hotel</styleUrl>
+			<Point>
+				<coordinates>-2.441826,54.808947,284</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[13 October 2012<br />Moorland<br />NY 650 643 (242m)]]></description>
+			<TimeStamp><when>2012-10-13T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.547657,54.972432,242</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[14 October 2012<br />Moorland<br />NY 810 764 (200m)]]></description>
+			<TimeStamp><when>2012-10-14T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.298458,55.081774,200</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[15 October 2012<br />Moorland hilltop<br />NY 816 942 (356m)]]></description>
+			<TimeStamp><when>2012-10-15T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.290694,55.242017,356</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Wild camping</name>
+			<description><![CDATA[16 October 2012<br />Moorland hilltop<br />NY 816 942 (356m)]]></description>
+			<TimeStamp><when>2012-10-16T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_tent</styleUrl>
+			<Point>
+				<coordinates>-2.290694,55.242017,356</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Refuge</name>
+			<description><![CDATA[17 October 2012<br />Auchope Hut<br />NT 804 129 (439m)]]></description>
+			<TimeStamp><when>2012-10-17T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_hut</styleUrl>
+			<Point>
+				<coordinates>-2.310762,55.409846,439</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>B&amp;B - Kirk Yetholm</name>
+			<description><![CDATA[18 October 2012<br />NT 828 281 (122m)]]></description>
+			<TimeStamp><when>2012-10-18T20:00:00Z</when></TimeStamp>
+			<styleUrl>#map_hotel</styleUrl>
+			<Point>
+				<coordinates>-2.274693,55.546693,122</coordinates>
+			</Point>
+		</Placemark>
 	</Document>
 </kml>
