@@ -3,7 +3,7 @@ var m = document.getElementById('message');
 m.innerHTML = "waiting...";
 
 var info = "";
-$.getJSON('routes.json', function(data) {
+$.getJSON('data.json', function(data) {
 	// info = JSON.stringify (data);
 	// info = Object.keys(data);
 	$.each(data.routes, function(index, value) {
