@@ -1,0 +1,39 @@
+{
+    "routes": [
+        {
+            "directory": "e2",
+            "fullname": "E2 Dover to Stranraer",
+            "name": "E2",
+            "attr": "cehrstv",
+            "dist_route": 890,
+            "date_start": "2010-09-22",
+            "date_end": "",
+            "days_walked": 40,
+            "days_camped": 34,
+            "days_other": 4,
+            "dist_walked": 700,
+            "complete": 79,
+            "latitude": 54.699200,
+            "longitude": -4.943850,
+            "zoom": 6,
+            "custom": ""
+        }, {
+            "directory": "e9",
+            "fullname": "E9 Dover to Plymouth",
+            "name": "E9",
+            "attr": "cefhrsvx",
+            "dist_route": 448,
+            "date_start": "2012-06-13",
+            "date_end": "2013-01-12",
+            "days_walked": 24,
+            "days_camped": 18,
+            "days_other": 4,
+            "dist_walked": 448,
+            "complete": 100,
+            "latitude": 50.590200,
+            "longitude": -1.450190,
+            "zoom": 7,
+            "custom": "ferry_icon"
+        }
+    ]
+}
