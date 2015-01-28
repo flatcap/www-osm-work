@@ -32,6 +32,12 @@ var show_html = {	// Keep the select HTML to rebuild the dropdown
 
 var map;
 
+if (!('contains' in String.prototype)) {
+	String.prototype.contains = function(str) {
+		return ''.indexOf.call(this, str, 0) !== -1;
+	};
+}
+
 function init_map()
 {
 	map = new ol.Map({
@@ -112,10 +118,6 @@ function dd_init()
 	var j_html = "";
 
 	$.each(route_list, function(index, route) {
-		if (index == "cross.cotswold") {
-			var dummy = 42;
-		}
-
 		if ((typeof(route.dist_route) !== undefined) && (route.dist_route > 0)) {
 			if (typeof(route.complete) !== undefined) {
 				if (route.complete == 100) {
