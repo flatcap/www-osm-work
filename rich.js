@@ -40,16 +40,101 @@ if (!('contains' in String.prototype)) {
 
 function init_map()
 {
+	var bing = new ol.layer.Tile({
+		source: new ol.source.BingMaps({
+			key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+			imagerySet: 'Aerial',
+		})
+	});
+
+	var route = new ol.layer.Vector({
+		source: new ol.source.Vector({
+			features: [ new ol.Feature({
+				'geometry': new ol.geom.LineString([
+						ol.proj.transform([0.469667,54.199919], 'EPSG:4326', 'EPSG:3857'),
+						ol.proj.transform([-2.408751,56.193443], 'EPSG:4326', 'EPSG:3857')
+				])
+			}) ]
+		}),
+		style: new ol.style.Style({
+			stroke: new ol.style.Stroke({
+				color: '#FF00FF',
+				width: 4
+			})
+		})
+	});
+
+	var alternate = new ol.layer.Vector({
+		source: new ol.source.Vector({
+			features: [ new ol.Feature({
+				'geometry': new ol.geom.LineString([
+						ol.proj.transform([-2.584533,52.387873], 'EPSG:4326', 'EPSG:3857'),
+						ol.proj.transform([0.513612,55.240489], 'EPSG:4326', 'EPSG:3857')
+				])
+			}) ]
+		}),
+		style: new ol.style.Style({
+			stroke: new ol.style.Stroke({
+				color: '#FFFF00',
+				width: 4
+			})
+		})
+	});
+
+	var ferry = new ol.layer.Vector({
+		source: new ol.source.Vector({
+			features: [ new ol.Feature({
+				'geometry': new ol.geom.LineString([
+						ol.proj.transform([-4.715880,53.708610], 'EPSG:4326', 'EPSG:3857'),
+						ol.proj.transform([-0.650939,52.508400], 'EPSG:4326', 'EPSG:3857')
+				])
+			}) ]
+		}),
+		style: new ol.style.Style({
+			stroke: new ol.style.Stroke({
+				color: '#00FFFF',
+				width: 4
+			})
+		})
+	});
+
+	var todo = new ol.layer.Vector({
+		source: new ol.source.Vector({
+			features: [ new ol.Feature({
+				'geometry': new ol.geom.LineString([
+						ol.proj.transform([-3.199767,55.812581], 'EPSG:4326', 'EPSG:3857'),
+						ol.proj.transform([-3.727111,52.535139], 'EPSG:4326', 'EPSG:3857')
+				])
+			}) ]
+		}),
+		style: new ol.style.Style({
+			stroke: new ol.style.Stroke({
+				color: '#FF0000',
+				width: 4
+			})
+		})
+	});
+
+	var hike = new ol.layer.Vector({
+		source: new ol.source.Vector({
+			features: [ new ol.Feature({
+				'geometry': new ol.geom.LineString([
+						ol.proj.transform([-0.782775,56.058728], 'EPSG:4326', 'EPSG:3857'),
+						ol.proj.transform([-5.221251,54.251300], 'EPSG:4326', 'EPSG:3857')
+				])
+			}) ]
+		}),
+		style: new ol.style.Style({
+			stroke: new ol.style.Stroke({
+				color: '#00FF00',
+				width: 4
+			})
+		})
+	});
+
 	map = new ol.Map({
 		target: 'map',
-		layers: [
-			new ol.layer.Tile({
-				source: new ol.source.BingMaps({
-					key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
-					imagerySet: 'Aerial',
-				})
-			})
-		],
+		layers: [ bing, route, alternate, ferry, todo, hike ],
 		view: new ol.View({
 			center: ol.proj.transform([-3.143848, 54.699234], 'EPSG:4326', 'EPSG:3857'),
 			zoom: 6
@@ -326,4 +411,12 @@ $('#show_inco').change(function() { show_inco = this.checked; on_show (this.id);
 $('#show_unst').change(function() { show_unst = this.checked; on_show (this.id); });
 $('#show_hill').change(function() { show_hill = this.checked; on_show (this.id); });
 $('#show_join').change(function() { show_join = this.checked; on_show (this.id); });
+
+var layers = map.getLayers();
+
+var kml_hike    = new ol.dom.Input(document.getElementById('kml_hike'));    kml_hike.bindTo    ('checked', layers.item(5), 'visible');
+var kml_todo    = new ol.dom.Input(document.getElementById('kml_todo'));    kml_todo.bindTo    ('checked', layers.item(4), 'visible');
+var kml_ferry   = new ol.dom.Input(document.getElementById('kml_ferry'));   kml_ferry.bindTo   ('checked', layers.item(3), 'visible');
+var kml_variant = new ol.dom.Input(document.getElementById('kml_variant')); kml_variant.bindTo ('checked', layers.item(2), 'visible');
+var kml_route   = new ol.dom.Input(document.getElementById('kml_route'));   kml_route.bindTo   ('checked', layers.item(1), 'visible');
 
