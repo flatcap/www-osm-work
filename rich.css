@@ -1,0 +1,88 @@
+html, body, #map {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
+div.fixed {
+	position: fixed;
+	top: 3em;
+	left: 0px;
+	bottom: 0px;
+	width: 70%;
+	border-right: 2px solid black;
+	float: left;
+}
+
+div#user {
+	padding: 0 0 0 0;
+	float: left;
+	width: 28%;
+	padding-left: 71%;
+}
+
+body {
+	background: white;
+	color: black;
+}
+
+h1 {
+	font-size: 120%;
+}
+
+h2 {
+	font-size: 100%;
+	margin-bottom: 0px;
+	margin: 0;
+	padding: 0;
+}
+
+h3, h4 {
+	margin: 0px;
+	padding: 0px;
+}
+
+label {
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+div.columns {
+	float: left;
+	vertical-align: top;
+}
+
+label {
+	font-size: 90%;
+	width: 90%;
+	padding-left: 1em;
+}
+
+form, select {
+	width: 99%;
+}
+
+span {
+	font-size: 75%;
+	font-weight: normal;
+}
+
+span.subtle {
+	color: #888;
+}
+
+span.estimate {
+	color: #f44;
+}
+
+span.lastseen {
+	color: #0c0;
+}
+
+hr {
+	clear: both;
+}
+

@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="lib/ol.css" type="text/css">
+		<link rel="stylesheet" href="map.css" type="text/css">
+		<link rel="stylesheet" href="rich.css" type="text/css">
+		<link rel="stylesheet" href="menu.css" type="text/css" />
+		<link href='https://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css' />
+		<script src="lib/ol.js" type="text/javascript"></script>
+		<script src="lib/jquery.min.js" type="text/javascript"></script>
+		<title>rich</title>
+	</head>
+	<body>
+		<p class="menu" id="menu">
+			<span>Hike Map</span>
+			<a href="stats.html"><span>Statistics</span></a>
+			<a href="calendar-hike.html"><span>Hike Calendar</span></a>
+			<a href="calendar-camp.html"><span>Camp Calendar</span></a>
+		</p>
+		<div id="fixed" class="fixed">
+		<div id="map"></div>
+		</div>
+		<div id="user">
+		<form action="">
+			<select size="15" id="dropdown" onchange="on_hike(this.id);"></select>
+		</form>
+		<div id="options">
+			<div class="columns">
+				<h2>Show:</h2>
+				<label><input id="show_comp" type="checkbox" />Completed Hikes </label><br />
+				<label><input id="show_inco" type="checkbox" />Incomplete Hikes</label><br />
+				<label><input id="show_unst" type="checkbox" />Unstarted Hikes </label><br />
+				<label><input id="show_hill" type="checkbox" />Hills           </label><br />
+				<label><input id="show_join" type="checkbox" />Join Ups        </label><br />
+			</div>
+		</div>
+		</div>
+
+		<!-- <div id="message">&nbsp;</div> -->
+
+		<script src="rich.js" type="text/javascript"></script>
+	</body>
+</html>
