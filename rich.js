@@ -45,6 +45,7 @@ String.prototype.contains = function (key)
 };
 
 var map;
+var route_list;
 
 var maps   = {};
 var layers = {};
@@ -530,6 +531,69 @@ function dd_select (route)
 
 
 /**
+ * map_zoom_ll - Zoom in on coordinates
+ * @lat: Latitude
+ * @lon: Longitude
+ * @zoom: Zoom level (1 = From space, 17 = grass level)
+ *
+ * Centre the map on the coordinates: (@lat, @lon).
+ * Zoom in to the level @zoom.
+ */
+function map_zoom_ll (lat, lon, zoom)
+{
+	if (!lat || !lon || !zoom) {
+		return false;
+	}
+
+	// bounds of UK
+	if ((lat < 49) || (lat > 59)) {
+		return false;
+	}
+
+	if ((lon < -8) || (lon > 2)) {
+		return false;
+	}
+
+	var place = ol.proj.transform([lon, lat], "EPSG:4326", "EPSG:3857");
+	var view = map.getView();
+
+	view.setCenter (place);
+	view.setZoom (zoom);
+
+	return true;
+}
+
+/**
+ * map_zoom_route - Frame a route in the map
+ * @route: Route name
+ *
+ * Centre the map on @route and zoom in.
+ * The data come from:
+ *	route_list[@route].latitude
+ *	route_list[@route].longitude
+ *	route_list[@route].zoom
+ */
+function map_zoom_route (route)
+{
+	var lat;
+	var lon;
+	var zoom;
+
+	if (route in route_list) {
+		lat  = route_list[route].latitude;
+		lon  = route_list[route].longitude;
+		zoom = route_list[route].zoom;
+	}
+
+	if (lat && lon && zoom) {
+		map_zoom_ll (lat, lon, zoom);
+	} else {
+		map_zoom_ll (54.699234, -3.143848, 6);	// UK
+	}
+}
+
+
+/**
  * on_hike - Event handler for hike dropdown
  * @id: ID of dropdown
  *
@@ -537,13 +601,17 @@ function dd_select (route)
  */
 function on_hike (id)
 {
-	// var option = $("#"+id).val();
+	var option = $("#"+id).val();
+	// alert(option);
+
+	map_zoom_route(option);
+	// var name = route_list[option].fullname;
+	// alert(name);
 
 	// show_route (option);
 }
 
 
-var route_list;
 $.getJSON("rich.json", function(data) {
 	route_list = data.routes;
 	if (!route_list) {
@@ -634,7 +702,14 @@ var kml_start   = new ol.dom.Input(document.getElementById("kml_start"));   kml_
 var kml_end     = new ol.dom.Input(document.getElementById("kml_end"));     kml_end.bindTo     ("checked", layers.end,        "visible");
 var kml_extra   = new ol.dom.Input(document.getElementById("kml_extra"));   kml_extra.bindTo   ("checked", layers.extra,      "visible");
 
-map_debug();
-icon_debug();
+var resolution = new ol.dom.Input(document.getElementById("resolution"));
+resolution.bindTo("value", map.getView(), "resolution").transform(parseFloat, String);
+
+$("#action").click(function() {
+	map.getView().setZoom (6);
+});
+
+// map_debug();
+// icon_debug();
 
 // alert("done");
