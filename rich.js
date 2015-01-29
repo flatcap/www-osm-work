@@ -30,113 +30,263 @@ var show_html = {	// Keep the select HTML to rebuild the dropdown
 	join: ""		// Non-route joins
 };
 
+/**
+ * String.contains - Does the string contain this character
+ * @key: Character to look for
+ *
+ * Extend the String class with a "contains" method.
+ * Search the string for a given character.
+ *
+ * Return: boolean
+ */
+String.prototype.contains = function (key)
+{
+	return (this.indexOf (key) >= 0);
+};
+
 var map;
 
-if (!('contains' in String.prototype)) {
-	String.prototype.contains = function(str) {
-		return ''.indexOf.call(this, str, 0) !== -1;
-	};
+var layers = {};
+var styles = {};
+var icons = {};
+var areas = {};
+
+function create_styles()
+{
+	styles.route = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: "#FF00FF",
+			width: 4
+		})
+	});
+	styles.variant = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: "#FFFF00",
+			width: 4
+		})
+	});
+	styles.ferry = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: "#00FFFF",
+			width: 4
+		})
+	});
+	styles.todo = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: "#FF0000",
+			width: 4
+		})
+	});
+	styles.hike = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: "#00FF00",
+			width: 4
+		})
+	});
 }
+
+function create_icons()
+{
+	var names = [
+		"diamond_green", "map_ferry", "paddle_5",
+		"diamond_red",   "map_hotel", "paddle_go",
+		"r_green",       "map_hut",   "paddle_green",
+		"r_red",         "map_tent",  "paddle_stop",
+		"r_yellow",      "map_waves"
+	];
+
+	$.each(names, function(index, name) {
+		var icon = new ol.style.Icon({
+			anchor: [0.5, 1.0],
+			anchorXUnits: "fraction",
+			anchorYUnits: "fraction",
+			src: "gfx/"+name+".png",
+			scale: 0.6
+		});
+
+		icons[name] = new ol.style.Style({
+			image: icon
+		});
+	});
+}
+
+function create_areas()
+{
+	areas.todo = new ol.style.Style({
+		fill: new ol.style.Fill({
+			color: [255, 150, 150, 0.3]
+		}),
+		// stroke: new ol.style.Stroke({
+		// 	color: "#FF0000",
+		// 	width: 1
+		// })
+	});
+	areas.done = new ol.style.Style({
+		fill: new ol.style.Fill({
+			color: [150, 255, 150, 0.3]
+		}),
+		// stroke: new ol.style.Stroke({
+		// 	color: "#00FF00",
+		// 	width: 1
+		// })
+	});
+}
+
+function map_debug()
+{
+	var l;
+	var s;
+
+	l = layers.route;
+	s = l.getSource();
+	s.addFeature(new ol.Feature({
+		"geometry": new ol.geom.LineString([
+			ol.proj.transform([0.469667 ,54.199919], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-2.408751,56.193443], "EPSG:4326", "EPSG:3857")
+		])
+	}));
+
+	l = layers.variant;
+	s = l.getSource();
+	s.addFeature(new ol.Feature({
+		"geometry": new ol.geom.LineString([
+			ol.proj.transform([-2.584533,52.387873], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([0.513612 ,55.240489], "EPSG:4326", "EPSG:3857")
+		])
+	}));
+
+	l = layers.ferry;
+	s = l.getSource();
+	s.addFeature(new ol.Feature({
+		"geometry": new ol.geom.LineString([
+			ol.proj.transform([-4.715880,53.708610], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-0.650939,52.508400], "EPSG:4326", "EPSG:3857")
+		])
+	}));
+
+	l = layers.todo;
+	s = l.getSource();
+	s.addFeature(new ol.Feature({
+		"geometry": new ol.geom.LineString([
+			ol.proj.transform([-3.199767,55.812581], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-3.727111,52.535139], "EPSG:4326", "EPSG:3857")
+		])
+	}));
+
+	l = layers.hike;
+	s = l.getSource();
+	s.addFeature(new ol.Feature({
+		"geometry": new ol.geom.LineString([
+			ol.proj.transform([-0.782775,56.058728], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-5.221251,54.251300], "EPSG:4326", "EPSG:3857")
+		])
+	}));
+}
+
+function icon_debug()
+{
+	var s;
+	var f;
+
+	s = layers.camp.getSource();
+	f = new ol.Feature({
+		"geometry": new ol.geom.MultiPoint([
+			ol.proj.transform([1.315772, 51.125442], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([0.564278, 51.302789], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-0.101859,51.268486], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-0.487547,51.397620], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-0.999423,51.469977], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-1.277531,51.778367], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-1.747134,51.980209], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-1.793643,52.289314], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-1.783227,52.652994], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-1.867354,52.879218], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-2.103054,53.221056], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-1.972233,53.524503], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-2.061775,53.910507], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-2.293589,54.145201], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-2.159982,54.455885], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-2.475524,54.618098], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-2.547657,54.972432], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-2.290694,55.242017], "EPSG:4326", "EPSG:3857"),
+			ol.proj.transform([-2.274693,55.546693], "EPSG:4326", "EPSG:3857"),
+		])
+	});
+	f.setStyle (icons.map_tent);
+	s.addFeature(f);
+
+	s = layers.area.getSource();
+	f = new ol.Feature({
+		"geometry": new ol.geom.Polygon([[
+			ol.proj.transform([-3.199767,55.812581], "EPSG:4326", "EPSG:3857"),  // todo
+			ol.proj.transform([-5.221251,54.251300], "EPSG:4326", "EPSG:3857"),  // hike
+			ol.proj.transform([-4.715880,53.708610], "EPSG:4326", "EPSG:3857"),  // ferry
+			ol.proj.transform([-3.727111,52.535139], "EPSG:4326", "EPSG:3857"),  // todo
+			ol.proj.transform([-2.584533,52.387873], "EPSG:4326", "EPSG:3857"),  // variant
+			ol.proj.transform([-0.650939,52.508400], "EPSG:4326", "EPSG:3857"),  // ferry
+		]])
+	});
+	f.setStyle (areas.todo);
+	s.addFeature(f);
+
+	s = layers.area.getSource();
+	f = new ol.Feature({
+		"geometry": new ol.geom.Polygon([[
+			ol.proj.transform([-0.650939,52.508400], "EPSG:4326", "EPSG:3857"),  // ferry
+			ol.proj.transform([0.469667 ,54.199919], "EPSG:4326", "EPSG:3857"),  // route
+			ol.proj.transform([0.513612 ,55.240489], "EPSG:4326", "EPSG:3857"),  // variant
+			ol.proj.transform([-0.782775,56.058728], "EPSG:4326", "EPSG:3857"),  // hike
+			ol.proj.transform([-2.408751,56.193443], "EPSG:4326", "EPSG:3857"),  // route
+			ol.proj.transform([-3.199767,55.812581], "EPSG:4326", "EPSG:3857"),  // todo
+		]])
+	});
+	f.setStyle (areas.done);
+	s.addFeature(f);
+}
+
 
 function init_map()
 {
-	var bing = new ol.layer.Tile({
+	create_styles();
+	create_icons();
+	create_areas();
+
+	layers.bing = new ol.layer.Tile({
 		source: new ol.source.BingMaps({
-			key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
-			imagerySet: 'Aerial',
+			key: "Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3",
+			imagerySet: "Aerial"
 		})
 	});
 
-	var route = new ol.layer.Vector({
-		source: new ol.source.Vector({
-			features: [ new ol.Feature({
-				'geometry': new ol.geom.LineString([
-						ol.proj.transform([0.469667,54.199919], 'EPSG:4326', 'EPSG:3857'),
-						ol.proj.transform([-2.408751,56.193443], 'EPSG:4326', 'EPSG:3857')
-				])
-			}) ]
-		}),
-		style: new ol.style.Style({
-			stroke: new ol.style.Stroke({
-				color: '#FF00FF',
-				width: 4
-			})
-		})
-	});
+	// Route layers
+	layers.route   = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.route   });
+	layers.variant = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.variant });
+	layers.ferry   = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.ferry   });
+	layers.todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.todo    });
+	layers.hike    = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.hike    });
 
-	var alternate = new ol.layer.Vector({
-		source: new ol.source.Vector({
-			features: [ new ol.Feature({
-				'geometry': new ol.geom.LineString([
-						ol.proj.transform([-2.584533,52.387873], 'EPSG:4326', 'EPSG:3857'),
-						ol.proj.transform([0.513612,55.240489], 'EPSG:4326', 'EPSG:3857')
-				])
-			}) ]
-		}),
-		style: new ol.style.Style({
-			stroke: new ol.style.Stroke({
-				color: '#FFFF00',
-				width: 4
-			})
-		})
-	});
+	// Icon layers
+	layers.camp  = new ol.layer.Vector({ source: new ol.source.Vector()                           });
+	layers.start = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.paddle_go   });
+	layers.end   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.paddle_stop });
+	layers.area  = new ol.layer.Vector({ source: new ol.source.Vector()                           });
 
-	var ferry = new ol.layer.Vector({
-		source: new ol.source.Vector({
-			features: [ new ol.Feature({
-				'geometry': new ol.geom.LineString([
-						ol.proj.transform([-4.715880,53.708610], 'EPSG:4326', 'EPSG:3857'),
-						ol.proj.transform([-0.650939,52.508400], 'EPSG:4326', 'EPSG:3857')
-				])
-			}) ]
-		}),
-		style: new ol.style.Style({
-			stroke: new ol.style.Stroke({
-				color: '#00FFFF',
-				width: 4
-			})
-		})
-	});
-
-	var todo = new ol.layer.Vector({
-		source: new ol.source.Vector({
-			features: [ new ol.Feature({
-				'geometry': new ol.geom.LineString([
-						ol.proj.transform([-3.199767,55.812581], 'EPSG:4326', 'EPSG:3857'),
-						ol.proj.transform([-3.727111,52.535139], 'EPSG:4326', 'EPSG:3857')
-				])
-			}) ]
-		}),
-		style: new ol.style.Style({
-			stroke: new ol.style.Stroke({
-				color: '#FF0000',
-				width: 4
-			})
-		})
-	});
-
-	var hike = new ol.layer.Vector({
-		source: new ol.source.Vector({
-			features: [ new ol.Feature({
-				'geometry': new ol.geom.LineString([
-						ol.proj.transform([-0.782775,56.058728], 'EPSG:4326', 'EPSG:3857'),
-						ol.proj.transform([-5.221251,54.251300], 'EPSG:4326', 'EPSG:3857')
-				])
-			}) ]
-		}),
-		style: new ol.style.Style({
-			stroke: new ol.style.Stroke({
-				color: '#00FF00',
-				width: 4
-			})
-		})
-	});
+	// Misc
+	layers.extra = new ol.layer.Vector({ source: new ol.source.Vector()                       });
+	layers.rich  = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.r_green });
 
 	map = new ol.Map({
-		target: 'map',
-		layers: [ bing, route, alternate, ferry, todo, hike ],
+		target: "map",
+		layers: [
+			// Layers grouped by depth
+			layers.bing, layers.area,
+			layers.route, layers.variant,
+			layers.todo, layers.ferry, layers.hike,
+			layers.camp, layers.start, layers.end, layers.extra,
+			layers.rich
+		],
 		view: new ol.View({
-			center: ol.proj.transform([-3.143848, 54.699234], 'EPSG:4326', 'EPSG:3857'),
+			center: ol.proj.transform([-3.143848, 54.699234], "EPSG:4326", "EPSG:3857"),
 			zoom: 6
 		})
 	});
@@ -149,11 +299,11 @@ function init_map()
  */
 function init_options()
 {
-	$("#show_comp").prop('checked', show_comp);
-	$("#show_inco").prop('checked', show_inco);
-	$("#show_unst").prop('checked', show_unst);
-	$("#show_hill").prop('checked', show_hill);
-	$("#show_join").prop('checked', show_join);
+	$("#show_comp").prop("checked", show_comp);
+	$("#show_inco").prop("checked", show_inco);
+	$("#show_unst").prop("checked", show_unst);
+	$("#show_hill").prop("checked", show_hill);
+	$("#show_join").prop("checked", show_join);
 }
 
 
@@ -206,7 +356,7 @@ function dd_init()
 		if ((typeof(route.dist_route) !== undefined) && (route.dist_route > 0)) {
 			if (typeof(route.complete) !== undefined) {
 				if (route.complete == 100) {
-					if (route.attr.contains ('j')) {
+					if (route.attr.contains ("j")) {
 						j.push ({ key: index, fullname: route.fullname });
 					} else {
 						c.push ({ key: index, fullname: route.fullname });
@@ -228,46 +378,44 @@ function dd_init()
 	h.sort(route_sort);
 	j.sort(route_sort);
 
-	var x;
-
 	if (c.length) {
-		c_html += '<optgroup id="complete" label="Complete">';
+		c_html += "<optgroup id='complete' label='Complete'>";
 		$.each(c, function(index, route) {
-			c_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+			c_html += "<option value='" + route.key +"'>" + route.fullname + "</option>";
 		});
-		c_html += '</optgroup>';
+		c_html += "</optgroup>";
 	}
 
 	if (i.length) {
-		i_html += '<optgroup id="incomplete" label="Incomplete">';
+		i_html += "<optgroup id='incomplete' label='Incomplete'>";
 		$.each(i, function(index, route) {
-			i_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+			i_html += "<option value='" + route.key +"'>" + route.fullname + "</option>";
 		});
-		i_html += '</optgroup>';
+		i_html += "</optgroup>";
 	}
 
 	if (u.length) {
-		u_html += '<optgroup id="unstarted" label="Unstarted">';
+		u_html += "<optgroup id='unstarted' label='Unstarted'>";
 		$.each(u, function(index, route) {
-			u_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+			u_html += "<option value='" + route.key +"'>" + route.fullname + "</option>";
 		});
-		u_html += '</optgroup>';
+		u_html += "</optgroup>";
 	}
 
 	if (h.length) {
-		h_html += '<optgroup id="hills" label="Hills">';
+		h_html += "<optgroup id='hills' label='Hills'>";
 		$.each(h, function(index, route) {
-			h_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+			h_html += "<option value='" + route.key +"'>" + route.fullname + "</option>";
 		});
-		h_html += '</optgroup>';
+		h_html += "</optgroup>";
 	}
 
 	if (j.length) {
-		j_html += '<optgroup id="join" label="Join Ups">';
+		j_html += "<optgroup id='join' label='Join Ups'>";
 		$.each(j, function(index, route) {
-			j_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+			j_html += "<option value='" + route.key +"'>" + route.fullname + "</option>";
 		});
-		j_html += '</optgroup>';
+		j_html += "</optgroup>";
 	}
 
 	show_html.comp = c_html;
@@ -293,11 +441,11 @@ function dd_populate()
 	var value = dd.value;
 	var html = "";
 
-	if (show_comp) html += show_html.comp;
-	if (show_inco) html += show_html.inco;
-	if (show_unst) html += show_html.unst;
-	if (show_hill) html += show_html.hill;
-	if (show_join) html += show_html.join;
+	if (show_comp) { html += show_html.comp; }
+	if (show_inco) { html += show_html.inco; }
+	if (show_unst) { html += show_html.unst; }
+	if (show_hill) { html += show_html.hill; }
+	if (show_join) { html += show_html.join; }
 
 	dd.html(html);
 
@@ -327,7 +475,7 @@ function dd_select (route)
  */
 function on_hike (id)
 {
-	var option = $("#"+id).val();
+	// var option = $("#"+id).val();
 
 	// show_route (option);
 }
@@ -379,25 +527,25 @@ function on_show (id)
 		if ("dist_route" in route_list[r]) {
 			dist_route = route_list[r].dist_route;
 		}
-		if (attr.contains ('r')) {
+		if (attr.contains ("r")) {
 			route = true;
 		}
 
-		if (!show_comp && route && (complete == 100)) {
-			hide_route (r);
-		}
-		if (!show_inco && route && (complete < 100)) {
-			hide_route (r);
-		}
-		if (!show_unst && route && (complete === 0)) {
-			hide_route (r);
-		}
-		if (!show_join && !route && (complete == 100) && (dist_route > 0)) {
-			hide_route (r);
-		}
-		if (!show_hill && !route && (dist_route === 0)) {
-			hide_route (r);
-		}
+		// if (!show_comp && route && (complete == 100)) {
+		// 	hide_route (r);
+		// }
+		// if (!show_inco && route && (complete < 100)) {
+		// 	hide_route (r);
+		// }
+		// if (!show_unst && route && (complete === 0)) {
+		// 	hide_route (r);
+		// }
+		// if (!show_join && !route && (complete == 100) && (dist_route > 0)) {
+		// 	hide_route (r);
+		// }
+		// if (!show_hill && !route && (dist_route === 0)) {
+		// 	hide_route (r);
+		// }
 	}
 
 	if (opt_one) {
@@ -406,17 +554,24 @@ function on_show (id)
 }
 
 
-$('#show_comp').change(function() { show_comp = this.checked; on_show (this.id); });
-$('#show_inco').change(function() { show_inco = this.checked; on_show (this.id); });
-$('#show_unst').change(function() { show_unst = this.checked; on_show (this.id); });
-$('#show_hill').change(function() { show_hill = this.checked; on_show (this.id); });
-$('#show_join').change(function() { show_join = this.checked; on_show (this.id); });
+$("#show_comp").change(function() { show_comp = this.checked; on_show (this.id); });
+$("#show_inco").change(function() { show_inco = this.checked; on_show (this.id); });
+$("#show_unst").change(function() { show_unst = this.checked; on_show (this.id); });
+$("#show_hill").change(function() { show_hill = this.checked; on_show (this.id); });
+$("#show_join").change(function() { show_join = this.checked; on_show (this.id); });
 
-var layers = map.getLayers();
+var kml_hike    = new ol.dom.Input(document.getElementById("kml_hike"));    kml_hike.bindTo    ("checked", layers.hike,    "visible");
+var kml_todo    = new ol.dom.Input(document.getElementById("kml_todo"));    kml_todo.bindTo    ("checked", layers.todo,    "visible");
+var kml_ferry   = new ol.dom.Input(document.getElementById("kml_ferry"));   kml_ferry.bindTo   ("checked", layers.ferry,   "visible");
+var kml_variant = new ol.dom.Input(document.getElementById("kml_variant")); kml_variant.bindTo ("checked", layers.variant, "visible");
+var kml_route   = new ol.dom.Input(document.getElementById("kml_route"));   kml_route.bindTo   ("checked", layers.route,   "visible");
 
-var kml_hike    = new ol.dom.Input(document.getElementById('kml_hike'));    kml_hike.bindTo    ('checked', layers.item(5), 'visible');
-var kml_todo    = new ol.dom.Input(document.getElementById('kml_todo'));    kml_todo.bindTo    ('checked', layers.item(4), 'visible');
-var kml_ferry   = new ol.dom.Input(document.getElementById('kml_ferry'));   kml_ferry.bindTo   ('checked', layers.item(3), 'visible');
-var kml_variant = new ol.dom.Input(document.getElementById('kml_variant')); kml_variant.bindTo ('checked', layers.item(2), 'visible');
-var kml_route   = new ol.dom.Input(document.getElementById('kml_route'));   kml_route.bindTo   ('checked', layers.item(1), 'visible');
+var kml_camp    = new ol.dom.Input(document.getElementById("kml_camp"));    kml_camp.bindTo    ("checked", layers.camp,    "visible");
+var kml_area    = new ol.dom.Input(document.getElementById("kml_area"));    kml_area.bindTo    ("checked", layers.area,    "visible");
+var kml_start   = new ol.dom.Input(document.getElementById("kml_start"));   kml_start.bindTo   ("checked", layers.start,   "visible");
+var kml_end     = new ol.dom.Input(document.getElementById("kml_end"));     kml_end.bindTo     ("checked", layers.end,     "visible");
+var kml_extra   = new ol.dom.Input(document.getElementById("kml_extra"));   kml_extra.bindTo   ("checked", layers.extra,   "visible");
+
+map_debug();
+icon_debug();
 
