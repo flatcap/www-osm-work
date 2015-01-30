@@ -99,31 +99,31 @@ function create_styles()
 	styles.route = new ol.style.Style({
 		stroke: new ol.style.Stroke({
 			color: "#FF00FF",
-			width: 4
+			width: 2
 		})
 	});
 	styles.variant = new ol.style.Style({
 		stroke: new ol.style.Stroke({
 			color: "#FFFF00",
-			width: 4
+			width: 2
 		})
 	});
 	styles.ferry = new ol.style.Style({
 		stroke: new ol.style.Stroke({
 			color: "#00FFFF",
-			width: 4
+			width: 2
 		})
 	});
 	styles.todo = new ol.style.Style({
 		stroke: new ol.style.Stroke({
 			color: "#FF0000",
-			width: 4
+			width: 2
 		})
 	});
 	styles.hike = new ol.style.Style({
 		stroke: new ol.style.Stroke({
 			color: "#00FF00",
-			width: 4
+			width: 2
 		})
 	});
 }
@@ -144,7 +144,7 @@ function create_icons()
 			anchorXUnits: "fraction",
 			anchorYUnits: "fraction",
 			src: "gfx/"+name+".png",
-			scale: 0.6
+			scale: 0.5
 		});
 
 		icons[name] = new ol.style.Style({
@@ -685,11 +685,24 @@ function on_show (id)
 }
 
 
+function map_clear()
+{
+	$.each(layers, function(name, layer) {
+		layer.setSource (new ol.source.Vector());
+	});
+}
+
+
 $("#show_comp").change(function() { show_comp = this.checked; on_show (this.id); });
 $("#show_inco").change(function() { show_inco = this.checked; on_show (this.id); });
 $("#show_unst").change(function() { show_unst = this.checked; on_show (this.id); });
 $("#show_hill").change(function() { show_hill = this.checked; on_show (this.id); });
 $("#show_join").change(function() { show_join = this.checked; on_show (this.id); });
+
+$("#global_centre").click(function() { map_zoom_route(); });
+$("#global_done")  .click(function() { alert("done");    });
+$("#global_todo")  .click(function() { alert("todo");    });
+$("#global_clear") .click(function() { map_clear();      });
 
 var kml_hike    = new ol.dom.Input(document.getElementById("kml_hike"));    kml_hike.bindTo    ("checked", layers.hike,       "visible");
 var kml_todo    = new ol.dom.Input(document.getElementById("kml_todo"));    kml_todo.bindTo    ("checked", layers.todo,       "visible");
