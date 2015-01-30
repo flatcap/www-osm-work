@@ -46,6 +46,7 @@ String.prototype.contains = function (key)
 
 var map;
 var route_list;
+var proj= ol.proj.get("EPSG:3857");
 
 var maps   = {};
 var layers = {};
@@ -230,7 +231,7 @@ function icon_debug()
 	var s;
 	var f;
 
-	s = layers.camp_tent.getSource();
+	s = layers.map_tent.getSource();
 	f = new ol.Feature({
 		"geometry": new ol.geom.MultiPoint([
 			ol.proj.transform([1.315772, 51.125442], "EPSG:4326", "EPSG:3857"),
@@ -252,7 +253,7 @@ function icon_debug()
 	});
 	s.addFeature(f);
 
-	s = layers.camp_hut.getSource();
+	s = layers.map_hut.getSource();
 	f = new ol.Feature({
 		"geometry": new ol.geom.MultiPoint([
 			ol.proj.transform([-0.999423,51.469977], "EPSG:4326", "EPSG:3857"),
@@ -261,7 +262,7 @@ function icon_debug()
 	});
 	s.addFeature(f);
 
-	s = layers.camp_hotel.getSource();
+	s = layers.map_hotel.getSource();
 	f = new ol.Feature({
 		"geometry": new ol.geom.MultiPoint([
 			ol.proj.transform([-2.159982,54.455885], "EPSG:4326", "EPSG:3857"),
@@ -305,26 +306,26 @@ function init_map()
 	create_maps();
 
 	// Route layers								  Default Line Style
-	layers.route      = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.route      });
-	layers.variant    = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.variant    });
-	layers.ferry      = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.ferry      });
-	layers.todo       = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.todo       });
-	layers.hike       = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.hike       });
+	layers.route     = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.route      });
+	layers.variant   = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.variant    });
+	layers.ferry     = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.ferry      });
+	layers.todo      = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.todo       });
+	layers.hike      = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.hike       });
 
 	// Icon layers	         						  Default Icon
-	layers.camp_hotel = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.map_hotel   });
-	layers.camp_hut   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.map_hut     });
-	layers.camp_tent  = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.map_tent    });
-	layers.end        = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.paddle_stop });
-	layers.start      = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.paddle_go   });
+	layers.map_hotel = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.map_hotel   });
+	layers.map_hut   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.map_hut     });
+	layers.map_tent  = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.map_tent    });
+	layers.end       = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.paddle_stop });
+	layers.start     = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.paddle_go   });
 
 	// Areas	         						  Default Area Styles
-	layers.area_todo  = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.todo        });
-	layers.area_done  = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.done        });
+	layers.area_todo = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.todo        });
+	layers.area_done = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.done        });
 
-	// Misc		         						  Default Icon
-	layers.extra      = new ol.layer.Vector({ source: new ol.source.Vector()                           });
-	layers.rich       = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.r_green     });
+	// Misc		        						  Default Icon
+	layers.extra     = new ol.layer.Vector({ source: new ol.source.Vector()                           });
+	layers.rich      = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.r_green     });
 
 	// Groups
 	layers.group_area = new ol.layer.Group({
@@ -334,7 +335,7 @@ function init_map()
 		layers: [ maps.bing, maps.osm, maps.terrain, maps.stamen ]
 	});
 	layers.group_camp = new ol.layer.Group({
-		layers: [ layers.camp_hotel, layers.camp_hut, layers.camp_tent ]
+		layers: [ layers.map_hotel, layers.map_hut, layers.map_tent ]
 	});
 
 	map = new ol.Map({
@@ -678,9 +679,9 @@ function on_show (id)
 		// }
 	}
 
-	if (opt_one) {
-		hide_other_routes (dd.value);
-	}
+	// if (opt_one) {
+	// 	hide_other_routes (dd.value);
+	// }
 }
 
 
@@ -705,8 +706,70 @@ var kml_extra   = new ol.dom.Input(document.getElementById("kml_extra"));   kml_
 var resolution = new ol.dom.Input(document.getElementById("resolution"));
 resolution.bindTo("value", map.getView(), "resolution").transform(parseFloat, String);
 
+var load;
+var key;
+
 $("#action").click(function() {
-	map.getView().setZoom (6);
+	// map.getView().setZoom (6);
+
+	load = new ol.source.KML({
+		projection: proj,
+		// url: "e2/camp.kml",
+		url: "e2/all.kml",
+		extractStyles: false,
+	});
+
+	key = load.on("change", function(e) {
+		// alert(load.getState());
+		// alert(load.getFeatures().length);
+		if (load.getState() == "ready") {
+			var features = [];
+			var count = 0;
+			load.forEachFeature(function(feature) {
+				var type = feature.get("type");
+				var layer = layers[type];
+				var src = layer.getSource();
+				// var style = layer.getStyle();
+				var clone = feature.clone();
+				clone.setId(feature.getId());
+				// clone.setStyle (style);
+				src.addFeature(clone);
+				// alert(type); return true;
+				// var id = feature.getId();
+				// if (id) {
+				// 	features.push(id);
+				// }
+				// var name = feature.get("length");
+				// if (name) {
+				// 	features.push(name);
+				// }
+
+				// alert (id + " " + name);
+				// count++;
+				// if (count > 3) {
+				// 	return true;
+				// }
+			});
+
+			load.unByKey(key);
+			load = null;
+		}
+	});
+
+	// layers.hike       = new ol.layer.Vector({
+	// 	source: new ol.source.KML({
+	// 		projection: proj,
+	// 		url: "e2/hike.kml",
+	// 		style: styles.hike,
+	// 		extractStyles: false,
+	// 	})
+	// });
+
+	// var src = layers.hike.getSource();
+	// src.on("change", function(e) {
+	// 	alert(src.getState());
+	// });
+
 });
 
 // map_debug();
