@@ -420,7 +420,7 @@ function dd_init()
 		if ((typeof(route.dist_route) !== undefined) && (route.dist_route > 0)) {
 			if (typeof(route.complete) !== undefined) {
 				if (route.complete == 100) {
-					if (route.attr.contains ("j")) {
+					if (index.substring(0, 5) == "join.") {
 						j.push ({ key: index, fullname: route.fullname });
 					} else {
 						c.push ({ key: index, fullname: route.fullname });
@@ -546,6 +546,9 @@ function map_zoom_ll (lat, lon, zoom)
 		return false;
 	}
 
+	lat = +lat;	// make sure we're dealing with numbers
+	lon = +lon;
+
 	// bounds of UK
 	if ((lat < 49) || (lat > 59)) {
 		return false;
@@ -580,11 +583,16 @@ function map_zoom_route (route)
 	var lon;
 	var zoom;
 
+	// alert(route);
 	if (route in route_list) {
 		lat  = route_list[route].latitude;
 		lon  = route_list[route].longitude;
 		zoom = route_list[route].zoom;
 	}
+
+	// alert(lat);
+	// alert(lon);
+	// alert(zoom);
 
 	if (lat && lon && zoom) {
 		map_zoom_ll (lat, lon, zoom);
@@ -603,24 +611,15 @@ function map_zoom_route (route)
 function on_hike (id)
 {
 	var option = $("#"+id).val();
-	// alert(option);
 
 	map_zoom_route(option);
-	// var name = route_list[option].fullname;
-	// alert(name);
 
-	// show_route (option);
+	show_route (option);
 }
 
 
 $.getJSON("rich.json", function(data) {
-	route_list = data.routes;
-	if (!route_list) {
-		alert ("'routes' doesn't exist in data file");
-		return;
-	}
-
-	// alert (Object.keys(routes).length + " routes");
+	route_list = data;
 	dd_init();
 })
 .fail(function() {
@@ -645,12 +644,13 @@ init_options();
 function on_show (id)
 {
 	var dd = dd_populate();
+	return;
 
 	for (var r in route_list) {
 		var complete = 0;
 		var dist_route = 0;
 		var route = false;
-		var attr = route_list[r].attr;
+		// var attr = route_list[r].attr;
 
 		if ("complete" in route_list[r]) {
 			complete = route_list[r].complete;
@@ -658,9 +658,9 @@ function on_show (id)
 		if ("dist_route" in route_list[r]) {
 			dist_route = route_list[r].dist_route;
 		}
-		if (attr.contains ("r")) {
-			route = true;
-		}
+		// if (attr.contains ("r")) {
+		// 	route = true;
+		// }
 
 		// if (!show_comp && route && (complete == 100)) {
 		// 	hide_route (r);
