@@ -94,16 +94,21 @@ function create_icons()
 		"waves":     "map_waves",
 	};
 
-	$.each(names, function(index, name) {
+	$.each(names, function(name, filename) {
+		var scale = 0.5;
+		if ((name == "start") || (name == "end")) {
+			scale = 1.0;
+		}
+
 		var icon = new ol.style.Icon({
 			anchor: [0.5, 1.0],
 			anchorXUnits: "fraction",
 			anchorYUnits: "fraction",
-			src: "gfx/"+name+".png",
-			scale: 0.5
+			src: "gfx/"+filename+".png",
+			scale: scale
 		});
 
-		icons[index] = new ol.style.Style({
+		icons[name] = new ol.style.Style({
 			image: icon
 		});
 	});
@@ -757,7 +762,7 @@ $("#action").click(function() {
 
 	load = new ol.source.KML({
 		projection: proj,
-		url: "e2/all.kml",
+		url: "output2/e2.kml",
 		extractStyles: false,
 	});
 
