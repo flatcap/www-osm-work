@@ -32,8 +32,8 @@
 			<div class="columns">
 				<h2>Display:</h2>
 				<div class="columns">
-					<label><img src="gfx/dot_green.png"  alt="green"  height="20" width="20" /> <input id="kml_hike"    type="checkbox" />Hikes           </label><br />
-					<label><img src="gfx/dot_blue.png"   alt="blue"   height="20" width="20" /> <input id="kml_ferry"   type="checkbox" />River crossings </label><br />
+					<label><img src="gfx/dot_green.png"  alt="green"  height="20" width="20" /> <input id="kml_done"    type="checkbox" />Hikes           </label><br />
+					<label><img src="gfx/dot_blue.png"   alt="blue"   height="20" width="20" /> <input id="kml_water"   type="checkbox" />River crossings </label><br />
 					<label><img src="gfx/dot_red.png"    alt="red"    height="20" width="20" /> <input id="kml_todo"    type="checkbox" />To Do           </label><br />
 					<label><img src="gfx/dot_yellow.png" alt="yellow" height="20" width="20" /> <input id="kml_variant" type="checkbox" />Alternate routes</label><br />
 					<label><img src="gfx/dot_purple.png" alt="purple" height="20" width="20" /> <input id="kml_route"   type="checkbox" />Not started     </label><br />
@@ -44,6 +44,14 @@
 					<label><img src="gfx/icon_start.png" alt="start"  height="20" width="20" /> <input id="kml_start"   type="checkbox" />Start of route  </label><br />
 					<label><img src="gfx/icon_end.png"   alt="end"    height="20" width="20" /> <input id="kml_end"     type="checkbox" />End of Route    </label><br />
 					<label><img src="gfx/icon_extra.png" alt="extra"  height="20" width="20" /> <input id="kml_extra"   type="checkbox" />Extras          </label><br />
+				</div>
+				<hr />
+				<div class="columns">
+					<h2>Options:</h2>
+					<label><input id="opt_one"  onchange="on_opt(this.id)" type="checkbox" />One route at a time</label><br />
+					<label><input id="opt_zoom" onchange="on_opt(this.id)" type="checkbox" />Zoom in on route   </label><br />
+					<label><input id="opt_rich" onchange="on_opt(this.id)" type="checkbox" />Where's Rich?      </label><br />
+					<br />
 				</div>
 				<div class="columns">
 					<h2>Show:</h2>

@@ -54,6 +54,61 @@ var styles = {};
 var icons  = {};
 var areas  = {};
 
+function create_areas()
+{
+	areas.todo = new ol.style.Style({
+		fill: new ol.style.Fill({
+			color: [255, 150, 150, 0.3]
+		}),
+		// stroke: new ol.style.Stroke({
+		// 	color: "#FF0000",
+		// 	width: 1
+		// })
+	});
+	areas.done = new ol.style.Style({
+		fill: new ol.style.Fill({
+			color: [150, 255, 150, 0.3]
+		}),
+		// stroke: new ol.style.Stroke({
+		// 	color: "#00FF00",
+		// 	width: 1
+		// })
+	});
+}
+
+function create_icons()
+{
+	var names = {
+		// Hide the filenames
+		"boat":      "map_ferry",
+		"end":       "paddle_end",
+		"hotel":     "map_hotel",
+		"hut":       "map_hut",
+		"peak_done": "diamond_green",
+		"peak_todo": "diamond_red",
+		"r_green":   "r_green",
+		"r_red":     "r_red",
+		"r_yellow":  "r_yellow",
+		"start":     "paddle_start",
+		"tent":      "map_tent",
+		"waves":     "map_waves",
+	};
+
+	$.each(names, function(index, name) {
+		var icon = new ol.style.Icon({
+			anchor: [0.5, 1.0],
+			anchorXUnits: "fraction",
+			anchorYUnits: "fraction",
+			src: "gfx/"+name+".png",
+			scale: 0.5
+		});
+
+		icons[index] = new ol.style.Style({
+			image: icon
+		});
+	});
+}
+
 function create_maps()
 {
 	maps.bing = new ol.layer.Tile({
@@ -128,92 +183,62 @@ function create_styles()
 	});
 }
 
-function create_icons()
+function create_layers()
 {
-	var names = [
-		"diamond_green", "map_ferry", "paddle_5",
-		"diamond_red",   "map_hotel", "paddle_go",
-		"r_green",       "map_hut",   "paddle_green",
-		"r_red",         "map_tent",  "paddle_stop",
-		"r_yellow",      "map_waves"
-	];
-
-	$.each(names, function(index, name) {
-		var icon = new ol.style.Icon({
-			anchor: [0.5, 1.0],
-			anchorXUnits: "fraction",
-			anchorYUnits: "fraction",
-			src: "gfx/"+name+".png",
-			scale: 0.5
-		});
-
-		icons[name] = new ol.style.Style({
-			image: icon
-		});
-	});
-}
-
-function create_areas()
-{
-	areas.todo = new ol.style.Style({
-		fill: new ol.style.Fill({
-			color: [255, 150, 150, 0.3]
-		}),
-		// stroke: new ol.style.Stroke({
-		// 	color: "#FF0000",
-		// 	width: 1
-		// })
-	});
-	areas.done = new ol.style.Style({
-		fill: new ol.style.Fill({
-			color: [150, 255, 150, 0.3]
-		}),
-		// stroke: new ol.style.Stroke({
-		// 	color: "#00FF00",
-		// 	width: 1
-		// })
-	});
-}
-
-function init_map()
-{
-	create_styles();
-	create_icons();
-	create_areas();
-	create_maps();
-
 	// Route layers								  Default Line Style
-	layers.route     = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.route      });
-	layers.variant   = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.variant    });
-	layers.ferry     = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.ferry      });
-	layers.todo      = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.todo       });
-	layers.hike      = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.hike       });
+	layers.hike      = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.hike     });
+	layers.ferry     = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.ferry    });
+	layers.route     = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.route    });
+	layers.todo      = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.todo     });
+	layers.variant   = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.variant  });
 
 	// Icon layers	         						  Default Icon
-	layers.map_hotel = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.map_hotel   });
-	layers.map_hut   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.map_hut     });
-	layers.map_tent  = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.map_tent    });
-	layers.end       = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.paddle_stop });
-	layers.start     = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.paddle_go   });
+	layers.boat      = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.boat      });
+	layers.end       = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.end       });
+	layers.hotel     = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.hotel     });
+	layers.hut       = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.hut       });
+	layers.peak_done = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_done });
+	layers.peak_todo = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_todo });
+	layers.rich      = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.r_green   });
+	layers.start     = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.start     });
+	layers.tent      = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.tent      });
+	layers.waves     = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.waves     });
 
 	// Areas	         						  Default Area Styles
-	layers.area_todo = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.todo        });
-	layers.area_done = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.done        });
+	layers.area_done = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.done      });
+	layers.area_todo = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.todo      });
 
-	// Misc		        						  Default Icon
-	layers.extra     = new ol.layer.Vector({ source: new ol.source.Vector()                           });
-	layers.rich      = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.r_green     });
+	// Misc		        						  No Defaults
+	layers.extra     = new ol.layer.Vector({ source: new ol.source.Vector()                         });
 
 	// Groups
 	layers.group_area = new ol.layer.Group({
 		layers: [ layers.area_todo, layers.area_done ]
 	});
+	layers.group_done = new ol.layer.Group({
+		layers: [ layers.hike, layers.peak_done ]
+	});
+	layers.group_todo = new ol.layer.Group({
+		layers: [ layers.todo, layers.peak_todo ]
+	});
 	layers.group_map = new ol.layer.Group({
 		layers: [ maps.bing, maps.osm, maps.terrain, maps.stamen ]
 	});
 	layers.group_camp = new ol.layer.Group({
-		layers: [ layers.map_hotel, layers.map_hut, layers.map_tent ]
+		layers: [ layers.hotel, layers.hut, layers.tent ]
 	});
+	layers.group_water = new ol.layer.Group({
+		layers: [ layers.ferry, layers.boat, layers.waves ]
+	});
+}
+
+function init_map()
+{
+	create_areas();
+	create_icons();
+	create_maps();
+	create_styles();
+	create_layers();
 
 	map = new ol.Map({
 		target: "map",
@@ -221,7 +246,7 @@ function init_map()
 			// Layers grouped by depth
 			layers.group_map, layers.group_area,
 			layers.route, layers.variant,
-			layers.todo, layers.ferry, layers.hike,
+			layers.group_water, layers.group_todo, layers.group_done,
 			layers.group_camp, layers.start, layers.end, layers.extra,
 			layers.rich
 		],
@@ -480,6 +505,134 @@ function map_zoom_route (route)
 
 
 /**
+ * show_route - Display/hide a route on the map
+ * @route: Route name
+ *
+ * For a given route, display its data on the map.
+ * Take into account the global options kml[*].
+ *
+ * route_list[@route].attr tells us what kml exists.
+ * kml[*] tells us what the use wants displayed.
+ *
+ * Use show_kml(), hide_kml() to do the work.
+ */
+function show_route (route)
+{
+	// if (!(route in route_list)) {
+	// 	return;
+	// }
+
+	// if (opt_one) {
+	// 	hide_other_routes (route);
+	// }
+
+	// var attr  = route_list[route].attr;
+	// var hill  = !(("dist_route" in route_list[route]) && (route_list[route].dist_route > 0));
+	// var extra = (!hill) || (kml.extra === true);
+	// var hike  = false;
+	// var todo  = false;
+	// var ferry = false;
+	// var walked = false;
+
+	// if ((kml.start === true) && attr.contains ("s")) {
+	// 	show_kml (route, "start");
+	// } else {
+	// 	hide_kml (route, "start");
+	// }
+
+	// if ((kml.end === true) && attr.contains ("e")) {
+	// 	show_kml (route, "end");
+	// } else {
+	// 	hide_kml (route, "end");
+	// }
+
+	// if (hill) {
+	// 	if ((kml.hike === true) && attr.contains ("P")) {
+	// 		show_kml (route, "hills_done");
+	// 	} else {
+	// 		hide_kml (route, "hills_done");
+	// 	}
+
+	// 	if ((kml.todo === true) && attr.contains ("p")) {
+	// 		show_kml (route, "hills_todo");
+	// 	} else {
+	// 		hide_kml (route, "hills_todo");
+	// 	}
+
+	// 	if ((kml.area === true) && kml.hike && attr.contains ("A")) {
+	// 		show_kml (route, "area_done");
+	// 	} else {
+	// 		hide_kml (route, "area_done");
+	// 	}
+
+	// 	if ((kml.area === true) && kml.todo && attr.contains ("a")) {
+	// 		show_kml (route, "area_todo");
+	// 	} else {
+	// 		hide_kml (route, "area_todo");
+	// 	}
+	// } else {
+	// 	if ((kml.variant === true) && attr.contains ("v")) {
+	// 		show_kml (route, "variant");
+	// 	} else {
+	// 		hide_kml (route, "variant");
+	// 	}
+	// }
+
+	// if (attr.contains ("x") && ("custom" in route_list[route])) {
+	// 	var list = route_list[route].custom.split(",");
+	// 	var i;
+	// 	if (kml.extra === true) {
+	// 		for (i = 0; i < list.length; i++) {
+	// 			show_kml (route, list[i]);
+	// 		}
+	// 	} else {
+	// 		for (i = 0; i < list.length; i++) {
+	// 			hide_kml (route, list[i]);
+	// 		}
+	// 	}
+	// }
+
+	// if ((kml.camp === true) && attr.contains ("c") && extra) {
+	// 	show_kml (route, "camp");
+	// } else {
+	// 	hide_kml (route, "camp");
+	// }
+
+	// if ((kml.hike === true) && attr.contains ("h") && extra) {
+	// 	show_kml (route, "hike");
+	// 	hike = true;
+	// } else {
+	// 	hide_kml (route, "hike");
+	// }
+
+	// if ((kml.todo === true) && attr.contains ("t") && extra) {
+	// 	show_kml (route, "todo");
+	// 	todo = true;
+	// } else {
+	// 	hide_kml (route, "todo");
+	// }
+
+	// if ((kml.ferry === true) && attr.contains ("f") && extra) {
+	// 	show_kml (route, "ferry");
+	// 	ferry = true;
+	// } else {
+	// 	hide_kml (route, "ferry");
+	// }
+
+	// walked = hike || todo || ferry;
+
+	// if ((kml.route === true) && attr.contains ("r") && (!walked)) {
+	// 	show_kml (route, "route");
+	// } else {
+	// 	hide_kml (route, "route");
+	// }
+
+	// if (opt_zoom) {
+	// 	map_zoom_route (route);
+	// }
+}
+
+/**
  * on_hike - Event handler for hike dropdown
  * @id: ID of dropdown
  *
@@ -581,17 +734,17 @@ $("#global_done")  .click(function() { alert("done");    });
 $("#global_todo")  .click(function() { alert("todo");    });
 $("#global_clear") .click(function() { map_clear();      });
 
-var kml_hike    = new ol.dom.Input(document.getElementById("kml_hike"));    kml_hike.bindTo    ("checked", layers.hike,       "visible");
-var kml_todo    = new ol.dom.Input(document.getElementById("kml_todo"));    kml_todo.bindTo    ("checked", layers.todo,       "visible");
-var kml_ferry   = new ol.dom.Input(document.getElementById("kml_ferry"));   kml_ferry.bindTo   ("checked", layers.ferry,      "visible");
-var kml_variant = new ol.dom.Input(document.getElementById("kml_variant")); kml_variant.bindTo ("checked", layers.variant,    "visible");
-var kml_route   = new ol.dom.Input(document.getElementById("kml_route"));   kml_route.bindTo   ("checked", layers.route,      "visible");
-
-var kml_camp    = new ol.dom.Input(document.getElementById("kml_camp"));    kml_camp.bindTo    ("checked", layers.group_camp, "visible");
-var kml_area    = new ol.dom.Input(document.getElementById("kml_area"));    kml_area.bindTo    ("checked", layers.group_area, "visible");
-var kml_start   = new ol.dom.Input(document.getElementById("kml_start"));   kml_start.bindTo   ("checked", layers.start,      "visible");
-var kml_end     = new ol.dom.Input(document.getElementById("kml_end"));     kml_end.bindTo     ("checked", layers.end,        "visible");
-var kml_extra   = new ol.dom.Input(document.getElementById("kml_extra"));   kml_extra.bindTo   ("checked", layers.extra,      "visible");
+var kml_done    = new ol.dom.Input(document.getElementById("kml_done"));    kml_done.bindTo    ("checked", layers.group_done,  "visible");
+var kml_route   = new ol.dom.Input(document.getElementById("kml_route"));   kml_route.bindTo   ("checked", layers.route,       "visible");
+var kml_todo    = new ol.dom.Input(document.getElementById("kml_todo"));    kml_todo.bindTo    ("checked", layers.group_todo,  "visible");
+var kml_variant = new ol.dom.Input(document.getElementById("kml_variant")); kml_variant.bindTo ("checked", layers.variant,     "visible");
+var kml_water   = new ol.dom.Input(document.getElementById("kml_water"));   kml_water.bindTo   ("checked", layers.group_water, "visible");
+                                                                                                                              
+var kml_area    = new ol.dom.Input(document.getElementById("kml_area"));    kml_area.bindTo    ("checked", layers.group_area,  "visible");
+var kml_camp    = new ol.dom.Input(document.getElementById("kml_camp"));    kml_camp.bindTo    ("checked", layers.group_camp,  "visible");
+var kml_end     = new ol.dom.Input(document.getElementById("kml_end"));     kml_end.bindTo     ("checked", layers.end,         "visible");
+var kml_extra   = new ol.dom.Input(document.getElementById("kml_extra"));   kml_extra.bindTo   ("checked", layers.extra,       "visible");
+var kml_start   = new ol.dom.Input(document.getElementById("kml_start"));   kml_start.bindTo   ("checked", layers.start,       "visible");
 
 var resolution = new ol.dom.Input(document.getElementById("resolution"));
 resolution.bindTo("value", map.getView(), "resolution").transform(parseFloat, String);
@@ -604,7 +757,6 @@ $("#action").click(function() {
 
 	load = new ol.source.KML({
 		projection: proj,
-		// url: "e2/camp.kml",
 		url: "e2/all.kml",
 		extractStyles: false,
 	});
@@ -618,6 +770,10 @@ $("#action").click(function() {
 			load.forEachFeature(function(feature) {
 				var type = feature.get("type");
 				var layer = layers[type];
+				if (!layer) {
+					alert(type);
+					return false;
+				}
 				var src = layer.getSource();
 				// var style = layer.getStyle();
 				var clone = feature.clone();
