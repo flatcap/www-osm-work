@@ -286,7 +286,7 @@ function map_init()
 			layers.group_map, layers.group_area,
 			layers.route, layers.variant,
 			layers.group_water, layers.group_todo, layers.group_done,
-			layers.group_camp, layers.start, layers.end, layers.extra,
+			layers.group_camp, layers.end, layers.start, layers.extra,
 			layers.rich
 		],
 		view: new ol.View({
@@ -469,8 +469,8 @@ function init_options()
 	var kml_extra   = new ol.dom.Input(document.getElementById("kml_extra"));   kml_extra.bindTo   ("checked", layers.extra,       "visible");
 	var kml_start   = new ol.dom.Input(document.getElementById("kml_start"));   kml_start.bindTo   ("checked", layers.start,       "visible");
 
-	var resolution = new ol.dom.Input(document.getElementById("resolution"));
-	resolution.bindTo("value", map.getView(), "resolution").transform(parseFloat, String);
+	// var resolution = new ol.dom.Input(document.getElementById("resolution"));
+	// resolution.bindTo("value", map.getView(), "resolution").transform(parseFloat, String);
 }
 
 
@@ -692,7 +692,8 @@ function on_hike (id)
 
 	map_zoom_route(option);
 
-	show_route (option);
+	// show_route (option);
+	load_kml(option);
 }
 
 /**
@@ -712,38 +713,38 @@ function on_show (id)
 	var dd = dd_populate();
 	return;
 
-	for (var r in route_list) {
-		var complete = 0;
-		var dist_route = 0;
-		var route = false;
-		// var attr = route_list[r].attr;
+	// for (var r in route_list) {
+	// 	var complete = 0;
+	// 	var dist_route = 0;
+	// 	var route = false;
+	// 	// var attr = route_list[r].attr;
 
-		if ("complete" in route_list[r]) {
-			complete = route_list[r].complete;
-		}
-		if ("dist_route" in route_list[r]) {
-			dist_route = route_list[r].dist_route;
-		}
-		// if (attr.contains ("r")) {
-		// 	route = true;
-		// }
+	// 	if ("complete" in route_list[r]) {
+	// 		complete = route_list[r].complete;
+	// 	}
+	// 	if ("dist_route" in route_list[r]) {
+	// 		dist_route = route_list[r].dist_route;
+	// 	}
+	// 	if (attr.contains ("r")) {
+	// 		route = true;
+	// 	}
 
-		// if (!show_comp && route && (complete == 100)) {
-		// 	hide_route (r);
-		// }
-		// if (!show_inco && route && (complete < 100)) {
-		// 	hide_route (r);
-		// }
-		// if (!show_unst && route && (complete === 0)) {
-		// 	hide_route (r);
-		// }
-		// if (!show_join && !route && (complete == 100) && (dist_route > 0)) {
-		// 	hide_route (r);
-		// }
-		// if (!show_hill && !route && (dist_route === 0)) {
-		// 	hide_route (r);
-		// }
-	}
+	// 	if (!show_comp && route && (complete == 100)) {
+	// 		hide_route (r);
+	// 	}
+	// 	if (!show_inco && route && (complete < 100)) {
+	// 		hide_route (r);
+	// 	}
+	// 	if (!show_unst && route && (complete === 0)) {
+	// 		hide_route (r);
+	// 	}
+	// 	if (!show_join && !route && (complete == 100) && (dist_route > 0)) {
+	// 		hide_route (r);
+	// 	}
+	// 	if (!show_hill && !route && (dist_route === 0)) {
+	// 		hide_route (r);
+	// 	}
+	// }
 
 	// if (opt_one) {
 	// 	hide_other_routes (dd.value);
@@ -765,12 +766,17 @@ init_options();
 var load;
 var key;
 
-$("#action").click(function() {
-	// map.getView().setZoom (6);
+function load_kml (route)
+{
+	if (load) {
+		alert ("busy...");
+		return;
+	}
 
+	var url = "output/"+route+".kml";
 	load = new ol.source.KML({
 		projection: proj,
-		url: "output/south.west.coast.kml",
+		url: url,
 		extractStyles: false,
 	});
 
@@ -819,21 +825,6 @@ $("#action").click(function() {
 			load = null;
 		}
 	});
+}
 
-	// layers.hike       = new ol.layer.Vector({
-	// 	source: new ol.source.KML({
-	// 		projection: proj,
-	// 		url: "e2/hike.kml",
-	// 		style: styles.hike,
-	// 		extractStyles: false,
-	// 	})
-	// });
 
-	// var src = layers.hike.getSource();
-	// src.on("change", function(e) {
-	// 	alert(src.getState());
-	// });
-
-});
-
-// alert("done");
