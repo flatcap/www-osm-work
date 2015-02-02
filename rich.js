@@ -84,28 +84,28 @@ function map_init_area_styles()
 		fill: new ol.style.Fill({
 			color: [255, 150, 150, 0.3]
 		}),
-		// stroke: new ol.style.Stroke({
-		// 	color: "#FF0000",
-		// 	width: 1
-		// })
+		stroke: new ol.style.Stroke({
+			color: "#FF0000",
+			width: 1
+		})
 	});
 	areas.done = new ol.style.Style({
 		fill: new ol.style.Fill({
 			color: [150, 255, 150, 0.3]
 		}),
-		// stroke: new ol.style.Stroke({
-		// 	color: "#00FF00",
-		// 	width: 1
-		// })
+		stroke: new ol.style.Stroke({
+			color: "#00FF00",
+			width: 1
+		})
 	});
 	areas.whole = new ol.style.Style({
 		fill: new ol.style.Fill({
 			color: [255, 255, 150, 0.3]
 		}),
-		// stroke: new ol.style.Stroke({
-		// 	color: "#FFFF00",
-		// 	width: 1
-		// })
+		stroke: new ol.style.Stroke({
+			color: "#FFFF00",
+			width: 1
+		})
 	});
 }
 
@@ -150,50 +150,52 @@ function map_init_icons()
 function map_init_layers()
 {
 	// Route layers								  Default Line Style
-	layers.hike       = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.hike     });
-	layers.river      = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.river    });
-	layers.route      = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.route    });
-	layers.todo       = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.todo     });
-	layers.variant    = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.variant  });
+	layers.line_hike    = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.hike     });
+	layers.line_river   = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.river    });
+	layers.line_route   = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.route    });
+	layers.line_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.todo     });
+	layers.line_variant = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.variant  });
 
-	// Icon layers	         						  Default Icon
-	layers.ferry      = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.ferry     });
-	layers.end        = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.end       });
-	layers.hotel      = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.hotel     });
-	layers.hut        = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.hut       });
-	layers.peak_done  = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_done });
-	layers.peak_todo  = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_todo });
-	layers.rich       = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.r_green   });
-	layers.start      = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.start     });
-	layers.tent       = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.tent      });
-	layers.waves      = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.waves     });
+	// Icon layers	      						  Default Icon
+	layers.icon_ferry   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.ferry     });
+	layers.icon_end     = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.end       });
+	layers.icon_hotel   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.hotel     });
+	layers.icon_hut     = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.hut       });
+	layers.peak_done    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_done });
+	layers.peak_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_todo });
+	layers.icon_rich    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.r_green   });
+	layers.icon_start   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.start     });
+	layers.icon_tent    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.tent      });
+	layers.icon_waves   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.waves     });
 
-	// Areas	         						  Default Area Styles
-	layers.area_done  = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.done      });
-	layers.area_todo  = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.todo      });
-	layers.area_whole = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.whole     });
+	// Areas	      						  Default Area Styles
+	layers.area_done    = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.done      });
+	layers.area_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.todo      });
+	layers.area_whole   = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.whole     });
 
-	// Misc		        						  No Defaults
-	layers.extra      = new ol.layer.Vector({ source: new ol.source.Vector()                         });
+	layers.area_whole.setVisible(false);
+
+	// Misc		     						  No Defaults
+	layers.extra        = new ol.layer.Vector({ source: new ol.source.Vector()                         });
 
 	// Groups
 	layers.group_area = new ol.layer.Group({
 		layers: [ layers.area_whole, layers.area_todo, layers.area_done ]
 	});
 	layers.group_camp = new ol.layer.Group({
-		layers: [ layers.hotel, layers.hut, layers.tent ]
+		layers: [ layers.icon_hotel, layers.icon_hut, layers.icon_tent ]
 	});
 	layers.group_done = new ol.layer.Group({
-		layers: [ layers.hike, layers.peak_done ]
+		layers: [ layers.line_hike, layers.peak_done ]
 	});
 	layers.group_map = new ol.layer.Group({
 		layers: [ maps.bing, maps.osm, maps.terrain, maps.stamen ]
 	});
 	layers.group_todo = new ol.layer.Group({
-		layers: [ layers.todo, layers.peak_todo ]
+		layers: [ layers.line_todo, layers.peak_todo ]
 	});
 	layers.group_water = new ol.layer.Group({
-		layers: [ layers.river, layers.ferry, layers.waves ]
+		layers: [ layers.line_river, layers.icon_ferry, layers.icon_waves ]
 	});
 }
 
@@ -284,10 +286,10 @@ function map_init()
 		layers: [
 			// Layers grouped by depth
 			layers.group_map, layers.group_area,
-			layers.route, layers.variant,
+			layers.line_route, layers.line_variant,
 			layers.group_water, layers.group_todo, layers.group_done,
-			layers.group_camp, layers.end, layers.start, layers.extra,
-			layers.rich
+			layers.group_camp, layers.icon_end, layers.icon_start, layers.extra,
+			layers.icon_rich
 		],
 		view: new ol.View({
 			center: ol.proj.transform([-3.143848, 54.699234], "EPSG:4326", "EPSG:3857"),
@@ -453,21 +455,19 @@ function init_options()
 	$("#show_join").change(function() { show_join = this.checked; on_show (this.id); });
 
 	$("#global_centre").click(function() { map_zoom_route(); });
-	$("#global_done")  .click(function() { alert("done");    });
-	$("#global_todo")  .click(function() { alert("todo");    });
 	$("#global_clear") .click(function() { map_clear();      });
 
-	var kml_done    = new ol.dom.Input(document.getElementById("kml_done"));    kml_done.bindTo    ("checked", layers.group_done,  "visible");
-	var kml_route   = new ol.dom.Input(document.getElementById("kml_route"));   kml_route.bindTo   ("checked", layers.route,       "visible");
-	var kml_todo    = new ol.dom.Input(document.getElementById("kml_todo"));    kml_todo.bindTo    ("checked", layers.group_todo,  "visible");
-	var kml_variant = new ol.dom.Input(document.getElementById("kml_variant")); kml_variant.bindTo ("checked", layers.variant,     "visible");
-	var kml_water   = new ol.dom.Input(document.getElementById("kml_water"));   kml_water.bindTo   ("checked", layers.group_water, "visible");
+	var kml_done    = new ol.dom.Input(document.getElementById("kml_done"));    kml_done.bindTo    ("checked", layers.group_done,   "visible");
+	var kml_route   = new ol.dom.Input(document.getElementById("kml_route"));   kml_route.bindTo   ("checked", layers.line_route,   "visible");
+	var kml_todo    = new ol.dom.Input(document.getElementById("kml_todo"));    kml_todo.bindTo    ("checked", layers.group_todo,   "visible");
+	var kml_variant = new ol.dom.Input(document.getElementById("kml_variant")); kml_variant.bindTo ("checked", layers.line_variant, "visible");
+	var kml_water   = new ol.dom.Input(document.getElementById("kml_water"));   kml_water.bindTo   ("checked", layers.group_water,  "visible");
 
-	var kml_area    = new ol.dom.Input(document.getElementById("kml_area"));    kml_area.bindTo    ("checked", layers.group_area,  "visible");
-	var kml_camp    = new ol.dom.Input(document.getElementById("kml_camp"));    kml_camp.bindTo    ("checked", layers.group_camp,  "visible");
-	var kml_end     = new ol.dom.Input(document.getElementById("kml_end"));     kml_end.bindTo     ("checked", layers.end,         "visible");
-	var kml_extra   = new ol.dom.Input(document.getElementById("kml_extra"));   kml_extra.bindTo   ("checked", layers.extra,       "visible");
-	var kml_start   = new ol.dom.Input(document.getElementById("kml_start"));   kml_start.bindTo   ("checked", layers.start,       "visible");
+	var kml_area    = new ol.dom.Input(document.getElementById("kml_area"));    kml_area.bindTo    ("checked", layers.group_area,   "visible");
+	var kml_camp    = new ol.dom.Input(document.getElementById("kml_camp"));    kml_camp.bindTo    ("checked", layers.group_camp,   "visible");
+	var kml_end     = new ol.dom.Input(document.getElementById("kml_end"));     kml_end.bindTo     ("checked", layers.icon_end,     "visible");
+	var kml_extra   = new ol.dom.Input(document.getElementById("kml_extra"));   kml_extra.bindTo   ("checked", layers.extra,        "visible");
+	var kml_start   = new ol.dom.Input(document.getElementById("kml_start"));   kml_start.bindTo   ("checked", layers.icon_start,   "visible");
 
 	// var resolution = new ol.dom.Input(document.getElementById("resolution"));
 	// resolution.bindTo("value", map.getView(), "resolution").transform(parseFloat, String);
@@ -752,7 +752,7 @@ function on_show (id)
 }
 
 
-$.getJSON("rich.json", function(data) {
+$.getJSON("output/routes.json", function(data) {
 	route_list = data;
 	dd_init();
 })
@@ -792,7 +792,9 @@ function load_kml (route)
 				if (!type || !tag) {
 					return false;
 				}
-				var layer = layers[tag] || layers.extra;
+
+				var l = type + "_" + tag;
+				var layer = layers[l] || layers.extra;
 
 				var src = layer.getSource();
 				var clone = feature.clone();
