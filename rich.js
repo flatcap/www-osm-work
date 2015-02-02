@@ -54,7 +54,31 @@ var styles = {};
 var icons  = {};
 var areas  = {};
 
-function map_create_area_styles()
+/**
+ * route_sort - Sort two route_list items by fullname
+ * @a: Item 1
+ * @b: Item 2
+ *
+ * Sort helper function.
+ * Sort the route_list by fullname.
+ *
+ * Return: -1	a precedes b
+ *	    0	a identical to b
+ *	    1	a follows b
+ */
+function route_sort(a,b)
+{
+	if (a.fullname > b.fullname) {
+		return 1;
+	} else if (a.fullname < b.fullname) {
+		return -1;
+	} else {
+		return 0;
+	}
+}
+
+
+function map_init_area_styles()
 {
 	areas.todo = new ol.style.Style({
 		fill: new ol.style.Fill({
@@ -85,7 +109,7 @@ function map_create_area_styles()
 	});
 }
 
-function map_create_icons()
+function map_init_icons()
 {
 	var names = {
 		// Map tags to filenames
@@ -123,7 +147,7 @@ function map_create_icons()
 	});
 }
 
-function map_create_layers()
+function map_init_layers()
 {
 	// Route layers								  Default Line Style
 	layers.hike       = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.hike     });
@@ -173,7 +197,7 @@ function map_create_layers()
 	});
 }
 
-function map_create_line_styles()
+function map_init_line_styles()
 {
 	styles.route = new ol.style.Style({
 		stroke: new ol.style.Stroke({
@@ -207,7 +231,7 @@ function map_create_line_styles()
 	});
 }
 
-function map_create_maps()
+function map_init_maps()
 {
 	maps.bing = new ol.layer.Tile({
 		source: new ol.source.BingMaps({
@@ -249,11 +273,11 @@ function map_create_maps()
 
 function map_init()
 {
-	map_create_area_styles();
-	map_create_icons();
-	map_create_maps();
-	map_create_line_styles();
-	map_create_layers();
+	map_init_area_styles();
+	map_init_icons();
+	map_init_maps();
+	map_init_line_styles();
+	map_init_layers();
 
 	map = new ol.Map({
 		target: "map",
@@ -270,71 +294,6 @@ function map_init()
 			zoom: 6
 		})
 	});
-}
-
-
-/**
- * init_options - Set the default checkbox values
- *
- * Set some sensible defaults for the checkboxes.
- */
-function init_options()
-{
-	$("#show_comp").prop("checked", show_comp);
-	$("#show_inco").prop("checked", show_inco);
-	$("#show_unst").prop("checked", show_unst);
-	$("#show_hill").prop("checked", show_hill);
-	$("#show_join").prop("checked", show_join);
-
-	$("#show_comp").change(function() { show_comp = this.checked; on_show (this.id); });
-	$("#show_inco").change(function() { show_inco = this.checked; on_show (this.id); });
-	$("#show_unst").change(function() { show_unst = this.checked; on_show (this.id); });
-	$("#show_hill").change(function() { show_hill = this.checked; on_show (this.id); });
-	$("#show_join").change(function() { show_join = this.checked; on_show (this.id); });
-
-	$("#global_centre").click(function() { map_zoom_route(); });
-	$("#global_done")  .click(function() { alert("done");    });
-	$("#global_todo")  .click(function() { alert("todo");    });
-	$("#global_clear") .click(function() { map_clear();      });
-
-	var kml_done    = new ol.dom.Input(document.getElementById("kml_done"));    kml_done.bindTo    ("checked", layers.group_done,  "visible");
-	var kml_route   = new ol.dom.Input(document.getElementById("kml_route"));   kml_route.bindTo   ("checked", layers.route,       "visible");
-	var kml_todo    = new ol.dom.Input(document.getElementById("kml_todo"));    kml_todo.bindTo    ("checked", layers.group_todo,  "visible");
-	var kml_variant = new ol.dom.Input(document.getElementById("kml_variant")); kml_variant.bindTo ("checked", layers.variant,     "visible");
-	var kml_water   = new ol.dom.Input(document.getElementById("kml_water"));   kml_water.bindTo   ("checked", layers.group_water, "visible");
-
-	var kml_area    = new ol.dom.Input(document.getElementById("kml_area"));    kml_area.bindTo    ("checked", layers.group_area,  "visible");
-	var kml_camp    = new ol.dom.Input(document.getElementById("kml_camp"));    kml_camp.bindTo    ("checked", layers.group_camp,  "visible");
-	var kml_end     = new ol.dom.Input(document.getElementById("kml_end"));     kml_end.bindTo     ("checked", layers.end,         "visible");
-	var kml_extra   = new ol.dom.Input(document.getElementById("kml_extra"));   kml_extra.bindTo   ("checked", layers.extra,       "visible");
-	var kml_start   = new ol.dom.Input(document.getElementById("kml_start"));   kml_start.bindTo   ("checked", layers.start,       "visible");
-
-	var resolution = new ol.dom.Input(document.getElementById("resolution"));
-	resolution.bindTo("value", map.getView(), "resolution").transform(parseFloat, String);
-}
-
-
-/**
- * route_sort - Sort two route_list items by fullname
- * @a: Item 1
- * @b: Item 2
- *
- * Sort helper function.
- * Sort the route_list by fullname.
- *
- * Return: -1	a precedes b
- *	    0	a identical to b
- *	    1	a follows b
- */
-function route_sort(a,b)
-{
-	if (a.fullname > b.fullname) {
-		return 1;
-	} else if (a.fullname < b.fullname) {
-		return -1;
-	} else {
-		return 0;
-	}
 }
 
 
@@ -473,6 +432,54 @@ function dd_select (route)
 	$("#dropdown").val(route);
 }
 
+
+/**
+ * init_options - Set the default checkbox values
+ *
+ * Set some sensible defaults for the checkboxes.
+ */
+function init_options()
+{
+	$("#show_comp").prop("checked", show_comp);
+	$("#show_inco").prop("checked", show_inco);
+	$("#show_unst").prop("checked", show_unst);
+	$("#show_hill").prop("checked", show_hill);
+	$("#show_join").prop("checked", show_join);
+
+	$("#show_comp").change(function() { show_comp = this.checked; on_show (this.id); });
+	$("#show_inco").change(function() { show_inco = this.checked; on_show (this.id); });
+	$("#show_unst").change(function() { show_unst = this.checked; on_show (this.id); });
+	$("#show_hill").change(function() { show_hill = this.checked; on_show (this.id); });
+	$("#show_join").change(function() { show_join = this.checked; on_show (this.id); });
+
+	$("#global_centre").click(function() { map_zoom_route(); });
+	$("#global_done")  .click(function() { alert("done");    });
+	$("#global_todo")  .click(function() { alert("todo");    });
+	$("#global_clear") .click(function() { map_clear();      });
+
+	var kml_done    = new ol.dom.Input(document.getElementById("kml_done"));    kml_done.bindTo    ("checked", layers.group_done,  "visible");
+	var kml_route   = new ol.dom.Input(document.getElementById("kml_route"));   kml_route.bindTo   ("checked", layers.route,       "visible");
+	var kml_todo    = new ol.dom.Input(document.getElementById("kml_todo"));    kml_todo.bindTo    ("checked", layers.group_todo,  "visible");
+	var kml_variant = new ol.dom.Input(document.getElementById("kml_variant")); kml_variant.bindTo ("checked", layers.variant,     "visible");
+	var kml_water   = new ol.dom.Input(document.getElementById("kml_water"));   kml_water.bindTo   ("checked", layers.group_water, "visible");
+
+	var kml_area    = new ol.dom.Input(document.getElementById("kml_area"));    kml_area.bindTo    ("checked", layers.group_area,  "visible");
+	var kml_camp    = new ol.dom.Input(document.getElementById("kml_camp"));    kml_camp.bindTo    ("checked", layers.group_camp,  "visible");
+	var kml_end     = new ol.dom.Input(document.getElementById("kml_end"));     kml_end.bindTo     ("checked", layers.end,         "visible");
+	var kml_extra   = new ol.dom.Input(document.getElementById("kml_extra"));   kml_extra.bindTo   ("checked", layers.extra,       "visible");
+	var kml_start   = new ol.dom.Input(document.getElementById("kml_start"));   kml_start.bindTo   ("checked", layers.start,       "visible");
+
+	var resolution = new ol.dom.Input(document.getElementById("resolution"));
+	resolution.bindTo("value", map.getView(), "resolution").transform(parseFloat, String);
+}
+
+
+function map_clear()
+{
+	$.each(layers, function(name, layer) {
+		layer.setSource (new ol.source.Vector());
+	});
+}
 
 /**
  * map_zoom_ll - Zoom in on coordinates
@@ -688,18 +695,6 @@ function on_hike (id)
 	show_route (option);
 }
 
-
-$.getJSON("rich.json", function(data) {
-	route_list = data;
-	dd_init();
-})
-.fail(function() {
-	alert("Couldn't load route data");
-});
-
-map_init();
-init_options();
-
 /**
  * on_show - Event hander for route list display options
  * @id: ID of checkbox
@@ -756,13 +751,16 @@ function on_show (id)
 }
 
 
-function map_clear()
-{
-	$.each(layers, function(name, layer) {
-		layer.setSource (new ol.source.Vector());
-	});
-}
+$.getJSON("rich.json", function(data) {
+	route_list = data;
+	dd_init();
+})
+.fail(function() {
+	alert("Couldn't load route data");
+});
 
+map_init();
+init_options();
 
 var load;
 var key;
