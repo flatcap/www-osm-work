@@ -56,6 +56,7 @@ var layers = {};
 var styles = {};
 var icons  = {};
 var areas  = {};
+var groups = {};
 
 /**
  * route_sort - Sort two route_list items by fullname
@@ -180,22 +181,22 @@ function map_init_layers()
 	layers.extra        = new ol.layer.Vector({ source: new ol.source.Vector()                         });
 
 	// Groups
-	layers.group_area = new ol.layer.Group({
+	groups.area = new ol.layer.Group({
 		layers: [ layers.area_whole, layers.area_todo, layers.area_done ]
 	});
-	layers.group_camp = new ol.layer.Group({
+	groups.camp = new ol.layer.Group({
 		layers: [ layers.icon_hotel, layers.icon_hut, layers.icon_tent ]
 	});
-	layers.group_done = new ol.layer.Group({
+	groups.done = new ol.layer.Group({
 		layers: [ layers.line_hike, layers.peak_done ]
 	});
-	layers.group_map = new ol.layer.Group({
+	groups.map = new ol.layer.Group({
 		layers: [ maps.bing, maps.osm, maps.terrain, maps.stamen ]
 	});
-	layers.group_todo = new ol.layer.Group({
+	groups.todo = new ol.layer.Group({
 		layers: [ layers.line_todo, layers.peak_todo ]
 	});
-	layers.group_water = new ol.layer.Group({
+	groups.water = new ol.layer.Group({
 		layers: [ layers.line_river, layers.icon_ferry, layers.icon_waves ]
 	});
 }
@@ -286,10 +287,10 @@ function map_init()
 		target: "map",
 		layers: [
 			// Layers grouped by depth
-			layers.group_map, layers.group_area,
+			groups.map, groups.area,
 			layers.line_route, layers.line_variant,
-			layers.group_water, layers.group_todo, layers.group_done,
-			layers.group_camp, layers.icon_end, layers.icon_start, layers.extra,
+			groups.water, groups.todo, groups.done,
+			groups.camp, layers.icon_end, layers.icon_start, layers.extra,
 			layers.icon_rich
 		],
 		view: new ol.View({
@@ -438,10 +439,12 @@ function dd_select (route)
 
 function set_defaults()
 {
-	layers.area_whole.setVisible(false);
-	layers.icon_end  .setVisible(false);
-	layers.icon_ferry.setVisible(false);
-	layers.icon_waves.setVisible(false);
+	layers.area_whole  .setVisible(false);
+	layers.icon_end    .setVisible(false);
+	layers.icon_ferry  .setVisible(false);
+	layers.icon_waves  .setVisible(false);
+	layers.line_route  .setVisible(false);
+	layers.line_variant.setVisible(false);
 }
 
 /**
@@ -466,8 +469,8 @@ function init_options()
 	$("#show_join").change(function() { show_join = this.checked; on_show (this.id); });
 	$("#show_unst").change(function() { show_unst = this.checked; on_show (this.id); });
 
-	$("#opt_one") .change(function() { opt_one  = this.checked; /*DO SOMETHING*/; });
-	$("#opt_zoom").change(function() { opt_zoom = this.checked; /*DO SOMETHING*/; });
+	$("#opt_one") .change(function() { opt_one  = this.checked; /*DO SOMETHING*/ });
+	$("#opt_zoom").change(function() { opt_zoom = this.checked; /*DO SOMETHING*/ });
 
 	$("#global_centre").click(map_zoom_route);
 	$("#global_done")  .click(map_show_all);
@@ -724,10 +727,15 @@ function on_hike (id)
 {
 	var option = $("#"+id).val();
 
-	map_zoom_route(option);
+	if (opt_zoom) {
+		map_zoom_route(option);
+	}
 
-	// show_route (option);
+	if (opt_one) {
+		map_clear();
+	}
 	load_kml(option);
+	// show_route (option);
 }
 
 /**
