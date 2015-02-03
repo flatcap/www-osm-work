@@ -50,6 +50,10 @@ label {
 	user-select: none;
 }
 
+div.options {
+	max-width: 600px;
+}
+
 div.columns {
 	float: left;
 	vertical-align: top;
@@ -85,4 +89,10 @@ span.lastseen {
 hr {
 	clear: both;
 }
+
+/* div.tabs label { */
+/* 	border: 1px solid red; */
+/* 	width: 8em; */
+/* 	float: left; */
+/* } */
 

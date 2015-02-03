@@ -1,12 +1,26 @@
 <html>
 	<head>
-		<link rel="stylesheet" href="lib/ol.css" type="text/css">
-		<link rel="stylesheet" href="map.css" type="text/css">
-		<link rel="stylesheet" href="rich.css" type="text/css">
+		<link rel="stylesheet" href="lib/ol.css" type="text/css" />
+		<link rel="stylesheet" href="map.css" type="text/css" />
+		<link rel="stylesheet" href="rich.css" type="text/css" />
 		<link rel="stylesheet" href="menu.css" type="text/css" />
 		<link href='https://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css' />
 		<script src="lib/ol-debug.js" type="text/javascript"></script>
-		<script src="lib/jquery.min.js" type="text/javascript"></script>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+		<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<link rel="stylesheet" href="popup.css" />
+
+		<script type='text/javascript'>
+			$(function() {
+				$("#tabs").tabs({ event: "mouseover" });
+			});
+		</script>
+
+		<link rel="stylesheet" href="popup.css" />
+
 		<title>rich</title>
 	</head>
 	<body>
@@ -15,6 +29,7 @@
 			<a href="stats.html"><span>Statistics</span></a>
 			<a href="calendar-hike.html"><span>Hike Calendar</span></a>
 			<a href="calendar-camp.html"><span>Camp Calendar</span></a>
+			<a href="#" onclick="$('#dialog').dialog({ width: 500 });"><span>Options</span></a>
 		</p>
 		<div id="fixed" class="fixed">
 		<div id="map"></div>
@@ -28,44 +43,75 @@
 			<input id="global_done"   value="All Done"   type="button" />
 			<input id="global_todo"   value="To Do"      type="button" />
 			<input id="global_clear"  value="Clear All"  type="button" />
-			<hr />
-			<div class="columns">
-				<h2>Display:</h2>
-				<div class="columns">
-					<label><img src="gfx/dot_green.png"  alt="green"  height="20" width="20" /> <input id="kml_done"    type="checkbox" />Hikes           </label><br />
-					<label><img src="gfx/dot_blue.png"   alt="blue"   height="20" width="20" /> <input id="kml_water"   type="checkbox" />River crossings </label><br />
-					<label><img src="gfx/dot_red.png"    alt="red"    height="20" width="20" /> <input id="kml_todo"    type="checkbox" />To Do           </label><br />
-					<label><img src="gfx/dot_yellow.png" alt="yellow" height="20" width="20" /> <input id="kml_variant" type="checkbox" />Alternate routes</label><br />
-					<label><img src="gfx/dot_purple.png" alt="purple" height="20" width="20" /> <input id="kml_route"   type="checkbox" />Not started     </label><br />
-				</div>
-				<div class="columns">
-					<label><img src="gfx/icon_tent.png"  alt="tent"   height="20" width="20" /> <input id="kml_camp"    type="checkbox" />Camp sites      </label><br />
-					<label><img src="gfx/icon_area.png"  alt="area"   height="20" width="20" /> <input id="kml_area"    type="checkbox" />Areas           </label><br />
-					<label><img src="gfx/icon_start.png" alt="start"  height="20" width="20" /> <input id="kml_start"   type="checkbox" />Start of route  </label><br />
-					<label><img src="gfx/icon_end.png"   alt="end"    height="20" width="20" /> <input id="kml_end"     type="checkbox" />End of Route    </label><br />
-					<label><img src="gfx/icon_extra.png" alt="extra"  height="20" width="20" /> <input id="kml_extra"   type="checkbox" />Extras          </label><br />
-				</div>
-				<hr />
-				<div class="columns">
-					<h2>Options:</h2>
-					<label><input id="opt_one"  onchange="on_opt(this.id)" type="checkbox" />One route at a time</label><br />
-					<label><input id="opt_zoom" onchange="on_opt(this.id)" type="checkbox" />Zoom in on route   </label><br />
-					<label><input id="opt_rich" onchange="on_opt(this.id)" type="checkbox" />Where's Rich?      </label><br />
-					<br />
-				</div>
-				<div class="columns">
-					<h2>Show:</h2>
-					<label><input id="show_comp" type="checkbox" />Completed Hikes </label><br />
-					<label><input id="show_inco" type="checkbox" />Incomplete Hikes</label><br />
-					<label><input id="show_unst" type="checkbox" />Unstarted Hikes </label><br />
-					<label><input id="show_hill" type="checkbox" />Hills           </label><br />
-					<label><input id="show_join" type="checkbox" />Join Ups        </label><br />
-				</div>
-			</div>
-			<!-- <input id="resolution" type="number" /> -->
 		</div>
 		</div>
 
+		<div id="dialog" style="display: none" title="Display Options">
+			<div class="tabs" id="tabs">
+
+				<ul>
+					<li><a href="#tabs-1">Map</a></li>
+					<li><a href="#tabs-2">Routes</a></li>
+					<li><a href="#tabs-3">Icons</a></li>
+					<li><a href="#tabs-4">Areas</a></li>
+					<li><a href="#tabs-5">Extras</a></li>
+				</ul>
+
+				<div id="tabs-1">
+					Aerial, Aerial with labels, Road map, Black, Pastel, Ordnance Survey
+					<label><input type="radio" name="map" value="bing" checked>Bing</input></label>
+					<label><input type="radio" name="map" value="osm">OSM</input></label>
+					<label><input type="radio" name="map" value="terrain">Terrain</input></label>
+					<label><input type="radio" name="map" value="stamen">Stamen</input></label>
+					<h2>List</h2>
+					<label><input type="checkbox" id="show_comp">Completed</input></label>
+					<label><input type="checkbox" id="show_inco">Incomplete</input></label>
+					<label><input type="checkbox" id="show_unst">Unstarted</input></label>
+					<label><input type="checkbox" id="show_hill">Hills</input></label>
+					<label><input type="checkbox" id="show_join">Join-ups</input></label>
+					<h2>List options</h2>
+					<label><input type="checkbox" id="opt_one">One route at a time</input></label>
+					<label><input type="checkbox" id="opt_zoom">Zoom in on route</input></label>
+				</div>
+
+				<div id="tabs-2">
+					<label><img src="gfx/dot_green.png"/><input type="checkbox" id="line_hike">Hike</input></label>
+					<label><img src="gfx/dot_blue.png"/><input type="checkbox" id="line_river">River</input></label>
+					<label><img src="gfx/dot_red.png"/><input type="checkbox" id="line_todo">To do</input></label>
+					<br/> 
+					<label><img src="gfx/dot_purple.png"/><input type="checkbox" id="line_route">Route</input></label>
+					<label><img src="gfx/dot_yellow.png"/><input type="checkbox" id="line_variant">Variant</input></label>
+				</div>
+
+				<div id="tabs-3">
+
+					<label><img src="gfx/map_tent.png"/><input type="checkbox" id="icon_tent"></input>Nights spent under canvas</label>
+					<label><img src="gfx/map_hut.png"/><input type="checkbox" id="icon_hut"></input>Nights in a bothy, barn, bird hide, etc</label>
+					<label><img src="gfx/map_hotel.png"/><input type="checkbox" id="icon_hotel"></input>Nights under a roof</label>
+					<br/> 
+					<label><img src="gfx/map_ferry.png"/><input type="checkbox" id="icon_ferry"></input>Water (crossed the easy way)</label>
+					<label><img src="gfx/map_waves.png"/><input type="checkbox" id="icon_waves"></input>Water (crossed the damp way)</label>
+					<br/> 
+					<label><img src="gfx/paddle_start.png"/><input type="checkbox" id="icon_start"></input>The start of a route</label>
+					<label><img src="gfx/paddle_end.png"/><input type="checkbox" id="icon_end"></input>The end of a route</label>
+					<label><img src="gfx/r_green.png"/><input type="checkbox" id="icon_rich"></input>Where's Rich?</label>
+					<br/> 
+					<label><img src="gfx/diamond_green.png"/><input type="checkbox" id="peak_done"></input>Done</label>
+					<label><img src="gfx/diamond_red.png"/><input type="checkbox" id="peak_todo"></input>To do</label>
+				</div>
+
+				<div id="tabs-4">
+					<label><img src="gfx/area_green.png"  /><input type="checkbox" id="area_done">Done</input></label>
+					<label><img src="gfx/area_red.png"    /><input type="checkbox" id="area_todo">To do</input></label>
+					<label><img src="gfx/area_yellow.png" /><input type="checkbox" id="area_whole">Whole</input></label>
+				</div>
+
+				<div id="tabs-5">
+					<label><input type="checkbox" id="extra">Extras</input></label>
+				</div>
+
+			</div>
+		</div>
 		<script src="rich.js" type="text/javascript"></script>
 	</body>
 </html>

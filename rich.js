@@ -15,6 +15,9 @@
  * this program. If not, see http://www.gnu.org/licenses/
  */
 
+			// Options:
+var opt_one     = true;		// Only show one route at a time
+var opt_zoom    = true;		// Zoom in to the current route
 			// Show list of:
 var show_comp   = true;		// Completed routes
 var show_inco   = true;		// Incomplete routes
@@ -157,16 +160,16 @@ function map_init_layers()
 	layers.line_variant = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.variant  });
 
 	// Icon layers	      						  Default Icon
-	layers.icon_ferry   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.ferry     });
 	layers.icon_end     = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.end       });
+	layers.icon_ferry   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.ferry     });
 	layers.icon_hotel   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.hotel     });
 	layers.icon_hut     = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.hut       });
-	layers.peak_done    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_done });
-	layers.peak_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_todo });
 	layers.icon_rich    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.r_green   });
 	layers.icon_start   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.start     });
 	layers.icon_tent    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.tent      });
 	layers.icon_waves   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.waves     });
+	layers.peak_done    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_done });
+	layers.peak_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_todo });
 
 	// Areas	      						  Default Area Styles
 	layers.area_done    = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.done      });
@@ -448,29 +451,44 @@ function init_options()
 	$("#show_hill").prop("checked", show_hill);
 	$("#show_join").prop("checked", show_join);
 
+	$("#opt_one")  .prop("checked", opt_one);
+	$("#opt_zoom") .prop("checked", opt_zoom);
+
 	$("#show_comp").change(function() { show_comp = this.checked; on_show (this.id); });
-	$("#show_inco").change(function() { show_inco = this.checked; on_show (this.id); });
-	$("#show_unst").change(function() { show_unst = this.checked; on_show (this.id); });
 	$("#show_hill").change(function() { show_hill = this.checked; on_show (this.id); });
+	$("#show_inco").change(function() { show_inco = this.checked; on_show (this.id); });
 	$("#show_join").change(function() { show_join = this.checked; on_show (this.id); });
+	$("#show_unst").change(function() { show_unst = this.checked; on_show (this.id); });
+
+	$("#opt_one") .change(function() { opt_one  = this.checked; /*DO SOMETHING*/; });
+	$("#opt_zoom").change(function() { opt_zoom = this.checked; /*DO SOMETHING*/; });
 
 	$("#global_centre").click(function() { map_zoom_route(); });
 	$("#global_clear") .click(function() { map_clear();      });
 
-	var kml_done    = new ol.dom.Input(document.getElementById("kml_done"));    kml_done.bindTo    ("checked", layers.group_done,   "visible");
-	var kml_route   = new ol.dom.Input(document.getElementById("kml_route"));   kml_route.bindTo   ("checked", layers.line_route,   "visible");
-	var kml_todo    = new ol.dom.Input(document.getElementById("kml_todo"));    kml_todo.bindTo    ("checked", layers.group_todo,   "visible");
-	var kml_variant = new ol.dom.Input(document.getElementById("kml_variant")); kml_variant.bindTo ("checked", layers.line_variant, "visible");
-	var kml_water   = new ol.dom.Input(document.getElementById("kml_water"));   kml_water.bindTo   ("checked", layers.group_water,  "visible");
+	var line_hike    = new ol.dom.Input(document.getElementById("line_hike"));    line_hike.bindTo    ("checked", layers.line_hike,    "visible");
+	var line_river   = new ol.dom.Input(document.getElementById("line_river"));   line_river.bindTo   ("checked", layers.line_river,   "visible");
+	var line_route   = new ol.dom.Input(document.getElementById("line_route"));   line_route.bindTo   ("checked", layers.line_route,   "visible");
+	var line_todo    = new ol.dom.Input(document.getElementById("line_todo"));    line_todo.bindTo    ("checked", layers.line_todo,    "visible");
+	var line_variant = new ol.dom.Input(document.getElementById("line_variant")); line_variant.bindTo ("checked", layers.line_variant, "visible");
 
-	var kml_area    = new ol.dom.Input(document.getElementById("kml_area"));    kml_area.bindTo    ("checked", layers.group_area,   "visible");
-	var kml_camp    = new ol.dom.Input(document.getElementById("kml_camp"));    kml_camp.bindTo    ("checked", layers.group_camp,   "visible");
-	var kml_end     = new ol.dom.Input(document.getElementById("kml_end"));     kml_end.bindTo     ("checked", layers.icon_end,     "visible");
-	var kml_extra   = new ol.dom.Input(document.getElementById("kml_extra"));   kml_extra.bindTo   ("checked", layers.extra,        "visible");
-	var kml_start   = new ol.dom.Input(document.getElementById("kml_start"));   kml_start.bindTo   ("checked", layers.icon_start,   "visible");
+	var icon_end     = new ol.dom.Input(document.getElementById("icon_end"));     icon_end.bindTo     ("checked", layers.icon_end,     "visible");
+	var icon_ferry   = new ol.dom.Input(document.getElementById("icon_ferry"));   icon_ferry.bindTo   ("checked", layers.icon_ferry,   "visible");
+	var icon_hotel   = new ol.dom.Input(document.getElementById("icon_hotel"));   icon_hotel.bindTo   ("checked", layers.icon_hotel,   "visible");
+	var icon_hut     = new ol.dom.Input(document.getElementById("icon_hut"));     icon_hut.bindTo     ("checked", layers.icon_hut,     "visible");
+	var icon_rich    = new ol.dom.Input(document.getElementById("icon_rich"));    icon_rich.bindTo    ("checked", layers.icon_rich,    "visible");
+	var icon_start   = new ol.dom.Input(document.getElementById("icon_start"));   icon_start.bindTo   ("checked", layers.icon_start,   "visible");
+	var icon_tent    = new ol.dom.Input(document.getElementById("icon_tent"));    icon_tent.bindTo    ("checked", layers.icon_tent,    "visible");
+	var icon_waves   = new ol.dom.Input(document.getElementById("icon_waves"));   icon_waves.bindTo   ("checked", layers.icon_waves,   "visible");
 
-	// var resolution = new ol.dom.Input(document.getElementById("resolution"));
-	// resolution.bindTo("value", map.getView(), "resolution").transform(parseFloat, String);
+	var peak_done    = new ol.dom.Input(document.getElementById("peak_done"));    peak_done.bindTo    ("checked", layers.peak_done,    "visible");
+	var peak_todo    = new ol.dom.Input(document.getElementById("peak_todo"));    peak_todo.bindTo    ("checked", layers.peak_todo,    "visible");
+
+	var area_done    = new ol.dom.Input(document.getElementById("area_done"));    area_done.bindTo    ("checked", layers.area_done,    "visible");
+	var area_todo    = new ol.dom.Input(document.getElementById("area_todo"));    area_todo.bindTo    ("checked", layers.area_todo,    "visible");
+	var area_whole   = new ol.dom.Input(document.getElementById("area_whole"));   area_whole.bindTo   ("checked", layers.area_whole,   "visible");
+
+	var extra        = new ol.dom.Input(document.getElementById("extra"));        extra.bindTo        ("checked", layers.extra,        "visible");
 }
 
 
