@@ -296,7 +296,10 @@ function map_init()
 		view: new ol.View({
 			center: ol.proj.transform([-3.143848, 54.699234], "EPSG:4326", "EPSG:3857"),
 			zoom: 6
-		})
+		}),
+		controls: ol.control.defaults().extend([
+			new ol.control.FullScreen()
+		])
 	});
 }
 
