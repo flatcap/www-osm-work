@@ -176,8 +176,6 @@ function map_init_layers()
 	layers.area_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.todo      });
 	layers.area_whole   = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.whole     });
 
-	layers.area_whole.setVisible(false);
-
 	// Misc		     						  No Defaults
 	layers.extra        = new ol.layer.Vector({ source: new ol.source.Vector()                         });
 
@@ -437,6 +435,14 @@ function dd_select (route)
 	$("#dropdown").val(route);
 }
 
+
+function set_defaults()
+{
+	layers.area_whole.setVisible(false);
+	layers.icon_end  .setVisible(false);
+	layers.icon_ferry.setVisible(false);
+	layers.icon_waves.setVisible(false);
+}
 
 /**
  * init_options - Set the default checkbox values
@@ -779,6 +785,7 @@ $.getJSON("output/routes.json", function(data) {
 });
 
 map_init();
+set_defaults();
 init_options();
 
 var load;
