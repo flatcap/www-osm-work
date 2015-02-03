@@ -474,7 +474,7 @@ function init_options()
 
 	$("#global_centre").click(map_zoom_route);
 	$("#global_done")  .click(map_show_all);
-	$("#global_clear") .click(map_clear);
+	$("#global_clear") .click(map_reset);
 
 	var line_hike    = new ol.dom.Input(document.getElementById("line_hike"));    line_hike.bindTo    ("checked", layers.line_hike,    "visible");
 	var line_river   = new ol.dom.Input(document.getElementById("line_river"));   line_river.bindTo   ("checked", layers.line_river,   "visible");
@@ -507,6 +507,12 @@ function map_clear()
 	$.each(layers, function(name, layer) {
 		layer.setSource (new ol.source.Vector());
 	});
+}
+
+function map_reset()
+{
+	map_clear();
+	dd_select("");
 }
 
 /**
