@@ -812,15 +812,10 @@ map_init();
 set_defaults();
 init_options();
 
-var load;
-var key;
-
 function load_kml (route)
 {
-	if (load) {
-		alert ("busy...");
-		return;
-	}
+	var load;
+	var key;
 
 	var url = "output/"+route+".kml";
 	load = new ol.source.KML({
@@ -830,8 +825,6 @@ function load_kml (route)
 	});
 
 	key = load.on("change", function(e) {
-		// alert(load.getState());
-		// alert(load.getFeatures().length);
 		if (load.getState() == "ready") {
 			var features = [];
 			var count = 0;
@@ -855,21 +848,6 @@ function load_kml (route)
 				}
 
 				src.addFeature(clone);
-				// alert(type); return true;
-				// var id = feature.getId();
-				// if (id) {
-				// 	features.push(id);
-				// }
-				// var name = feature.get("length");
-				// if (name) {
-				// 	features.push(name);
-				// }
-
-				// alert (id + " " + name);
-				// count++;
-				// if (count > 3) {
-				// 	return true;
-				// }
 			});
 
 			load.unByKey(key);
