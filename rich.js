@@ -828,6 +828,7 @@ function load_kml (route)
 		if (load.getState() == "ready") {
 			var features = [];
 			var count = 0;
+			var id_list = [];
 			load.forEachFeature(function(feature) {
 				var type = feature.get("type");
 				var tag  = feature.get("tag");
@@ -838,9 +839,16 @@ function load_kml (route)
 				var l = type + "_" + tag;
 				var layer = layers[l] || layers.extra;
 
+				var id = feature.getId();
 				var src = layer.getSource();
+				if (id) {
+					if (src.getFeatureById(id)) {
+						id_list.push(id);
+						return false;
+					}
+				}
 				var clone = feature.clone();
-				clone.setId(feature.getId());
+				clone.setId(id);
 
 				if (layer == layers.misc) {
 					// var style = layer.getStyle();
@@ -852,6 +860,11 @@ function load_kml (route)
 
 			load.unByKey(key);
 			load = null;
+			if (id_list.length > 0) {
+				id_list.sort (function(a, b){return a-b;});
+				// alert(id_list.join());
+				// alert(id_list.length + " dupes");
+			}
 		}
 	});
 }
