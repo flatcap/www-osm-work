@@ -469,8 +469,9 @@ function init_options()
 	$("#opt_one") .change(function() { opt_one  = this.checked; /*DO SOMETHING*/; });
 	$("#opt_zoom").change(function() { opt_zoom = this.checked; /*DO SOMETHING*/; });
 
-	$("#global_centre").click(function() { map_zoom_route(); });
-	$("#global_clear") .click(function() { map_clear();      });
+	$("#global_centre").click(map_zoom_route);
+	$("#global_done")  .click(map_show_all);
+	$("#global_clear") .click(map_clear);
 
 	var line_hike    = new ol.dom.Input(document.getElementById("line_hike"));    line_hike.bindTo    ("checked", layers.line_hike,    "visible");
 	var line_river   = new ol.dom.Input(document.getElementById("line_river"));   line_river.bindTo   ("checked", layers.line_river,   "visible");
@@ -573,6 +574,15 @@ function map_zoom_route (route)
 	} else {
 		map_zoom_ll (54.699234, -3.143848, 6);	// UK
 	}
+}
+
+function map_show_all()
+{
+	$.each(route_list, function(dir, route) {
+		if (route.dist_walked > 0) {
+			load_kml(dir);
+		}
+	});
 }
 
 
