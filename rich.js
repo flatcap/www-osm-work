@@ -160,7 +160,7 @@ function map_init_layers()
 	layers.line_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.todo     });
 	layers.line_variant = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.variant  });
 
-	// Icon layers	      						  Default Icon
+	// Icon$("#message") layers	      						  Default Icon
 	layers.icon_end     = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.end       });
 	layers.icon_ferry   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.ferry     });
 	layers.icon_hotel   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.hotel     });
@@ -872,4 +872,34 @@ function load_kml (route)
 	});
 }
 
+
+var msg = $("#message");
+msg.html ("Waiting...");
+var line = null;
+
+$(map.getViewport()).on("mousemove", function(evt) {
+	var messages = [];
+
+	var pixel = map.getEventPixel(evt.originalEvent);
+	var hit = false;
+	
+	map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+		messages.push ("'"+feature.get("description")+"'");
+		hit = true;
+		return;
+	});
+
+	var t = $("#map")[0];
+	if (hit) {
+		t.style.cursor = "pointer";
+	} else {
+		t.style.cursor = "";
+	}
+
+	if (messages.length > 0) {
+		msg.html (messages.join("\n"));
+	} else {
+		msg.html ("...");
+	}
+});
 
