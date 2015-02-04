@@ -27,6 +27,10 @@ p.menu span {
 	-webkit-border-radius: 15px;
 }
 
+a {
+	text-decoration: none;
+}
+
 a span {
 	background: #006 !important;
 }

@@ -35,15 +35,14 @@
 		<div id="map"></div>
 		</div>
 		<div id="user">
-		<form action="">
-			<select size="15" id="dropdown" onchange="on_hike(this.id);"></select>
-		</form>
 		<div id="options">
 			<input id="global_centre" value="Centre Map" type="button" />
 			<input id="global_done"   value="All Done"   type="button" />
 			<input id="global_todo"   value="To Do"      type="button" />
 			<input id="global_clear"  value="Clear All"  type="button" />
 		</div>
+		<hr />
+		<select size="10" id="dropdown" onchange="on_hike(this.id);"></select>
 
 		<hr />
 
@@ -83,7 +82,7 @@
 					<label><img src="gfx/dot_green.png"/><input type="checkbox" id="line_hike">Hike</input></label>
 					<label><img src="gfx/dot_blue.png"/><input type="checkbox" id="line_river">River</input></label>
 					<label><img src="gfx/dot_red.png"/><input type="checkbox" id="line_todo">To do</input></label>
-					<br/> 
+					<br/>
 					<label><img src="gfx/dot_purple.png"/><input type="checkbox" id="line_route">Route</input></label>
 					<label><img src="gfx/dot_yellow.png"/><input type="checkbox" id="line_variant">Variant</input></label>
 				</div>
@@ -93,14 +92,14 @@
 					<label><img src="gfx/map_tent.png"/><input type="checkbox" id="icon_tent"></input>Nights spent under canvas</label>
 					<label><img src="gfx/map_hut.png"/><input type="checkbox" id="icon_hut"></input>Nights in a bothy, barn, bird hide, etc</label>
 					<label><img src="gfx/map_hotel.png"/><input type="checkbox" id="icon_hotel"></input>Nights under a roof</label>
-					<br/> 
+					<br/>
 					<label><img src="gfx/map_ferry.png"/><input type="checkbox" id="icon_ferry"></input>Water (crossed the easy way)</label>
 					<label><img src="gfx/map_waves.png"/><input type="checkbox" id="icon_waves"></input>Water (crossed the damp way)</label>
-					<br/> 
+					<br/>
 					<label><img src="gfx/paddle_start.png"/><input type="checkbox" id="icon_start"></input>The start of a route</label>
 					<label><img src="gfx/paddle_end.png"/><input type="checkbox" id="icon_end"></input>The end of a route</label>
 					<label><img src="gfx/r_green.png"/><input type="checkbox" id="icon_rich"></input>Where's Rich?</label>
-					<br/> 
+					<br/>
 					<label><img src="gfx/diamond_green.png"/><input type="checkbox" id="peak_done"></input>Done</label>
 					<label><img src="gfx/diamond_red.png"/><input type="checkbox" id="peak_todo"></input>To do</label>
 				</div>

@@ -153,14 +153,14 @@ function map_init_icons()
 
 function map_init_layers()
 {
-	// Route layers								  Default Line Style
+	// Route layers								    Default Line Style
 	layers.line_hike    = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.hike     });
 	layers.line_river   = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.river    });
 	layers.line_route   = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.route    });
 	layers.line_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.todo     });
 	layers.line_variant = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.variant  });
 
-	// Icon$("#message") layers	      						  Default Icon
+	// Icon layers								    Default Icon
 	layers.icon_end     = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.end       });
 	layers.icon_ferry   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.ferry     });
 	layers.icon_hotel   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.hotel     });
@@ -172,12 +172,12 @@ function map_init_layers()
 	layers.peak_done    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_done });
 	layers.peak_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_todo });
 
-	// Areas	      						  Default Area Styles
+	// Areas								    Default Area Styles
 	layers.area_done    = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.done      });
 	layers.area_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.todo      });
 	layers.area_whole   = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.whole     });
 
-	// Misc		     						  No Defaults
+	// Misc									    No Defaults
 	layers.extra        = new ol.layer.Vector({ source: new ol.source.Vector()                         });
 
 	// Groups
@@ -743,6 +743,7 @@ function on_hike (id)
 	if (opt_one) {
 		map_clear();
 	}
+	msg.html (html_route_info (option));
 	load_kml(option);
 	// show_route (option);
 }
@@ -831,7 +832,6 @@ function load_kml (route)
 		if (load.getState() == "ready") {
 			var features = [];
 			var count = 0;
-			var id_list = [];
 			load.forEachFeature(function(feature) {
 				var type = feature.get("type");
 				var tag  = feature.get("tag");
@@ -846,7 +846,6 @@ function load_kml (route)
 				var src = layer.getSource();
 				if (id) {
 					if (src.getFeatureById(id)) {
-						id_list.push(id);
 						return false;
 					}
 				}
@@ -863,11 +862,6 @@ function load_kml (route)
 
 			load.unByKey(key);
 			load = null;
-			if (id_list.length > 0) {
-				id_list.sort (function(a, b){return a-b;});
-				// alert(id_list.join());
-				// alert(id_list.length + " dupes");
-			}
 		}
 	});
 }
@@ -877,16 +871,266 @@ var msg = $("#message");
 msg.html ("Waiting...");
 var line = null;
 
+function format_date (datestr)
+{
+	var months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+
+	if (!datestr) {
+		return "";
+	}
+
+	var d = new Date (datestr);
+	if (!d) {
+		return "";
+	}
+
+	return d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear();
+}
+
+function html_date (feature, key, newline)
+{
+	var months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+
+	if (!feature || !key) {
+		return "";
+	}
+
+	var str = format_date (feature.get (key));
+
+	if (newline) {
+		str += "<br />";
+	}
+
+	return str;
+}
+
+function html_description (feature, newline)
+{
+	if (!feature) {
+		return "";
+	}
+
+	var desc = feature.get ("description") || "";
+
+	if (newline) {
+		desc += "<br />";
+	}
+
+	return desc;
+}
+
+function html_gridref (feature, newline)
+{
+	if (!feature) {
+		return "";
+	}
+
+	var gridref = feature.get ("gridref");
+	if (!gridref) {
+		return "";
+	}
+
+	var output = gridref;
+
+	var coords = feature.get ("coords");
+	if (coords) {
+		var c = coords.split(",");
+		if (c.length == 3) {
+			output += " (" + c[2] + "m)";
+		}
+	}
+
+	if (newline) {
+		output += "<br />";
+	}
+
+	return output;
+}
+
+function html_title (feature)
+{
+	if (!feature) {
+		return "";
+	}
+
+	var name = feature.get ("name");
+	if (!name) {
+		return "";
+	}
+
+	// var bits = name.split (", ");
+	// var as = "<a href='' class='route'>";
+	// var ae = "</a>";
+	// var title = as + bits.join (ae+", "+as) + ae;
+	var title = name;
+
+	var where = feature.get ("where");
+	if (where) {
+		title += " - " + where;
+	}
+
+	return "<h1>" + title + "</h1>";
+}
+
+function html_camp (feature)
+{
+	if (!feature) {
+		return "";
+	}
+
+	var output = "";
+
+	output += html_title       (feature);
+	output += html_date        (feature, "datetime", true);
+	output += html_description (feature, true);
+	output += html_gridref     (feature, false);
+
+	return output;
+}
+
+
+function html_distance (route, newline)
+{
+	if (!route) {
+		return "";
+	}
+
+	var output = "";
+
+	var complete = route.complete    || 0;
+	var walk     = route.dist_walked || 0;
+	var dist     = route.dist_route;
+
+	if ((complete == 100) && (walk > 0)) {
+		dist = route.dist_walked;
+	}
+
+	output += "<span>Route</span>: " + dist + " miles";
+
+	if (complete) {
+		if (complete == 100) {
+			output += " (Complete)";
+		} else if (route.complete > 0) {
+			output += " (" + complete + "%)";
+		}
+	}
+
+	if (newline) {
+		output += "<br />";
+	}
+
+	return output;
+
+}
+
+function html_camps (route, newline)
+{
+	if (!route) {
+		return "";
+	}
+
+	var output = "";
+
+	var other  = route.days_other  || 0;
+	var camped = route.days_camped || 0;
+	var total  = camped + other;
+
+	output += "<span>Camped</span>: " + total + " night";
+	if (total != 1) {
+		output += "s";
+	}
+
+	if (other > 0) {
+		output += " (" + camped + " under canvas)";
+	}
+
+	if (newline) {
+		output += "<br />";
+	}
+
+	return output;
+
+}
+
+function html_route (feature)
+{
+	if (!feature) {
+		return "";
+	}
+
+	var output = "";
+
+	output += html_title (feature);
+	output += html_date  (feature, "date", true);
+
+	return output;
+}
+
+
+function html_start (feature)
+{
+	if (!feature) {
+		return "";
+	}
+
+	var output = "";
+
+	var dir = feature.get ("route");
+
+	return html_route_info(dir);
+}
+
+function html_route_info (dir)
+{
+	if (!dir) {
+		return "";
+	}
+
+	var r = route_list[dir];
+	if (!r) {
+		return "";
+	}
+
+	var output = "<h1>" + r.fullname + "</h1>";
+	output += html_distance (r, true);
+
+	var start = r.date_start;
+	if (start) {
+		output += "<span>Started</span>: " + format_date (start) + "<br />";
+	}
+
+	var end = r.date_end;
+	if (end) {
+		output += "<span>Finished</span>: " + format_date (end) + "<br />";
+	}
+
+	var walked = r.days_walked;
+	if (walked) {
+		output += "<span>Hiked</span>: " + walked + " day";
+		if (walked != 1) {
+			output += "s";
+		}
+		output += "<br />";
+	}
+
+	output += html_camps (r, true);
+
+	return output;
+}
+
+
 $(map.getViewport()).on("mousemove", function(evt) {
 	var messages = [];
 
 	var pixel = map.getEventPixel(evt.originalEvent);
 	var hit = false;
-	
+
 	map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-		messages.push ("'"+feature.get("description")+"'");
+		// msg.html (html_camp (feature));
+		msg.html (html_start (feature));
+		// msg.html (html_distance (feature));
 		hit = true;
-		return;
+		return true;
 	});
 
 	var t = $("#map")[0];
@@ -894,12 +1138,6 @@ $(map.getViewport()).on("mousemove", function(evt) {
 		t.style.cursor = "pointer";
 	} else {
 		t.style.cursor = "";
-	}
-
-	if (messages.length > 0) {
-		msg.html (messages.join("\n"));
-	} else {
-		msg.html ("...");
 	}
 });
 
