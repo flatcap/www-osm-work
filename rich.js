@@ -202,39 +202,63 @@ function map_init_line_styles()
 
 function map_init_maps()
 {
-	maps.bing = new ol.layer.Tile({
+	maps.aerial = new ol.layer.Tile({
 		source: new ol.source.BingMaps({
 			key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
-			imagerySet: 'Aerial',		// 1-19
-			// imagerySet: 'Road',			// 5-18 (0-4 = country outlines)
-			// imagerySet: 'AerialWithLabels',	// 5-19 (0-4\ =\ country\ outlines)
-			// imagerySet: 'collinsBart',		// 10-13 (terrain-ish)
-			// imagerySet: 'ordnanceSurvey',	// 10-11 (fuzzy), 12-14 (1:50), 15-17 (1:25)
+			imagerySet: 'Aerial',
 		}),
 		visible: true,
 	});
 
-	// OSM StreetView : 5-19 (0-4 = country outlines)
-	maps.osm = new ol.layer.Tile({
-		source: new ol.source.OSM(),
-		visible: false,
-	});
-
-	// Mapbox : Terrain: 0-6
-	maps.terrain = new ol.layer.Tile({
-		source: new ol.source.TileJSON({
-			url: 'http://api.tiles.mapbox.com/v3/mapbox.natural-earth-hypso-bathy.jsonp',
-			// url: 'http://api.tiles.mapbox.com/v3/mapbox.world-black.jsonp',	// silhouette : 1-13
+	maps.hybrid = new ol.layer.Tile({
+		source: new ol.source.BingMaps({
+			key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+			imagerySet: 'AerialWithLabels',
 		}),
 		visible: false,
 	});
 
-	maps.stamen = new ol.layer.Tile({
+	maps.street = new ol.layer.Tile({
+		source: new ol.source.OSM(),
+		visible: false,
+	});
+
+	maps.os = new ol.layer.Group({
+		layers: [
+			new ol.layer.Tile({
+				source: new ol.source.BingMaps({
+					key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+					imagerySet: 'ordnanceSurvey',
+				}),
+				minResolution: 1.18,
+				maxResolution: 40,
+			}),
+			new ol.layer.Tile({
+				source: new ol.source.OSM(),
+				minResolution: 40,
+				maxResolution: 20000,
+			})
+		],
+		visible: false,
+	});
+
+	maps.pastel = new ol.layer.Tile({
 		source: new ol.source.Stamen({
-			layer: 'watercolor'		// Pastels: 1-17
-			// layer: 'toner'			// Black/white: 0-19
-			// layer: 'toner-background'		// Black/white (no-labels): 0-19
-			// layer: 'toner-lines'			// Black/white (labels only): 0-19
+			layer: 'watercolor'
+		}),
+		visible: false,
+	});
+
+	maps.toner = new ol.layer.Tile({
+		source: new ol.source.Stamen({
+			layer: 'toner-background'
+		}),
+		visible: false,
+	});
+
+	maps.black = new ol.layer.Tile({
+		source: new ol.source.TileJSON({
+			url: 'http://api.tiles.mapbox.com/v3/mapbox.world-black.jsonp',
 		}),
 		visible: false,
 	});
@@ -252,7 +276,7 @@ function map_init()
 		target: 'map',
 		layers: [
 			// Layers grouped by depth
-			maps.bing, maps.osm, maps.terrain, maps.stamen,
+			maps.aerial, maps.hybrid, maps.street, maps.os, maps.pastel, maps.toner, maps.black,
 			layers.area_whole, layers.area_todo, layers.area_done,
 			layers.line_route, layers.line_variant,
 			layers.line_river, layers.icon_ferry, layers.icon_waves,
@@ -264,11 +288,13 @@ function map_init()
 		],
 		view: new ol.View({
 			center: ol.proj.transform([-3.143848, 54.699234], 'EPSG:4326', 'EPSG:3857'),
-			zoom: 6
+			zoom: 6,
+			minZoom: 1,
+			maxZoom: 19,
 		}),
 		controls: ol.control.defaults().extend([
 			new ol.control.FullScreen()
-		])
+		]),
 	});
 }
 
@@ -444,6 +470,8 @@ function init_options()
 	$('#opt_one') .change(function() { opt_one  = this.checked; /*DO SOMETHING*/ });
 	$('#opt_zoom').change(function() { opt_zoom = this.checked; /*DO SOMETHING*/ });
 
+	$('input[name=map_type]').change(set_map_type);
+
 	$('#global_centre') .click(map_zoom_route);
 	$('#global_done')   .click(map_show_all);
 	$('#global_clear')  .click(map_reset);
@@ -572,6 +600,15 @@ function map_show_all()
 	});
 }
 
+
+function set_map_type()
+{
+	var opt = this.value;
+
+	$.each (maps, function(index, layer) {
+		layer.setVisible (opt == index);
+	});
+}
 
 /**
  * on_hike - Event handler for hike dropdown
