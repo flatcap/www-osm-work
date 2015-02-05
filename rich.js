@@ -33,30 +33,15 @@ var show_html = {	// Keep the select HTML to rebuild the dropdown
 	join: ""		// Non-route joins
 };
 
-/**
- * String.contains - Does the string contain this character
- * @key: Character to look for
- *
- * Extend the String class with a "contains" method.
- * Search the string for a given character.
- *
- * Return: boolean
- */
-String.prototype.contains = function (key)
-{
-	return (this.indexOf (key) >= 0);
-};
-
 var map;
 var route_list;
-var proj= ol.proj.get("EPSG:3857");
+var proj = ol.proj.get("EPSG:3857");
 
 var maps   = {};
 var layers = {};
 var styles = {};
 var icons  = {};
 var areas  = {};
-var groups = {};
 
 /**
  * route_sort - Sort two route_list items by fullname
@@ -179,26 +164,6 @@ function map_init_layers()
 
 	// Misc									    No Defaults
 	layers.extra        = new ol.layer.Vector({ source: new ol.source.Vector()                         });
-
-	// Groups
-	groups.area = new ol.layer.Group({
-		layers: [ layers.area_whole, layers.area_todo, layers.area_done ]
-	});
-	groups.camp = new ol.layer.Group({
-		layers: [ layers.icon_hotel, layers.icon_hut, layers.icon_tent ]
-	});
-	groups.done = new ol.layer.Group({
-		layers: [ layers.line_hike, layers.peak_done ]
-	});
-	groups.map = new ol.layer.Group({
-		layers: [ maps.bing, maps.osm, maps.terrain, maps.stamen ]
-	});
-	groups.todo = new ol.layer.Group({
-		layers: [ layers.line_todo, layers.peak_todo ]
-	});
-	groups.water = new ol.layer.Group({
-		layers: [ layers.line_river, layers.icon_ferry, layers.icon_waves ]
-	});
 }
 
 function map_init_line_styles()
@@ -287,10 +252,14 @@ function map_init()
 		target: "map",
 		layers: [
 			// Layers grouped by depth
-			groups.map, groups.area,
+			maps.bing, maps.osm, maps.terrain, maps.stamen,
+			layers.area_whole, layers.area_todo, layers.area_done,
 			layers.line_route, layers.line_variant,
-			groups.water, groups.todo, groups.done,
-			groups.camp, layers.icon_end, layers.icon_start, layers.extra,
+			layers.line_river, layers.icon_ferry, layers.icon_waves
+			layers.line_todo, layers.peak_todo,
+			layers.line_hike, layers.peak_done,
+			layers.icon_hotel, layers.icon_hut, layers.icon_tent,
+			layers.icon_end, layers.icon_start, layers.extra,
 			layers.icon_rich
 		],
 		view: new ol.View({
