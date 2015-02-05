@@ -38,9 +38,18 @@ var map = new ol.Map({
 	view: v
 });
 
-var resolution = new ol.dom.Input(document.getElementById('resolution'));
-resolution.bindTo('value', v, 'resolution').transform(parseFloat, String);
+function set_values()
+{
+	var z = v.getZoom();
+	var zi = document.getElementById('zoom');
+	zi.value = z;
 
-var zoom = new ol.dom.Input(document.getElementById('zoom'));
-zoom.bindTo('value', v, 'zoom').transform(parseFloat, String);
+	var r = v.getResolution();
+	var ri = document.getElementById('res');
+	ri.value = r;
+}
+
+v.on('change:resolution', set_values);
+
+set_values();
 
