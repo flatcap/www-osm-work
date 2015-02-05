@@ -479,6 +479,8 @@ function init_options()
 	$("#global_done")  .click(map_show_all);
 	$("#global_clear") .click(map_reset);
 
+	$("#dropdown").change(on_hike);
+
 	var line_hike    = new ol.dom.Input(document.getElementById("line_hike"));    line_hike.bindTo    ("checked", layers.line_hike,    "visible");
 	var line_river   = new ol.dom.Input(document.getElementById("line_river"));   line_river.bindTo   ("checked", layers.line_river,   "visible");
 	var line_route   = new ol.dom.Input(document.getElementById("line_route"));   line_route.bindTo   ("checked", layers.line_route,   "visible");
@@ -606,9 +608,9 @@ function map_show_all()
  *
  * When the user selects a different hike, display it.
  */
-function on_hike (id)
+function on_hike()
 {
-	var option = $("#"+id).val();
+	var option = this.value;
 
 	if (opt_zoom) {
 		map_zoom_route(option);
@@ -619,7 +621,6 @@ function on_hike (id)
 	}
 	msg1.html (html_route_info (option));
 	load_kml(option);
-	// show_route (option);
 }
 
 
@@ -649,8 +650,6 @@ function load_kml (route)
 
 	key = load.on("change", function(e) {
 		if (load.getState() == "ready") {
-			var features = [];
-			var count = 0;
 			load.forEachFeature(function(feature) {
 				var type = feature.get("type");
 				var tag  = feature.get("tag");
@@ -707,8 +706,6 @@ function format_date (datestr)
 
 function html_date (feature, key, newline)
 {
-	var months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
-
 	if (!feature || !key) {
 		return "";
 	}
@@ -894,8 +891,6 @@ function html_start (feature)
 		return "";
 	}
 
-	var output = "";
-
 	var dir = feature.get ("route");
 
 	return html_route_info(dir);
@@ -941,8 +936,6 @@ function html_route_info (dir)
 
 
 $(map.getViewport()).on("mousemove", function(evt) {
-	var messages = [];
-
 	var pixel = map.getEventPixel(evt.originalEvent);
 	var hit = false;
 
