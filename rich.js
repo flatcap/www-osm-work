@@ -475,7 +475,7 @@ function init_options()
 	$('#global_centre') .click(map_zoom_route);
 	$('#global_done')   .click(map_show_all);
 	$('#global_clear')  .click(map_reset);
-	$('#global_options').click(function() { $('#dialog').dialog({ width: 500 }); });
+	$('#global_options').click(function() { $('#dialog').dialog({ width: 450 }); });
 
 	$('#dropdown').change(on_hike);
 
