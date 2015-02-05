@@ -255,7 +255,7 @@ function map_init()
 			maps.bing, maps.osm, maps.terrain, maps.stamen,
 			layers.area_whole, layers.area_todo, layers.area_done,
 			layers.line_route, layers.line_variant,
-			layers.line_river, layers.icon_ferry, layers.icon_waves
+			layers.line_river, layers.icon_ferry, layers.icon_waves,
 			layers.line_todo, layers.peak_todo,
 			layers.line_hike, layers.peak_done,
 			layers.icon_hotel, layers.icon_hut, layers.icon_tent,
