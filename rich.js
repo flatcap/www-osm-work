@@ -466,11 +466,11 @@ function init_options()
 	$("#opt_one")  .prop("checked", opt_one);
 	$("#opt_zoom") .prop("checked", opt_zoom);
 
-	$("#show_comp").change(function() { show_comp = this.checked; on_show (this.id); });
-	$("#show_hill").change(function() { show_hill = this.checked; on_show (this.id); });
-	$("#show_inco").change(function() { show_inco = this.checked; on_show (this.id); });
-	$("#show_join").change(function() { show_join = this.checked; on_show (this.id); });
-	$("#show_unst").change(function() { show_unst = this.checked; on_show (this.id); });
+	$("#show_comp").change(function() { show_comp = this.checked; dd_populate(); });
+	$("#show_hill").change(function() { show_hill = this.checked; dd_populate(); });
+	$("#show_inco").change(function() { show_inco = this.checked; dd_populate(); });
+	$("#show_join").change(function() { show_join = this.checked; dd_populate(); });
+	$("#show_unst").change(function() { show_unst = this.checked; dd_populate(); });
 
 	$("#opt_one") .change(function() { opt_one  = this.checked; /*DO SOMETHING*/ });
 	$("#opt_zoom").change(function() { opt_zoom = this.checked; /*DO SOMETHING*/ });
@@ -620,61 +620,6 @@ function on_hike (id)
 	msg1.html (html_route_info (option));
 	load_kml(option);
 	// show_route (option);
-}
-
-/**
- * on_show - Event hander for route list display options
- * @id: ID of checkbox
- *
- * Toggle whether a class of routes is displayed in the dropdown.
- * The use can choose any, or none of:
- *	Completed routes
- *	Incomplete routes
- *	Unstarted routes
- *	Sets of hills
- *	Join Up routes
- */
-function on_show (id)
-{
-	var dd = dd_populate();
-	return;
-
-	// for (var r in route_list) {
-	// 	var complete = 0;
-	// 	var dist_route = 0;
-	// 	var route = false;
-	// 	// var attr = route_list[r].attr;
-
-	// 	if ("complete" in route_list[r]) {
-	// 		complete = route_list[r].complete;
-	// 	}
-	// 	if ("dist_route" in route_list[r]) {
-	// 		dist_route = route_list[r].dist_route;
-	// 	}
-	// 	if (attr.contains ("r")) {
-	// 		route = true;
-	// 	}
-
-	// 	if (!show_comp && route && (complete == 100)) {
-	// 		hide_route (r);
-	// 	}
-	// 	if (!show_inco && route && (complete < 100)) {
-	// 		hide_route (r);
-	// 	}
-	// 	if (!show_unst && route && (complete === 0)) {
-	// 		hide_route (r);
-	// 	}
-	// 	if (!show_join && !route && (complete == 100) && (dist_route > 0)) {
-	// 		hide_route (r);
-	// 	}
-	// 	if (!show_hill && !route && (dist_route === 0)) {
-	// 		hide_route (r);
-	// 	}
-	// }
-
-	// if (opt_one) {
-	// 	hide_other_routes (dd.value);
-	// }
 }
 
 
