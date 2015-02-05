@@ -564,6 +564,7 @@ function map_zoom_route (route)
 
 function map_show_all()
 {
+	map_zoom_route();
 	$.each(route_list, function(dir, route) {
 		if (route.dist_walked > 0) {
 			load_kml(dir);
@@ -619,7 +620,8 @@ function load_kml (route)
 	});
 
 	key = load.on('change', function(e) {
-		if (load.getState() == 'ready') {
+		var state = load.getState();
+		if (state == 'ready') {
 			load.forEachFeature(function(feature) {
 				var type = feature.get('type');
 				var tag  = feature.get('tag');
@@ -650,6 +652,8 @@ function load_kml (route)
 
 			load.unByKey(key);
 			load = null;
+		} else {
+			alert (state);
 		}
 	});
 }
