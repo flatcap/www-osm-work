@@ -510,6 +510,9 @@ function map_clear()
 	$.each(layers, function(name, layer) {
 		layer.setSource (new ol.source.Vector());
 	});
+	dd_select("");
+	msg1.html("");
+	msg2.html("");
 }
 
 function map_reset()
@@ -743,7 +746,7 @@ function on_hike (id)
 	if (opt_one) {
 		map_clear();
 	}
-	msg.html (html_route_info (option));
+	msg1.html (html_route_info (option));
 	load_kml(option);
 	// show_route (option);
 }
@@ -867,9 +870,8 @@ function load_kml (route)
 }
 
 
-var msg = $("#message");
-msg.html ("Waiting...");
-var line = null;
+var msg1 = $("#route");
+var msg2 = $("#item");
 
 function format_date (datestr)
 {
@@ -910,7 +912,10 @@ function html_description (feature, newline)
 		return "";
 	}
 
-	var desc = feature.get ("description") || "";
+	var desc = feature.get ("description");
+	if (!desc) {
+		return "";
+	}
 
 	if (newline) {
 		desc += "<br />";
@@ -969,7 +974,7 @@ function html_title (feature)
 		title += " - " + where;
 	}
 
-	return "<h1>" + title + "</h1>";
+	return "<h2>" + title + "</h2>";
 }
 
 function html_camp (feature)
@@ -1126,9 +1131,9 @@ $(map.getViewport()).on("mousemove", function(evt) {
 	var hit = false;
 
 	map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-		// msg.html (html_camp (feature));
-		msg.html (html_start (feature));
-		// msg.html (html_distance (feature));
+		msg2.html (html_camp (feature));
+		// msg2.html (html_start (feature));
+		// msg2.html (html_distance (feature));
 		hit = true;
 		return true;
 	});
@@ -1138,6 +1143,7 @@ $(map.getViewport()).on("mousemove", function(evt) {
 		t.style.cursor = "pointer";
 	} else {
 		t.style.cursor = "";
+		msg2.html();
 	}
 });
 
