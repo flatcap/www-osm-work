@@ -967,3 +967,8 @@ $(map.getViewport()).on('mousemove', function(evt) {
 	}
 });
 
+$(window).on('resize', function(){
+	map.updateSize();
+	map.render();
+});
+

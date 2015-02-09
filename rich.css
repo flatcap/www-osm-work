@@ -4,23 +4,6 @@ html, body, #map {
 	height: 100%;
 }
 
-div.fixed {
-	position: fixed;
-	top: 3em;
-	left: 0px;
-	bottom: 0px;
-	width: 70%;
-	border-right: 2px solid black;
-	float: left;
-}
-
-div#user {
-	padding: 0 0 0 0;
-	float: left;
-	width: 28%;
-	padding-left: 71%;
-}
-
 body {
 	background: white;
 	color: black;
