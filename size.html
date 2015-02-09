@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="menu.css" type="text/css" />
+		<link href='https://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css' />
+		<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script type='text/javascript'>
+			function info() {
+				// $('#heightSpan').html($(window).height());
+				// $('#widthSpan').html($(window).width());
+				$('#heightSpan').html($("#other").height());
+				$('#widthSpan').html($("#other").width());
+			}
+			$(function() {
+				// var px = $(window).width();
+				// alert(px);
+				// var font = $("html").css("font-size")
+				// alert(font);
+				// parseFloat();
+				info();
+			});
+			$(window).on('resize', function(){
+				info();
+			});
+		</script>
+
+		<title>size</title>
+		<style type="text/css">
+			html, body {
+				margin: 0;
+				padding: 0;
+			}
+			div.fixed {
+				position: fixed;
+				background: #fcc;
+				top: 3em;
+				left: 0px;
+				bottom: 0px;
+				width: 70%;
+				float: left;
+				border: 1px solid #f00;
+			}
+			div.menu {
+				background: #cfc;
+				position: fixed;
+				top: 0em;
+				left: 0px;
+				bottom: 3em;
+				height: 3em;
+				width: 100%;
+				border: 1px solid #0f0;
+			}
+			div.other {
+				background: #ffc;
+				border: 1px solid #000;
+				margin-left: 71%;
+				min-width: 20em;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="menu">
+			<span class="active">Hike Map</span>
+			<a href="stats.html"><span>Statistics</span></a>
+			<a href="calendar-hike.html"><span>Hike Calendar</span></a>
+			<a href="calendar-camp.html"><span>Camp Calendar</span></a>
+		</div>
+
+		<div class="fixed" id="fixed"> </div>
+
+		<div class="other" id="other">
+		width: <span id="widthSpan">x</span> px
+		<br />
+		height: <span id="heightSpan">y</span> px
+		</div>
+	</body>
+</html>
