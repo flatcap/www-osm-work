@@ -20,21 +20,6 @@
                 <script type="text/javascript" src="layout/jquery.layout.js"> </script>
 		<script type="text/javascript" src="lib/ol-debug.js"> </script>
 
-		<script type="text/javascript">
-			$(function() {
-				myLayout = $('body').layout({
-					east__size: 400,
-					east__minSize: 250,
-					north__resizable: false,
-					north__closable: false,
-					center__onresize: function() { map.updateSize(); }
-				});
-				map.updateSize();
-
-				$("#tabs").tabs();
-			});
-		</script>
-
 		<title>rich</title>
 	</head>
 	<body>
@@ -47,17 +32,15 @@
 
 		<div id="map" class="ui-layout-center"> </div>
 
-		<div class="ui-layout-east">
-			<div id="options">
-				<input id="global_centre"  value="Centre Map" type="button" />
-				<input id="global_done"    value="All Done"   type="button" />
-				<input id="global_clear"   value="Clear All"  type="button" />
-				<input id="global_options" value="Options"    type="button" />
+		<div class="options ui-layout-east">
+			<div>
+				<input id="button_centre"  value="Centre Map" type="button" />
+				<input id="button_done"    value="All Done"   type="button" />
+				<input id="button_clear"   value="Clear All"  type="button" />
+				<input id="button_options" value="Options"    type="button" />
 			</div>
 			<hr />
 			<select size="10" id="dropdown"></select>
-
-			<hr />
 
 			<div id="route"></div>
 			<br />

@@ -20,12 +20,11 @@ h2 {
 	padding: 0;
 }
 
-h3, h4 {
-	margin: 0px;
-	padding: 0px;
-}
-
 label {
+	font-size: 90%;
+	width: 90%;
+	padding-left: 1em;
+
 	-moz-user-select: -moz-none;
 	-khtml-user-select: none;
 	-webkit-user-select: none;
@@ -34,18 +33,12 @@ label {
 }
 
 div.options {
-	max-width: 600px;
+	padding-left: 0.5em;
 }
 
 div.columns {
 	float: left;
 	vertical-align: top;
-}
-
-label {
-	font-size: 90%;
-	width: 90%;
-	padding-left: 1em;
 }
 
 form, select {
@@ -72,12 +65,6 @@ span.lastseen {
 hr {
 	clear: both;
 }
-
-/* div.tabs label { */
-/* 	border: 1px solid red; */
-/* 	width: 8em; */
-/* 	float: left; */
-/* } */
 
 #route span {
 	display: block;

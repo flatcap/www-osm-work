@@ -472,10 +472,10 @@ function init_options()
 
 	$('input[name=map_type]').change(set_map_type);
 
-	$('#global_centre') .click(map_zoom_route);
-	$('#global_done')   .click(map_show_all);
-	$('#global_clear')  .click(map_reset);
-	$('#global_options').click(function() { $('#dialog').dialog({ width: 450 }); });
+	$('#button_centre') .click(map_zoom_route);
+	$('#button_done')   .click(map_show_all);
+	$('#button_clear')  .click(map_reset);
+	$('#button_options').click(function() { $('#dialog').dialog({ width: 450 }); });
 
 	$('#dropdown').change(on_hike);
 
@@ -970,5 +970,18 @@ $(map.getViewport()).on('mousemove', function(evt) {
 $(window).on('resize', function(){
 	map.updateSize();
 	map.render();
+});
+
+$(function() {
+	$('body').layout({
+		east__size: 400,
+		east__minSize: 250,
+		north__resizable: false,
+		north__closable: false,
+		center__onresize: function() { map.updateSize(); }
+	});
+	map.updateSize();
+
+	$('#tabs').tabs();
 });
 
