@@ -1,24 +1,17 @@
-body {
-	margin-top: 0;
-	padding-top: 0;
-	background: white;
-	color: black;
-}
-
-p.menu {
+div.menu {
 	margin: 0;
 	padding: 0;
+	z-index: 10;
 }
 
-p.menu span {
-	display: block;
+div.menu span {
 	float: left;
 	width: 8em;
 	font-size: 120%;
-	background: blue;
-	color: white;
+	background: #006;
+	color: #fff;
 	padding: 0.5em;
-	border: 3px solid white;
+	border: 3px solid #fff;
 	font-family: 'Fredoka One';
 	text-align: center;
 
@@ -27,15 +20,11 @@ p.menu span {
 	-webkit-border-radius: 15px;
 }
 
-a {
+div.menu a {
 	text-decoration: none;
 }
 
-a span {
-	background: #006 !important;
-}
-
-br {
-	clear: left;
+div.menu span.active {
+	background: #00f;
 }
 
