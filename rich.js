@@ -817,6 +817,26 @@ function html_camp (feature)
 	return output;
 }
 
+function html_length (feature, newline)
+{
+	if (!feature) {
+		return '';
+	}
+
+	var len = feature.get ('day_length');
+	if (!len) {
+		return '';
+	}
+
+	var str = 'Day length: ' + len;
+
+	if (newline) {
+		str += '<br />';
+	}
+
+	return str;
+}
+
 
 function html_distance (route, newline)
 {
@@ -891,6 +911,7 @@ function html_route (feature)
 
 	output += html_title (feature);
 	output += html_date  (feature, 'date', true);
+	output += html_length (feature, true);
 
 	return output;
 }
@@ -951,7 +972,8 @@ $(map.getViewport()).on('mousemove', function(evt) {
 	var hit = false;
 
 	map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-		msg2.html (html_camp (feature));
+		msg2.html (html_route (feature));
+		// msg2.html (html_camp (feature));
 		// msg2.html (html_start (feature));
 		// msg2.html (html_distance (feature));
 		hit = true;
@@ -963,13 +985,12 @@ $(map.getViewport()).on('mousemove', function(evt) {
 		t.style.cursor = 'pointer';
 	} else {
 		t.style.cursor = '';
-		msg2.html();
+		msg2.html('');
 	}
 });
 
 $(window).on('resize', function(){
 	map.updateSize();
-	map.render();
 });
 
 $(function() {
