@@ -43,7 +43,17 @@ var map = new ol.Map({
 });
 
 var msg = document.getElementById('message');
-msg.innerHTML = "Waiting...";
+msg.innerHTML = 'Waiting...';
+
+var res = document.getElementById('resolution');
+res.innerHTML = 'Waiting...';
+
+var distance = document.getElementById('distance');
+distance.innerHTML = 'Waiting...';
+
+var pixel_count = document.getElementById('pixel');
+pixel_count.innerHTML = 'Waiting...';
+
 var line = null;
 $(map.getViewport()).on('mousemove', function(evt) {
 	var pixel = map.getEventPixel(evt.originalEvent);
@@ -73,8 +83,14 @@ $(map.getViewport()).on('mousemove', function(evt) {
 		if (len > 100000) {
 			line = null;
 		} else {
-			msg.innerHTML = closestFeature.get('description') + '<br>' + len;
+			msg.innerHTML = closestFeature.get('description');
 		}
+
+		distance.innerHTML = len.toFixed(0);
+		var r = map.getView().getResolution();
+		res.innerHTML = r.toFixed(0);
+		var p = len/r;
+		pixel_count.innerHTML = p.toFixed(0);
 	}
 	map.render();
 });
