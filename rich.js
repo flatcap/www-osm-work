@@ -478,6 +478,7 @@ function init_options()
 	$('#button_options').click(function() { $('#dialog').dialog({ width: 450 }); });
 
 	$('#dropdown').change(on_hike);
+	$('#dropdown').click(on_click_hike);
 
 	var line_hike    = new ol.dom.Input(document.getElementById('line_hike'));    line_hike.bindTo    ('checked', layers.line_hike,    'visible');
 	var line_river   = new ol.dom.Input(document.getElementById('line_river'));   line_river.bindTo   ('checked', layers.line_river,   'visible');
@@ -616,6 +617,15 @@ function set_map_type()
  *
  * When the user selects a different hike, display it.
  */
+function on_click_hike()
+{
+	var option = this.value;
+
+	if (opt_zoom) {
+		map_zoom_route(option);
+	}
+}
+
 function on_hike()
 {
 	var option = this.value;
@@ -972,6 +982,7 @@ $(map.getViewport()).on('mousemove', function(evt) {
 	var hit = false;
 
 	map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+		// alert (feature.get('type'));
 		msg2.html (html_route (feature));
 		// msg2.html (html_camp (feature));
 		// msg2.html (html_start (feature));
