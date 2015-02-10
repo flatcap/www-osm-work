@@ -80,7 +80,9 @@ $(map.getViewport()).on('mousemove', function(evt) {
 			line.setCoordinates([coordinate, closestPoint]);
 		}
 		var len = line.getLength();
-		if (len > 100000) {
+		// if (len > 100000) {
+		var x = map.getView().getResolution();
+		if (len/x > 100) {
 			line = null;
 		} else {
 			msg.innerHTML = closestFeature.get('description');
