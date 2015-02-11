@@ -950,6 +950,7 @@ function html_route (feature)
 	var output = '';
 
 	output += html_title (feature);
+	output += '<img src="gfx/map_hike.png" />';
 	output += html_date  (feature, 'date', true);
 	output += html_length (feature, true);
 
@@ -1007,17 +1008,34 @@ function html_route_info (dir)
 }
 
 
+var highlightStyleCache = {};
+
+var featureOverlay = new ol.FeatureOverlay({
+	map: map,
+});
+
+// var highlight;
+// var hi_circle;
+// var dupe;
+// var layer_match;
+
 $(map.getViewport()).on('mousemove', function(evt) {
 	var pixel = map.getEventPixel(evt.originalEvent);
 	var hit = false;
+	var match;
 
 	map.forEachFeatureAtPixel(pixel, function(feature, layer) {
 		// alert (feature.get('type'));
+		if (feature.get('type') != 'icon') {
+			return false;
+		}
 		msg2.html (html_route (feature));
 		// msg2.html (html_camp (feature));
 		// msg2.html (html_start (feature));
 		// msg2.html (html_distance (feature));
 		hit = true;
+		match = feature;
+		layer_match = layer;
 		return true;
 	});
 
@@ -1026,7 +1044,54 @@ $(map.getViewport()).on('mousemove', function(evt) {
 		t.style.cursor = 'pointer';
 	} else {
 		t.style.cursor = '';
-		msg2.html('');
+		// msg2.html('');
+	}
+
+	if (hit) {
+		if (match !== highlight) {
+			if (hi_circle) {
+				featureOverlay.removeFeature(dupe);
+				featureOverlay.removeFeature(hi_circle);
+			}
+			if (match) {
+				$('#event')  .html (pixel[0].toFixed(0) + "," + pixel[1].toFixed(0));
+
+				pixel[1] -= 50;
+				var c = map.getCoordinateFromPixel (pixel);
+
+				var geom2 = match.getGeometry();
+				var fc = geom2.getFirstCoordinate();
+				var px = map.getPixelFromCoordinate (fc);
+
+				$('#feature').html (px   [0].toFixed(0) + "," + px   [1].toFixed(0));
+
+				var p = new ol.geom.Point (c);
+				var q = new ol.geom.Point (fc);
+
+				hi_circle = new ol.Feature (new ol.geom.Point(c));
+				hi_circle.setStyle(new ol.style.Style({
+					image: new ol.style.Circle({
+						radius: 12,
+						fill: new ol.style.Fill({
+							color: '#ff0'
+						}),
+						stroke: new ol.style.Stroke({
+							color: '#fff',
+							width: 2
+						})
+					})
+				}));
+
+				dupe = match.clone();
+				dupe.setGeometry(p);
+				var s = layer_match.getStyle();
+				dupe.setStyle (s);
+
+				featureOverlay.addFeature(hi_circle);
+				featureOverlay.addFeature(dupe);
+			}
+			highlight = match;
+		}
 	}
 });
 
