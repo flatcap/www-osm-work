@@ -43,6 +43,23 @@ var styles = {};
 var icons  = {};
 var areas  = {};
 
+var coords = [[
+	[ -6.224408,56.725261 ],
+	[ -5.191198,58.587064 ],
+	[ -3.028093,58.646065 ],
+	[ -1.823329,57.612691 ],
+	[  1.781172,52.562703 ],
+	[  1.400427,51.152562 ],
+	[  0.247893,50.725720 ],
+	[ -5.203043,49.958145 ],
+	[ -5.708586,50.045477 ],
+	[ -5.026403,53.977312 ],
+	[ -6.224408,56.725261 ]
+]];
+
+var uk = new ol.geom.Polygon(coords);
+uk.transform('EPSG:4326', 'EPSG:3857');
+
 /**
  * route_sort - Sort two route_list items by fullname
  * @a: Item 1
@@ -69,21 +86,27 @@ function route_sort(a,b)
 
 function map_init_area_styles()
 {
-	areas.todo = new ol.style.Style({
-		fill: new ol.style.Fill({
-			color: [255, 150, 150, 0.3]
-		}),
-		stroke: new ol.style.Stroke({
-			color: '#FF0000',
-			width: 1
-		})
-	});
 	areas.done = new ol.style.Style({
 		fill: new ol.style.Fill({
 			color: [150, 255, 150, 0.3]
 		}),
 		stroke: new ol.style.Stroke({
 			color: '#00FF00',
+			width: 1
+		})
+	});
+	areas.hull = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: '#00FFFF',
+			width: 2
+		})
+	});
+	areas.todo = new ol.style.Style({
+		fill: new ol.style.Fill({
+			color: [255, 150, 150, 0.3]
+		}),
+		stroke: new ol.style.Stroke({
+			color: '#FF0000',
 			width: 1
 		})
 	});
@@ -159,6 +182,7 @@ function map_init_layers()
 
 	// Areas								    Default Area Styles
 	layers.area_done    = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.done      });
+	layers.area_hull    = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.hull      });
 	layers.area_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.todo      });
 	layers.area_whole   = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.whole     });
 
@@ -276,6 +300,7 @@ function map_init()
 		target: 'map',
 		layers: [
 			// Layers grouped by depth
+			layers.area_hull,
 			maps.aerial, maps.hybrid, maps.street, maps.os, maps.pastel, maps.toner, maps.black,
 			layers.area_whole, layers.area_todo, layers.area_done,
 			layers.line_route, layers.line_variant,
@@ -284,7 +309,8 @@ function map_init()
 			layers.line_hike, layers.peak_done,
 			layers.icon_hotel, layers.icon_hut, layers.icon_tent,
 			layers.icon_end, layers.icon_start, layers.extra,
-			layers.icon_rich
+			layers.icon_rich,
+			layers.area_hull,
 		],
 		view: new ol.View({
 			center: ol.proj.transform([-3.143848, 54.699234], 'EPSG:4326', 'EPSG:3857'),
@@ -438,6 +464,7 @@ function dd_select (route)
 function set_defaults()
 {
 	layers.area_whole  .setVisible(false);
+	// layers.area_hull   .setVisible(false);
 	layers.icon_end    .setVisible(false);
 	layers.icon_ferry  .setVisible(false);
 	layers.icon_waves  .setVisible(false);
@@ -587,7 +614,10 @@ function map_zoom_route (route)
 	if (lat && lon && zoom) {
 		map_zoom_ll (lat, lon, zoom);
 	} else {
-		map_zoom_ll (54.699234, -3.143848, 6);	// UK
+		// map_zoom_ll (54.699234, -3.143848, 6);	// UK
+		var view = map.getView();
+		var size = map.getSize();
+		view.fitGeometry(uk, size);
 	}
 }
 
