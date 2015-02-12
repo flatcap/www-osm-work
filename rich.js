@@ -88,11 +88,11 @@ function map_init_area_styles()
 {
 	areas.done = new ol.style.Style({
 		fill: new ol.style.Fill({
-			color: [150, 255, 150, 0.3]
+			color: [0, 255, 0, 0.2]
 		}),
 		stroke: new ol.style.Stroke({
 			color: '#00FF00',
-			width: 1
+			width: 2
 		})
 	});
 	areas.hull = new ol.style.Style({
@@ -103,20 +103,20 @@ function map_init_area_styles()
 	});
 	areas.todo = new ol.style.Style({
 		fill: new ol.style.Fill({
-			color: [255, 150, 150, 0.3]
+			color: [255, 0, 0, 0.2]
 		}),
 		stroke: new ol.style.Stroke({
 			color: '#FF0000',
-			width: 1
+			width: 2
 		})
 	});
 	areas.whole = new ol.style.Style({
 		fill: new ol.style.Fill({
-			color: [255, 255, 150, 0.3]
+			color: [255, 255, 0, 0.2]
 		}),
 		stroke: new ol.style.Stroke({
 			color: '#FFFF00',
-			width: 1
+			width: 2
 		})
 	});
 }
@@ -1007,8 +1007,6 @@ function html_route_info (dir)
 }
 
 
-var highlightStyleCache = {};
-
 var featureOverlay = new ol.FeatureOverlay({
 	map: map,
 });
@@ -1028,9 +1026,37 @@ $(map.getViewport()).on('mousemove', function(evt) {
 		match = feature;
 		layer_match = layer;
 		// alert (feature.get('type'));
-		// if (feature.get('type') != 'icon') {
-		// 	return false;
-		// }
+
+		// area
+		//	todo
+		//	done
+		//	whole
+		//	hull
+		// line
+		//	hike
+		//	todo
+		//	variant
+		//	route
+		//	river
+		// icon
+		//	ferry
+		//	waves
+		//	tent
+		//	hut
+		//	hotel
+		//	start
+		//	end
+		// peak
+		//	done
+		//	todo
+
+		$('#name').html (feature.get('name') || "");
+		$('#description').html (feature.get('description') || "");
+		$('#type').html (feature.get('type') || "");
+		$('#tag') .html (feature.get('tag')  || "");
+		if (feature.get('type') == 'hull') {
+			return false;
+		}
 		try {
 			msg2.html (html_route (feature));
 		} catch (e) {
@@ -1049,11 +1075,11 @@ $(map.getViewport()).on('mousemove', function(evt) {
 			var x = layer_match.getStyle();
 			var y = x.getImage();
 			var z = y.getSrc();
-			alert(z);
+			// alert(z);
 		} catch (e) {
 			var n = match.get('name') || 'unknown';
 			var d = match.get('type') || 'unknown';
-			alert ('non-icon: ' + n + ' ' + d);
+			// alert ('non-icon: ' + n + ' ' + d);
 		}
 	} else {
 		t.style.cursor = '';
