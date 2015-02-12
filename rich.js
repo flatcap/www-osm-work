@@ -310,7 +310,6 @@ function map_init()
 			layers.icon_hotel, layers.icon_hut, layers.icon_tent,
 			layers.icon_end, layers.icon_start, layers.extra,
 			layers.icon_rich,
-			layers.area_hull,
 		],
 		view: new ol.View({
 			center: ol.proj.transform([-3.143848, 54.699234], 'EPSG:4326', 'EPSG:3857'),
@@ -1017,7 +1016,7 @@ var featureOverlay = new ol.FeatureOverlay({
 // var highlight;
 // var hi_circle;
 // var dupe;
-// var layer_match;
+var layer_match;
 
 $(map.getViewport()).on('mousemove', function(evt) {
 	var pixel = map.getEventPixel(evt.originalEvent);
@@ -1025,28 +1024,43 @@ $(map.getViewport()).on('mousemove', function(evt) {
 	var match;
 
 	map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-		// alert (feature.get('type'));
-		if (feature.get('type') != 'icon') {
-			return false;
-		}
-		msg2.html (html_route (feature));
-		// msg2.html (html_camp (feature));
-		// msg2.html (html_start (feature));
-		// msg2.html (html_distance (feature));
 		hit = true;
 		match = feature;
 		layer_match = layer;
+		// alert (feature.get('type'));
+		// if (feature.get('type') != 'icon') {
+		// 	return false;
+		// }
+		try {
+			msg2.html (html_route (feature));
+		} catch (e) {
+		}
+		// msg2.html (html_camp (feature));
+		// msg2.html (html_start (feature));
+		// msg2.html (html_distance (feature));
 		return true;
 	});
 
 	var t = $('#map')[0];
 	if (hit) {
 		t.style.cursor = 'pointer';
+
+		try {
+			var x = layer_match.getStyle();
+			var y = x.getImage();
+			var z = y.getSrc();
+			alert(z);
+		} catch (e) {
+			var n = match.get('name') || 'unknown';
+			var d = match.get('type') || 'unknown';
+			alert ('non-icon: ' + n + ' ' + d);
+		}
 	} else {
 		t.style.cursor = '';
 		// msg2.html('');
 	}
 
+	/*
 	if (hit) {
 		if (match !== highlight) {
 			if (hi_circle) {
@@ -1093,6 +1107,7 @@ $(map.getViewport()).on('mousemove', function(evt) {
 			highlight = match;
 		}
 	}
+	*/
 });
 
 $(window).on('resize', function(){
