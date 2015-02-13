@@ -493,14 +493,14 @@ function init_options()
 	$('#show_join').change(function() { show_join = this.checked; dd_populate(); });
 	$('#show_unst').change(function() { show_unst = this.checked; dd_populate(); });
 
-	$('#opt_one') .change(function() { opt_one  = this.checked; /*DO SOMETHING*/ });
-	$('#opt_zoom').change(function() { opt_zoom = this.checked; /*DO SOMETHING*/ });
+	$('#opt_one')  .change(function() { opt_one  = this.checked; });
+	$('#opt_zoom') .change(function() { opt_zoom = this.checked; });
 
 	$('input[name=map_type]').change(set_map_type);
 
-	$('#button_centre') .click(map_zoom_route);
-	$('#button_done')   .click(map_show_all);
-	$('#button_clear')  .click(map_reset);
+	$('#button_centre') .click(function() { map_zoom_route(); });
+	$('#button_done')   .click(function() { map_show_all();   });
+	$('#button_clear')  .click(function() { map_reset();      });
 	$('#button_options').click(function() { $('#dialog').dialog({ width: 450 }); });
 
 	$('#dropdown').change(on_hike);
@@ -548,69 +548,28 @@ function map_reset()
 }
 
 /**
- * map_zoom_ll - Zoom in on coordinates
- * @lat: Latitude
- * @lon: Longitude
- * @zoom: Zoom level (1 = From space, 17 = grass level)
- *
- * Centre the map on the coordinates: (@lat, @lon).
- * Zoom in to the level @zoom.
- */
-function map_zoom_ll (lat, lon, zoom)
-{
-	if (!lat || !lon || !zoom) {
-		return false;
-	}
-
-	lat = +lat;	// make sure we're dealing with numbers
-	lon = +lon;
-
-	// bounds of UK
-	if ((lat < 49) || (lat > 59)) {
-		return false;
-	}
-
-	if ((lon < -8) || (lon > 2)) {
-		return false;
-	}
-
-	var place = ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
-	var view = map.getView();
-
-	view.setCenter (place);
-	view.setZoom (zoom);
-
-	return true;
-}
-
-/**
  * map_zoom_route - Frame a route in the map
  * @route: Route name
  */
 function map_zoom_route (route)
 {
-	// map_zoom_ll (54.699234, -3.143848, 6);	// UK
+	var view = map.getView();
+	var size = map.getSize();
 
-	// var view = map.getView();
-	// var size = map.getSize();
-	// view.fitGeometry(uk, size);
+	if (route) {
+		var lay = layers.area_hull;
+		var src = lay.getSource();
+		var fts = src.getFeatures();
 
-	var lay = layers.area_hull;
-	var src = lay.getSource();
-	var fts = src.getFeatures();
+		if (fts.length > 0) {
+			var item = fts[0];
+			var geom = item.getGeometry();
 
-	if (fts.length > 0) {
-		var view = map.getView();
-		var size = map.getSize();
-		var item = fts[0];
-		var geom = item.getGeometry();
-
-		view.fitGeometry(geom, size, { padding: [10, 10, 10, 10] });
-
-		var dummy = 42;
+			view.fitGeometry(geom, size, { padding: [10, 10, 10, 10] });
+		}
+	} else {
+		view.fitGeometry(uk, size);
 	}
-
-	var dummy = 42;
 }
 
 function map_show_all()
