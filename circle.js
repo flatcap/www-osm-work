@@ -94,5 +94,5 @@ function kml_circle(longitude,latitude,meters,segments){
 	return s;
 }
 
-print (kml_circle (-3.183848, 54.699234, 1000, 20));
+// print (kml_circle (-3.183848, 54.699234, 1000, 20));
 

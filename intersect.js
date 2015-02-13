@@ -105,7 +105,10 @@ function calc()
 	}
 	coords += first;
 	
-	var cont = document.getElementById ('output')
-	cont.innerHTML += coords;
+	// var cont = document.getElementById ('output')
+	// cont.innerHTML += coords;
+
+	print (coords);
 }
 
+calc();
