@@ -586,38 +586,31 @@ function map_zoom_ll (lat, lon, zoom)
 /**
  * map_zoom_route - Frame a route in the map
  * @route: Route name
- *
- * Centre the map on @route and zoom in.
- * The data come from:
- *	route_list[@route].latitude
- *	route_list[@route].longitude
- *	route_list[@route].zoom
  */
 function map_zoom_route (route)
 {
-	var lat;
-	var lon;
-	var zoom;
+	// map_zoom_ll (54.699234, -3.143848, 6);	// UK
 
-	// alert(route);
-	if (route in route_list) {
-		lat  = route_list[route].latitude;
-		lon  = route_list[route].longitude;
-		zoom = route_list[route].zoom;
-	}
+	// var view = map.getView();
+	// var size = map.getSize();
+	// view.fitGeometry(uk, size);
 
-	// alert(lat);
-	// alert(lon);
-	// alert(zoom);
+	var lay = layers.area_hull;
+	var src = lay.getSource();
+	var fts = src.getFeatures();
 
-	if (lat && lon && zoom) {
-		map_zoom_ll (lat, lon, zoom);
-	} else {
-		// map_zoom_ll (54.699234, -3.143848, 6);	// UK
+	if (fts.length > 0) {
 		var view = map.getView();
 		var size = map.getSize();
-		view.fitGeometry(uk, size);
+		var item = fts[0];
+		var geom = item.getGeometry();
+
+		view.fitGeometry(geom, size, { padding: [10, 10, 10, 10] });
+
+		var dummy = 42;
 	}
+
+	var dummy = 42;
 }
 
 function map_show_all()
@@ -728,6 +721,7 @@ function load_kml (route)
 
 			load.unByKey(key);
 			load = null;
+			map_zoom_route (route);
 		} else {
 			alert (state);
 		}
@@ -1050,10 +1044,11 @@ $(map.getViewport()).on('mousemove', function(evt) {
 		//	done
 		//	todo
 
-		$('#name').html (feature.get('name') || "");
-		$('#description').html (feature.get('description') || "");
-		$('#type').html (feature.get('type') || "");
-		$('#tag') .html (feature.get('tag')  || "");
+		$('#name')       .html (feature.get('name')        || '');
+		$('#description').html (feature.get('description') || '');
+		$('#type')       .html (feature.get('type')        || '');
+		$('#tag')        .html (feature.get('tag')         || '');
+
 		if (feature.get('type') == 'hull') {
 			return false;
 		}
