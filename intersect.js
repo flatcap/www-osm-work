@@ -1,19 +1,49 @@
 
 function draw()
 {
-	var subj_paths = [[{X:10,Y:10},{X:110,Y:10},{X:110,Y:110},{X:10,Y:110}], [{X:20,Y:20},{X:20,Y:100},{X:100,Y:100},{X:100,Y:20}]];
-	var clip_paths = [[{X:50,Y:50},{X:150,Y:50},{X:150,Y:150},{X:50,Y:150}], [{X:60,Y:60},{X:60,Y:140},{X:140,Y:140},{X:140,Y:60}]];
+	var subj_paths = [
+		[
+			{X:10,Y:10},
+			{X:110,Y:10},
+			{X:110,Y:110},
+			{X:10,Y:110}
+		],
+		[
+			{X:20,Y:20},
+			{X:20,Y:100},
+			{X:100,Y:100},
+			{X:100,Y:20}
+		]
+	];
+
+	var clip_paths = [
+		[
+			{X:50,Y:50},
+			{X:150,Y:50},
+			{X:150,Y:150},
+			{X:50,Y:150}
+		],
+		[
+			{X:60,Y:60},
+			{X:60,Y:140},
+			{X:140,Y:140},
+			{X:140,Y:60}
+		]
+	];
+
 	var scale = 100;
 	ClipperLib.JS.ScaleUpPaths(subj_paths, scale);
 	ClipperLib.JS.ScaleUpPaths(clip_paths, scale);
+
 	var cpr = new ClipperLib.Clipper();
 	cpr.AddPaths(subj_paths, ClipperLib.PolyType.ptSubject, true);
 	cpr.AddPaths(clip_paths, ClipperLib.PolyType.ptClip, true);
+
 	var subject_fillType = ClipperLib.PolyFillType.pftNonZero;
 	var clip_fillType = ClipperLib.PolyFillType.pftNonZero;
 	var clipTypes = [ClipperLib.ClipType.ctUnion, ClipperLib.ClipType.ctDifference, ClipperLib.ClipType.ctXor, ClipperLib.ClipType.ctIntersection];
-	var clipTypesTexts = "Union, Difference, Xor, Intersection";
 	var solution_paths, svg, cont = document.getElementById('svgcontainer');
+
 	var i;
 	for(i = 0; i < clipTypes.length; i++) {
 		solution_paths = new ClipperLib.Paths();
@@ -24,11 +54,9 @@ function draw()
 		svg += '</svg>';
 		cont.innerHTML += svg;
 	}
-	cont.innerHTML += "<br>" + clipTypesTexts;
 }
 
-// Converts Paths to SVG path string
-// and scales down the coordinates
+// Converts Paths to SVG path string and scales down the coordinates
 function paths2string (paths, scale)
 {
 	var svgpath = "", i, j;
