@@ -503,7 +503,7 @@ function init_options()
 	$('#button_clear')  .click(function() { map_reset();      });
 	$('#button_options').click(function() { $('#dialog').dialog({ width: 450 }); });
 
-	$('#dropdown').change(on_hike);
+	$('#dropdown').change(on_change_hike);
 	$('#dropdown').click(on_click_hike);
 
 	var line_hike    = new ol.dom.Input(document.getElementById('line_hike'));    line_hike.bindTo    ('checked', layers.line_hike,    'visible');
@@ -562,10 +562,14 @@ function map_zoom_route (route)
 		var fts = src.getFeatures();
 
 		if (fts.length > 0) {
-			var item = fts[0];
-			var geom = item.getGeometry();
-
-			view.fitGeometry(geom, size, { padding: [10, 10, 10, 10] });
+			$.each (fts, function(index, item) {
+				var dir = item.get('hike_dir');
+				if (dir == route) {
+					var geom = item.getGeometry();
+					view.fitGeometry(geom, size, { padding: [10, 10, 10, 10] });
+					return false;
+				}
+			});
 		}
 	} else {
 		view.fitGeometry(uk, size);
@@ -592,12 +596,6 @@ function set_map_type()
 	});
 }
 
-/**
- * on_hike - Event handler for hike dropdown
- * @id: ID of dropdown
- *
- * When the user selects a different hike, display it.
- */
 function on_click_hike()
 {
 	var option = this.value;
@@ -607,7 +605,7 @@ function on_click_hike()
 	}
 }
 
-function on_hike()
+function on_change_hike()
 {
 	var option = this.value;
 
@@ -680,7 +678,9 @@ function load_kml (route)
 
 			load.unByKey(key);
 			load = null;
-			map_zoom_route (route);
+			if (opt_zoom) {
+				map_zoom_route(route);
+			}
 		} else {
 			alert (state);
 		}
