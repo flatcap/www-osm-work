@@ -969,26 +969,117 @@ function show_icon (feature, layer)
 	//	end
 }
 
-/**
- * show_line - Display information about a route
- * line
- *	hike
- *	todo
- *	variant
- *	route
- *	river
- */
-function show_line (feature, layer)
+
+function get_line_title (feature)
 {
-	if (!feature || !layer) {
+	if (!feature) {
+		return '';
+	}
+
+	var tag = feature.get('tag');
+	if (!tag) {
+		return '';
+	}
+
+	     if (tag == 'route')   { tag = 'Official Route';     }
+	else if (tag == 'todo')    { tag = 'Route (Not Walked)'; }
+	else if (tag == 'hike')    { tag = 'Route (Walked)';     }
+	else if (tag == 'variant') { tag = 'Alternate Route';    }
+	else if (tag == 'river')   { tag = 'River Crossing';     }
+
+	var str = '<span>Type:</span> ' + tag + '<br />';
+	return str;
+}
+
+function get_part_of (feature)
+{
+	if (!feature) {
+		return '';
+	}
+
+	var name = feature.get('name');
+	if (!name) {
+		return '';
+	}
+
+	var str = '<span>Part&nbsp;of:</span> ' + name + '<br />';
+	return str;
+}
+
+function get_date (feature)
+{
+	if (!feature) {
+		return '';
+	}
+
+	var date = feature.get ('date');
+	if (!date) {
+		return '';
+	}
+
+	var str = '<span>Date:</span> ' + format_date (date) + '<br />';
+	return str;
+}
+
+function get_day_length (feature)
+{
+	if (!feature) {
+		return '';
+	}
+
+	var len = feature.get ('day_length');
+	if (!len) {
+		return '';
+	}
+
+	var str = '<span>Length:</span> ' + len + ' miles<br />';
+	return str;
+}
+
+function get_line_id (feature)
+{
+	if (!feature) {
+		return '';
+	}
+
+	var id = feature.getId();
+	if (!id) {
+		return '';
+	}
+
+	var str = '<span>Line&nbsp;ID:</span> ' + id + '<br />';
+	return str;
+}
+
+function get_description (feature)
+{
+	if (!feature) {
+		return '';
+	}
+
+	var desc = feature.get ('description');
+	if (!desc) {
+		return '';
+	}
+
+	desc += '<br />';
+	return desc;
+}
+
+
+function show_line (feature)
+{
+	if (!feature) {
 		return '';
 	}
 
 	var output = '';
-	output += html_title       (feature);
-	output += html_description (feature, true);
-	output += html_date        (feature, 'date', true);
-	output += html_length      (feature, true);
+	output += get_line_title  (feature);
+	output += get_description (feature);
+	output += get_part_of     (feature);
+	output += get_date        (feature);
+	output += get_day_length  (feature);
+	output += get_line_id     (feature);
 
 	return output;
 }

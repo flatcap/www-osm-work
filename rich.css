@@ -67,7 +67,7 @@ hr {
 	clear: both;
 }
 
-#route span {
+#route span, #item span {
 	display: block;
 	width: 6em;
 	float: left;
