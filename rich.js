@@ -35,7 +35,7 @@ var show_html = {	// Keep the select HTML to rebuild the dropdown
 
 var map;
 var route_list;
-var proj = ol.proj.get('EPSG:3857');
+var proj = ol.proj.get ('EPSG:3857');
 
 var maps   = {};
 var layers = {};
@@ -44,21 +44,21 @@ var icons  = {};
 var areas  = {};
 
 var coords = [[
-	[ -6.224408,56.725261 ],
-	[ -5.191198,58.587064 ],
-	[ -3.028093,58.646065 ],
-	[ -1.823329,57.612691 ],
-	[  1.781172,52.562703 ],
-	[  1.400427,51.152562 ],
-	[  0.247893,50.725720 ],
-	[ -5.203043,49.958145 ],
-	[ -5.708586,50.045477 ],
-	[ -5.026403,53.977312 ],
-	[ -6.224408,56.725261 ]
+	[ -6.224408, 56.725261 ],
+	[ -5.191198, 58.587064 ],
+	[ -3.028093, 58.646065 ],
+	[ -1.823329, 57.612691 ],
+	[  1.781172, 52.562703 ],
+	[  1.400427, 51.152562 ],
+	[  0.247893, 50.725720 ],
+	[ -5.203043, 49.958145 ],
+	[ -5.708586, 50.045477 ],
+	[ -5.026403, 53.977312 ],
+	[ -6.224408, 56.725261 ]
 ]];
 
-var uk = new ol.geom.Polygon(coords);
-uk.transform('EPSG:4326', 'EPSG:3857');
+var uk = new ol.geom.Polygon (coords);
+uk.transform ('EPSG:4326', 'EPSG:3857');
 
 /**
  * route_sort - Sort two route_list items by fullname
@@ -72,7 +72,7 @@ uk.transform('EPSG:4326', 'EPSG:3857');
  *	    0	a identical to b
  *	    1	a follows b
  */
-function route_sort(a,b)
+function route_sort (a, b)
 {
 	if (a.fullname > b.fullname) {
 		return 1;
@@ -139,7 +139,7 @@ function map_init_icons()
 		'waves':     'map_waves',
 	};
 
-	$.each(names, function(name, filename) {
+	$.each (names, function (name, filename) {
 		var scale = 0.5;
 		if ((name == 'start') || (name == 'end')) {
 			scale = 1.0;
@@ -162,32 +162,32 @@ function map_init_icons()
 function map_init_layers()
 {
 	// Route layers								    Default Line Style
-	layers.line_hike    = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.hike     });
-	layers.line_river   = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.river    });
-	layers.line_route   = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.route    });
-	layers.line_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.todo     });
-	layers.line_variant = new ol.layer.Vector({ source: new ol.source.Vector(), style: styles.variant  });
+	layers.line_hike    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.hike     });
+	layers.line_river   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.river    });
+	layers.line_route   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.route    });
+	layers.line_todo    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.todo     });
+	layers.line_variant = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.variant  });
 
 	// Icon layers								    Default Icon
-	layers.icon_end     = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.end       });
-	layers.icon_ferry   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.ferry     });
-	layers.icon_hotel   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.hotel     });
-	layers.icon_hut     = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.hut       });
-	layers.icon_rich    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.r_green   });
-	layers.icon_start   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.start     });
-	layers.icon_tent    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.tent      });
-	layers.icon_waves   = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.waves     });
-	layers.peak_done    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_done });
-	layers.peak_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: icons.peak_todo });
+	layers.icon_end     = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.end       });
+	layers.icon_ferry   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.ferry     });
+	layers.icon_hotel   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.hotel     });
+	layers.icon_hut     = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.hut       });
+	layers.icon_rich    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.r_green   });
+	layers.icon_start   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.start     });
+	layers.icon_tent    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.tent      });
+	layers.icon_waves   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.waves     });
+	layers.peak_done    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.peak_done });
+	layers.peak_todo    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.peak_todo });
 
 	// Areas								    Default Area Styles
-	layers.area_done    = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.done      });
-	layers.area_hull    = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.hull      });
-	layers.area_todo    = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.todo      });
-	layers.area_whole   = new ol.layer.Vector({ source: new ol.source.Vector(), style: areas.whole     });
+	layers.area_done    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: areas.done      });
+	layers.area_hull    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: areas.hull      });
+	layers.area_todo    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: areas.todo      });
+	layers.area_whole   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: areas.whole     });
 
 	// Misc									    No Defaults
-	layers.extra        = new ol.layer.Vector({ source: new ol.source.Vector()                         });
+	layers.extra        = new ol.layer.Vector ({ source: new ol.source.Vector()                         });
 }
 
 function map_init_line_styles()
@@ -312,12 +312,12 @@ function map_init()
 			layers.icon_rich,
 		],
 		view: new ol.View({
-			center: ol.proj.transform([-3.143848, 54.699234], 'EPSG:4326', 'EPSG:3857'),
+			center: ol.proj.transform ([-3.143848, 54.699234], 'EPSG:4326', 'EPSG:3857'),
 			zoom: 6,
 			minZoom: 1,
 			maxZoom: 19,
 		}),
-		controls: ol.control.defaults().extend([
+		controls: ol.control.defaults().extend ([
 			new ol.control.FullScreen()
 		]),
 	});
@@ -345,11 +345,11 @@ function dd_init()
 	var h_html = '';
 	var j_html = '';
 
-	$.each(route_list, function(index, route) {
-		if ((typeof(route.dist_route) !== undefined) && (route.dist_route > 0)) {
-			if (typeof(route.complete) !== undefined) {
+	$.each (route_list, function (index, route) {
+		if ((typeof (route.dist_route) !== undefined) && (route.dist_route > 0)) {
+			if (typeof (route.complete) !== undefined) {
 				if (route.complete == 100) {
-					if (index.substring(0, 5) == 'join.') {
+					if (index.substring (0, 5) == 'join.') {
 						j.push ({ key: index, fullname: route.fullname });
 					} else {
 						c.push ({ key: index, fullname: route.fullname });
@@ -365,15 +365,15 @@ function dd_init()
 		}
 	});
 
-	c.sort(route_sort);
-	i.sort(route_sort);
-	u.sort(route_sort);
-	h.sort(route_sort);
-	j.sort(route_sort);
+	c.sort (route_sort);
+	i.sort (route_sort);
+	u.sort (route_sort);
+	h.sort (route_sort);
+	j.sort (route_sort);
 
 	if (c.length) {
 		c_html += '<optgroup id="complete" label="Complete">';
-		$.each(c, function(index, route) {
+		$.each (c, function (index, route) {
 			c_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
 		});
 		c_html += '</optgroup>';
@@ -381,7 +381,7 @@ function dd_init()
 
 	if (i.length) {
 		i_html += '<optgroup id="incomplete" label="Incomplete">';
-		$.each(i, function(index, route) {
+		$.each (i, function (index, route) {
 			i_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
 		});
 		i_html += '</optgroup>';
@@ -389,7 +389,7 @@ function dd_init()
 
 	if (u.length) {
 		u_html += '<optgroup id="unstarted" label="Unstarted">';
-		$.each(u, function(index, route) {
+		$.each (u, function (index, route) {
 			u_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
 		});
 		u_html += '</optgroup>';
@@ -397,7 +397,7 @@ function dd_init()
 
 	if (h.length) {
 		h_html += '<optgroup id="hills" label="Hills">';
-		$.each(h, function(index, route) {
+		$.each (h, function (index, route) {
 			h_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
 		});
 		h_html += '</optgroup>';
@@ -405,7 +405,7 @@ function dd_init()
 
 	if (j.length) {
 		j_html += '<optgroup id="join" label="Join Ups">';
-		$.each(j, function(index, route) {
+		$.each (j, function (index, route) {
 			j_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
 		});
 		j_html += '</optgroup>';
@@ -440,7 +440,7 @@ function dd_populate()
 	if (show_hill) { html += show_html.hill; }
 	if (show_join) { html += show_html.join; }
 
-	dd.html(html);
+	dd.html (html);
 
 	// If possible, leave the selection unchanged
 	dd_select (value);
@@ -456,19 +456,19 @@ function dd_populate()
  */
 function dd_select (route)
 {
-	$('#dropdown').val(route);
+	$('#dropdown').val (route);
 }
 
 
 function set_defaults()
 {
-	layers.area_whole  .setVisible(false);
-	// layers.area_hull   .setVisible(false);
-	layers.icon_end    .setVisible(false);
-	layers.icon_ferry  .setVisible(false);
-	layers.icon_waves  .setVisible(false);
-	layers.line_route  .setVisible(false);
-	layers.line_variant.setVisible(false);
+	layers.area_whole  .setVisible (false);
+	// layers.area_hull   .setVisible (false);
+	layers.icon_end    .setVisible (false);
+	layers.icon_ferry  .setVisible (false);
+	layers.icon_waves  .setVisible (false);
+	layers.line_route  .setVisible (false);
+	layers.line_variant.setVisible (false);
 }
 
 /**
@@ -478,73 +478,73 @@ function set_defaults()
  */
 function init_options()
 {
-	$('#show_comp').prop('checked', show_comp);
-	$('#show_inco').prop('checked', show_inco);
-	$('#show_unst').prop('checked', show_unst);
-	$('#show_hill').prop('checked', show_hill);
-	$('#show_join').prop('checked', show_join);
+	$('#show_comp').prop ('checked', show_comp);
+	$('#show_inco').prop ('checked', show_inco);
+	$('#show_unst').prop ('checked', show_unst);
+	$('#show_hill').prop ('checked', show_hill);
+	$('#show_join').prop ('checked', show_join);
 
-	$('#opt_one')  .prop('checked', opt_one);
-	$('#opt_zoom') .prop('checked', opt_zoom);
+	$('#opt_one')  .prop ('checked', opt_one);
+	$('#opt_zoom') .prop ('checked', opt_zoom);
 
-	$('#show_comp').change(function() { show_comp = this.checked; dd_populate(); });
-	$('#show_hill').change(function() { show_hill = this.checked; dd_populate(); });
-	$('#show_inco').change(function() { show_inco = this.checked; dd_populate(); });
-	$('#show_join').change(function() { show_join = this.checked; dd_populate(); });
-	$('#show_unst').change(function() { show_unst = this.checked; dd_populate(); });
+	$('#show_comp').change (function() { show_comp = this.checked; dd_populate(); });
+	$('#show_hill').change (function() { show_hill = this.checked; dd_populate(); });
+	$('#show_inco').change (function() { show_inco = this.checked; dd_populate(); });
+	$('#show_join').change (function() { show_join = this.checked; dd_populate(); });
+	$('#show_unst').change (function() { show_unst = this.checked; dd_populate(); });
 
-	$('#opt_one')  .change(function() { opt_one  = this.checked; });
-	$('#opt_zoom') .change(function() { opt_zoom = this.checked; });
+	$('#opt_one')  .change (function() { opt_one  = this.checked; });
+	$('#opt_zoom') .change (function() { opt_zoom = this.checked; });
 
-	$('input[name=map_type]').change(set_map_type);
+	$('input[name=map_type]').change (set_map_type);
 
-	$('#button_centre') .click(function() { map_zoom_route(); });
-	$('#button_done')   .click(function() { map_show_all();   });
-	$('#button_clear')  .click(function() { map_reset();      });
-	$('#button_options').click(function() { $('#dialog').dialog({ width: 450 }); });
+	$('#button_centre') .click (function() { map_zoom_route(); });
+	$('#button_done')   .click (function() { map_show_all();   });
+	$('#button_clear')  .click (function() { map_reset();      });
+	$('#button_options').click (function() { $('#dialog').dialog ({ width: 450 }); });
 
-	$('#dropdown').change(on_change_hike);
-	$('#dropdown').click(on_click_hike);
+	$('#dropdown').change (on_change_hike);
+	$('#dropdown').click (on_click_hike);
 
-	var line_hike    = new ol.dom.Input(document.getElementById('line_hike'));    line_hike.bindTo    ('checked', layers.line_hike,    'visible');
-	var line_river   = new ol.dom.Input(document.getElementById('line_river'));   line_river.bindTo   ('checked', layers.line_river,   'visible');
-	var line_route   = new ol.dom.Input(document.getElementById('line_route'));   line_route.bindTo   ('checked', layers.line_route,   'visible');
-	var line_todo    = new ol.dom.Input(document.getElementById('line_todo'));    line_todo.bindTo    ('checked', layers.line_todo,    'visible');
-	var line_variant = new ol.dom.Input(document.getElementById('line_variant')); line_variant.bindTo ('checked', layers.line_variant, 'visible');
+	var line_hike    = new ol.dom.Input (document.getElementById ('line_hike'));    line_hike.bindTo    ('checked', layers.line_hike,    'visible');
+	var line_river   = new ol.dom.Input (document.getElementById ('line_river'));   line_river.bindTo   ('checked', layers.line_river,   'visible');
+	var line_route   = new ol.dom.Input (document.getElementById ('line_route'));   line_route.bindTo   ('checked', layers.line_route,   'visible');
+	var line_todo    = new ol.dom.Input (document.getElementById ('line_todo'));    line_todo.bindTo    ('checked', layers.line_todo,    'visible');
+	var line_variant = new ol.dom.Input (document.getElementById ('line_variant')); line_variant.bindTo ('checked', layers.line_variant, 'visible');
 
-	var icon_end     = new ol.dom.Input(document.getElementById('icon_end'));     icon_end.bindTo     ('checked', layers.icon_end,     'visible');
-	var icon_ferry   = new ol.dom.Input(document.getElementById('icon_ferry'));   icon_ferry.bindTo   ('checked', layers.icon_ferry,   'visible');
-	var icon_hotel   = new ol.dom.Input(document.getElementById('icon_hotel'));   icon_hotel.bindTo   ('checked', layers.icon_hotel,   'visible');
-	var icon_hut     = new ol.dom.Input(document.getElementById('icon_hut'));     icon_hut.bindTo     ('checked', layers.icon_hut,     'visible');
-	var icon_rich    = new ol.dom.Input(document.getElementById('icon_rich'));    icon_rich.bindTo    ('checked', layers.icon_rich,    'visible');
-	var icon_start   = new ol.dom.Input(document.getElementById('icon_start'));   icon_start.bindTo   ('checked', layers.icon_start,   'visible');
-	var icon_tent    = new ol.dom.Input(document.getElementById('icon_tent'));    icon_tent.bindTo    ('checked', layers.icon_tent,    'visible');
-	var icon_waves   = new ol.dom.Input(document.getElementById('icon_waves'));   icon_waves.bindTo   ('checked', layers.icon_waves,   'visible');
+	var icon_end     = new ol.dom.Input (document.getElementById ('icon_end'));     icon_end.bindTo     ('checked', layers.icon_end,     'visible');
+	var icon_ferry   = new ol.dom.Input (document.getElementById ('icon_ferry'));   icon_ferry.bindTo   ('checked', layers.icon_ferry,   'visible');
+	var icon_hotel   = new ol.dom.Input (document.getElementById ('icon_hotel'));   icon_hotel.bindTo   ('checked', layers.icon_hotel,   'visible');
+	var icon_hut     = new ol.dom.Input (document.getElementById ('icon_hut'));     icon_hut.bindTo     ('checked', layers.icon_hut,     'visible');
+	var icon_rich    = new ol.dom.Input (document.getElementById ('icon_rich'));    icon_rich.bindTo    ('checked', layers.icon_rich,    'visible');
+	var icon_start   = new ol.dom.Input (document.getElementById ('icon_start'));   icon_start.bindTo   ('checked', layers.icon_start,   'visible');
+	var icon_tent    = new ol.dom.Input (document.getElementById ('icon_tent'));    icon_tent.bindTo    ('checked', layers.icon_tent,    'visible');
+	var icon_waves   = new ol.dom.Input (document.getElementById ('icon_waves'));   icon_waves.bindTo   ('checked', layers.icon_waves,   'visible');
 
-	var peak_done    = new ol.dom.Input(document.getElementById('peak_done'));    peak_done.bindTo    ('checked', layers.peak_done,    'visible');
-	var peak_todo    = new ol.dom.Input(document.getElementById('peak_todo'));    peak_todo.bindTo    ('checked', layers.peak_todo,    'visible');
+	var peak_done    = new ol.dom.Input (document.getElementById ('peak_done'));    peak_done.bindTo    ('checked', layers.peak_done,    'visible');
+	var peak_todo    = new ol.dom.Input (document.getElementById ('peak_todo'));    peak_todo.bindTo    ('checked', layers.peak_todo,    'visible');
 
-	var area_done    = new ol.dom.Input(document.getElementById('area_done'));    area_done.bindTo    ('checked', layers.area_done,    'visible');
-	var area_todo    = new ol.dom.Input(document.getElementById('area_todo'));    area_todo.bindTo    ('checked', layers.area_todo,    'visible');
-	var area_whole   = new ol.dom.Input(document.getElementById('area_whole'));   area_whole.bindTo   ('checked', layers.area_whole,   'visible');
+	var area_done    = new ol.dom.Input (document.getElementById ('area_done'));    area_done.bindTo    ('checked', layers.area_done,    'visible');
+	var area_todo    = new ol.dom.Input (document.getElementById ('area_todo'));    area_todo.bindTo    ('checked', layers.area_todo,    'visible');
+	var area_whole   = new ol.dom.Input (document.getElementById ('area_whole'));   area_whole.bindTo   ('checked', layers.area_whole,   'visible');
 
-	var extra        = new ol.dom.Input(document.getElementById('extra'));        extra.bindTo        ('checked', layers.extra,        'visible');
+	var extra        = new ol.dom.Input (document.getElementById ('extra'));        extra.bindTo        ('checked', layers.extra,        'visible');
 }
 
 
 function map_clear()
 {
-	$.each(layers, function(name, layer) {
+	$.each (layers, function (name, layer) {
 		layer.setSource (new ol.source.Vector());
 	});
-	msg1.html('');
-	msg2.html('');
+	msg1.html ('');
+	msg2.html ('');
 }
 
 function map_reset()
 {
 	map_clear();
-	dd_select('');
+	dd_select ('');
 }
 
 /**
@@ -562,26 +562,26 @@ function map_zoom_route (route)
 		var fts = src.getFeatures();
 
 		if (fts.length > 0) {
-			$.each (fts, function(index, item) {
-				var dir = item.get('hike_dir');
+			$.each (fts, function (index, item) {
+				var dir = item.get ('hike_dir');
 				if (dir == route) {
 					var geom = item.getGeometry();
-					view.fitGeometry(geom, size, { padding: [10, 10, 10, 10] });
+					view.fitGeometry (geom, size, { padding: [10, 10, 10, 10] });
 					return false;
 				}
 			});
 		}
 	} else {
-		view.fitGeometry(uk, size);
+		view.fitGeometry (uk, size);
 	}
 }
 
 function map_show_all()
 {
 	map_zoom_route();
-	$.each(route_list, function(dir, route) {
+	$.each (route_list, function (dir, route) {
 		if (route.dist_walked > 0) {
-			load_kml(dir);
+			load_kml (dir);
 		}
 	});
 }
@@ -591,7 +591,7 @@ function set_map_type()
 {
 	var opt = this.value;
 
-	$.each (maps, function(index, layer) {
+	$.each (maps, function (index, layer) {
 		layer.setVisible (opt == index);
 	});
 }
@@ -601,7 +601,7 @@ function on_click_hike()
 	var option = this.value;
 
 	if (opt_zoom) {
-		map_zoom_route(option);
+		map_zoom_route (option);
 	}
 }
 
@@ -610,23 +610,23 @@ function on_change_hike()
 	var option = this.value;
 
 	if (opt_zoom) {
-		map_zoom_route(option);
+		map_zoom_route (option);
 	}
 
 	if (opt_one) {
 		map_clear();
 	}
 	msg1.html (html_route_info (option));
-	load_kml(option);
+	load_kml (option);
 }
 
 
-$.getJSON('output/routes.json', function(data) {
+$.getJSON ('output/routes.json', function (data) {
 	route_list = data;
 	dd_init();
 })
-.fail(function() {
-	alert('Couldn\'t load route data');
+.fail (function() {
+	alert ('Couldn\'t load route data');
 });
 
 map_init();
@@ -645,12 +645,12 @@ function load_kml (route)
 		extractStyles: false,
 	});
 
-	key = load.on('change', function(e) {
+	key = load.on ('change', function(e) {
 		var state = load.getState();
 		if (state == 'ready') {
-			load.forEachFeature(function(feature) {
-				var type = feature.get('type');
-				var tag  = feature.get('tag');
+			load.forEachFeature (function (feature) {
+				var type = feature.get ('type');
+				var tag  = feature.get ('tag');
 				if (!type || !tag) {
 					return false;
 				}
@@ -661,25 +661,25 @@ function load_kml (route)
 				var id = feature.getId();
 				var src = layer.getSource();
 				if (id) {
-					if (src.getFeatureById(id)) {
+					if (src.getFeatureById (id)) {
 						return false;
 					}
 				}
 				var clone = feature.clone();
-				clone.setId(id);
+				clone.setId (id);
 
 				if (layer == layers.misc) {
 					// var style = layer.getStyle();
 					// clone.setStyle (style);
 				}
 
-				src.addFeature(clone);
+				src.addFeature (clone);
 			});
 
-			load.unByKey(key);
+			load.unByKey (key);
 			load = null;
 			if (opt_zoom) {
-				map_zoom_route(route);
+				map_zoom_route (route);
 			}
 		} else {
 			alert (state);
@@ -755,7 +755,7 @@ function html_gridref (feature, newline)
 
 	var coords = feature.get ('coords');
 	if (coords) {
-		var c = coords.split(',');
+		var c = coords.split (',');
 		if (c.length == 3) {
 			output += ' (' + c[2] + 'm)';
 		}
@@ -918,7 +918,7 @@ function html_start (feature)
 
 	var dir = feature.get ('route');
 
-	return html_route_info(dir);
+	return html_route_info (dir);
 }
 
 function html_route_info (dir)
@@ -960,25 +960,25 @@ function html_route_info (dir)
 }
 
 
-var featureOverlay = new ol.FeatureOverlay({
-	map: map,
-});
+// var featureOverlay = new ol.FeatureOverlay({
+// 	map: map,
+// });
 
 // var highlight;
 // var hi_circle;
 // var dupe;
 var layer_match;
 
-$(map.getViewport()).on('mousemove', function(evt) {
-	var pixel = map.getEventPixel(evt.originalEvent);
+$(map.getViewport()).on ('mousemove', function (evt) {
+	var pixel = map.getEventPixel (evt.originalEvent);
 	var hit = false;
 	var match;
 
-	map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+	map.forEachFeatureAtPixel (pixel, function (feature, layer) {
 		hit = true;
 		match = feature;
 		layer_match = layer;
-		// alert (feature.get('type'));
+		// alert (feature.get ('type'));
 
 		// area
 		//	todo
@@ -1003,17 +1003,17 @@ $(map.getViewport()).on('mousemove', function(evt) {
 		//	done
 		//	todo
 
-		$('#name')       .html (feature.get('name')        || '');
-		$('#description').html (feature.get('description') || '');
-		$('#type')       .html (feature.get('type')        || '');
-		$('#tag')        .html (feature.get('tag')         || '');
+		$('#name')       .html (feature.get ('name')        || '');
+		$('#description').html (feature.get ('description') || '');
+		$('#type')       .html (feature.get ('type')        || '');
+		$('#tag')        .html (feature.get ('tag')         || '');
 
-		if (feature.get('type') == 'hull') {
+		if (feature.get ('type') == 'hull') {
 			return false;
 		}
 		try {
 			msg2.html (html_route (feature));
-		} catch (e) {
+		} catch(e) {
 		}
 		// msg2.html (html_camp (feature));
 		// msg2.html (html_start (feature));
@@ -1030,25 +1030,25 @@ $(map.getViewport()).on('mousemove', function(evt) {
 			var y = x.getImage();
 			var z = y.getSrc();
 			// alert(z);
-		} catch (e) {
-			var n = match.get('name') || 'unknown';
-			var d = match.get('type') || 'unknown';
+		} catch(e) {
+			var n = match.get ('name') || 'unknown';
+			var d = match.get ('type') || 'unknown';
 			// alert ('non-icon: ' + n + ' ' + d);
 		}
 	} else {
 		t.style.cursor = '';
-		// msg2.html('');
+		// msg2.html ('');
 	}
 
 	/*
 	if (hit) {
 		if (match !== highlight) {
 			if (hi_circle) {
-				featureOverlay.removeFeature(dupe);
-				featureOverlay.removeFeature(hi_circle);
+				featureOverlay.removeFeature (dupe);
+				featureOverlay.removeFeature (hi_circle);
 			}
 			if (match) {
-				$('#event')  .html (pixel[0].toFixed(0) + "," + pixel[1].toFixed(0));
+				$('#event')  .html (pixel[0].toFixed(0) + ',' + pixel[1].toFixed(0));
 
 				pixel[1] -= 50;
 				var c = map.getCoordinateFromPixel (pixel);
@@ -1057,13 +1057,13 @@ $(map.getViewport()).on('mousemove', function(evt) {
 				var fc = geom2.getFirstCoordinate();
 				var px = map.getPixelFromCoordinate (fc);
 
-				$('#feature').html (px   [0].toFixed(0) + "," + px   [1].toFixed(0));
+				$('#feature').html (px   [0].toFixed(0) + ',' + px   [1].toFixed(0));
 
-				var p = new ol.geom.Point (c);
+				var p = new ol.geom.Point(c);
 				var q = new ol.geom.Point (fc);
 
 				hi_circle = new ol.Feature (new ol.geom.Point(c));
-				hi_circle.setStyle(new ol.style.Style({
+				hi_circle.setStyle (new ol.style.Style({
 					image: new ol.style.Circle({
 						radius: 12,
 						fill: new ol.style.Fill({
@@ -1079,10 +1079,10 @@ $(map.getViewport()).on('mousemove', function(evt) {
 				dupe = match.clone();
 				dupe.setGeometry(p);
 				var s = layer_match.getStyle();
-				dupe.setStyle (s);
+				dupe.setStyle(s);
 
-				featureOverlay.addFeature(hi_circle);
-				featureOverlay.addFeature(dupe);
+				featureOverlay.addFeature (hi_circle);
+				featureOverlay.addFeature (dupe);
 			}
 			highlight = match;
 		}
@@ -1090,7 +1090,7 @@ $(map.getViewport()).on('mousemove', function(evt) {
 	*/
 });
 
-$(window).on('resize', function(){
+$(window).on ('resize', function(){
 	map.updateSize();
 });
 
