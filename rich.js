@@ -1209,11 +1209,21 @@ function show_icon (feature, layer)
 	}
 
 	var output = '';
+
+	var x = layer.getStyle();
+	var y = x.getImage();
+	var z = y.getSrc();
+	output += '<img style="float: left" src="' + z + '" />';
+
+	output += '<div style="float: left">';
+
 	output += get_bold_name   (feature);
 	output += get_description (feature);
 	output += get_date2       (feature);
 	output += get_location    (feature);
 	output += get_id2         (feature, 'Icon');
+
+	output += '</div>';
 
 	return output;
 }
