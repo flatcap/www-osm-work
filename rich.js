@@ -462,13 +462,37 @@ function dd_select (route)
 
 function set_defaults()
 {
-	layers.area_whole  .setVisible (false);
-	// layers.area_hull   .setVisible (false);
-	layers.icon_end    .setVisible (false);
-	layers.icon_ferry  .setVisible (false);
-	layers.icon_waves  .setVisible (false);
-	layers.line_route  .setVisible (false);
-	layers.line_variant.setVisible (false);
+	layers.area_done    .setVisible (false);
+	layers.area_hull    .setVisible (false);
+	layers.area_hull    .setVisible (false);
+	layers.area_todo    .setVisible (false);
+	layers.area_whole   .setVisible (false);
+	layers.area_whole   .setVisible (false);
+
+	layers.extra        .setVisible (false);
+
+	layers.icon_end     .setVisible (true);
+	layers.icon_end     .setVisible (true);
+	layers.icon_ferry   .setVisible (true);
+	layers.icon_ferry   .setVisible (true);
+	layers.icon_hotel   .setVisible (true);
+	layers.icon_hut     .setVisible (true);
+	layers.icon_rich    .setVisible (true);
+	layers.icon_start   .setVisible (true);
+	layers.icon_tent    .setVisible (true);
+	layers.icon_waves   .setVisible (true);
+	layers.icon_waves   .setVisible (true);
+
+	layers.line_hike    .setVisible (false);
+	layers.line_river   .setVisible (false);
+	layers.line_route   .setVisible (false);
+	layers.line_route   .setVisible (false);
+	layers.line_todo    .setVisible (false);
+	layers.line_variant .setVisible (false);
+	layers.line_variant .setVisible (false);
+
+	layers.peak_done    .setVisible (false);
+	layers.peak_todo    .setVisible (false);
 }
 
 /**
@@ -948,28 +972,6 @@ function html_route_info (dir)
 // 	map: map,
 // });
 
-function show_area (feature, layer)
-{
-	// area
-	//	todo
-	//	done
-	//	whole
-	//	hull
-}
-
-function show_icon (feature, layer)
-{
-	// icon
-	//	ferry
-	//	waves
-	//	tent
-	//	hut
-	//	hotel
-	//	start
-	//	end
-}
-
-
 function get_line_title (feature)
 {
 	if (!feature) {
@@ -1012,12 +1014,27 @@ function get_date (feature)
 		return '';
 	}
 
-	var date = feature.get ('date');
+	var date = feature.get ('date') || feature.get ('datetime');
 	if (!date) {
 		return '';
 	}
 
 	var str = '<span>Date:</span> ' + format_date (date) + '<br />';
+	return str;
+}
+
+function get_date2 (feature)
+{
+	if (!feature) {
+		return '';
+	}
+
+	var date = feature.get ('date') || feature.get ('datetime');
+	if (!date) {
+		return '';
+	}
+
+	var str = format_date (date) + '<br />';
 	return str;
 }
 
@@ -1036,9 +1053,9 @@ function get_day_length (feature)
 	return str;
 }
 
-function get_line_id (feature)
+function get_id (feature, name)
 {
-	if (!feature) {
+	if (!feature || !name) {
 		return '';
 	}
 
@@ -1047,7 +1064,22 @@ function get_line_id (feature)
 		return '';
 	}
 
-	var str = '<span>Line&nbsp;ID:</span> ' + id + '<br />';
+	var str = '<span>' + name + '&nbsp;ID:</span> ' + id + '<br />';
+	return str;
+}
+
+function get_id2 (feature, name)
+{
+	if (!feature || !name) {
+		return '';
+	}
+
+	var id = feature.getId();
+	if (!id) {
+		return '';
+	}
+
+	var str = name + ' ID: ' + id + '<br />';
 	return str;
 }
 
@@ -1067,6 +1099,125 @@ function get_description (feature)
 }
 
 
+function get_bold_name (feature)
+{
+	if (!feature) {
+		return '';
+	}
+
+	var str = '';
+	var tag = feature.get('tag');
+	if (tag == 'start') {
+		str = "Start of the ";
+	} else if (tag == 'end') {
+		str = "End of the ";
+	}
+
+	var name = feature.get('name');
+	if (!name) {
+		return '';
+	}
+
+	str += name;
+
+	var where = feature.get('where');
+	if (where) {
+		str += ' - ' + where;
+	}
+
+	str = '<h2>' + str + '</h2>';
+	return str;
+}
+
+function get_location (feature)
+{
+	if (!feature) {
+		return '';
+	}
+
+	var tag = feature.get('tag');
+	if ((tag == 'ferry') || (tag == 'waves')) {
+		return '';
+	}
+
+	var str = '';
+	var lat, lon, alt;
+	var coords = feature.get('coords');
+	if (coords) {
+		var c = coords.split (',');
+		if (c.length > 1) {
+			lon = c[0];
+			lat = c[1];
+		}
+		if (c.length > 2) {
+			alt = c[2];
+		}
+	}
+
+	var gr = feature.get('gridref');
+	if (gr) {
+		str += gr;
+	} else {
+		if (lon && lat) {
+			str += lon + ',' + lat;
+		}
+	}
+
+	if (alt && str) {
+		str += ' (' + alt + 'm)';
+	}
+
+	if (str) {
+		str += '<br />';
+	}
+
+	return str;
+}
+
+
+function show_area (feature, layer)
+{
+	// area
+	//	todo
+	//	done
+	//	whole
+	//	hull
+}
+
+function show_icon (feature, layer)
+{
+	// icon
+	//	ferry
+	//	waves
+	//	tent
+	//	hut
+	//	hotel
+	//	start
+	//	end
+
+	if (!feature) {
+		return '';
+	}
+
+	// var k = feature.getKeys();
+	// alert (k.join());
+
+	var tag = feature.get ('tag');
+	if ((tag == 'start') || (tag == 'end')) {
+		var route = feature.get ('route');
+		msg1.html (html_route_info (route));
+	}
+
+	var output = '';
+	output += get_bold_name   (feature);
+	output += get_description (feature);
+	output += get_date2       (feature);
+	output += get_location    (feature);
+	output += get_id2         (feature, 'Icon');
+
+	return output;
+}
+
 function show_line (feature)
 {
 	if (!feature) {
@@ -1079,7 +1230,7 @@ function show_line (feature)
 	output += get_part_of     (feature);
 	output += get_date        (feature);
 	output += get_day_length  (feature);
-	output += get_line_id     (feature);
+	output += get_id          (feature, 'Line');
 
 	return output;
 }
@@ -1090,6 +1241,7 @@ function show_peak (feature, layer)
 	//	done
 	//	todo
 }
+
 
 // var highlight;
 // var hi_circle;
@@ -1133,13 +1285,13 @@ $(map.getViewport()).on ('mousemove', function (evt) {
 		t.style.cursor = 'pointer';
 
 		try {
-			var x = layer_match.getStyle();
-			var y = x.getImage();
-			var z = y.getSrc();
+			// var x = layer_match.getStyle();
+			// var y = x.getImage();
+			// var z = y.getSrc();
 			// alert(z);
 		} catch(e) {
-			var n = match.get ('name') || 'unknown';
-			var d = match.get ('type') || 'unknown';
+			// var n = match.get ('name') || 'unknown';
+			// var d = match.get ('type') || 'unknown';
 			// alert ('non-icon: ' + n + ' ' + d);
 		}
 	} else {
