@@ -820,7 +820,7 @@ function html_length (feature, newline)
 		return '';
 	}
 
-	var str = 'Day length: ' + len;
+	var str = 'Day length: ' + len + ' miles';
 
 	if (newline) {
 		str += '<br />';
@@ -893,22 +893,6 @@ function html_camps (route, newline)
 
 }
 
-function html_route (feature)
-{
-	if (!feature) {
-		return '';
-	}
-
-	var output = '';
-
-	output += html_title (feature);
-	output += '<img src="gfx/map_hike.png" />';
-	output += html_date  (feature, 'date', true);
-	output += html_length (feature, true);
-
-	return output;
-}
-
 
 function html_start (feature)
 {
@@ -964,6 +948,58 @@ function html_route_info (dir)
 // 	map: map,
 // });
 
+function show_area (feature, layer)
+{
+	// area
+	//	todo
+	//	done
+	//	whole
+	//	hull
+}
+
+function show_icon (feature, layer)
+{
+	// icon
+	//	ferry
+	//	waves
+	//	tent
+	//	hut
+	//	hotel
+	//	start
+	//	end
+}
+
+/**
+ * show_line - Display information about a route
+ * line
+ *	hike
+ *	todo
+ *	variant
+ *	route
+ *	river
+ */
+function show_line (feature, layer)
+{
+	if (!feature || !layer) {
+		return '';
+	}
+
+	var output = '';
+	output += html_title       (feature);
+	output += html_description (feature, true);
+	output += html_date        (feature, 'date', true);
+	output += html_length      (feature, true);
+
+	return output;
+}
+
+function show_peak (feature, layer)
+{
+	// peak
+	//	done
+	//	todo
+}
+
 // var highlight;
 // var hi_circle;
 // var dupe;
@@ -978,46 +1014,26 @@ $(map.getViewport()).on ('mousemove', function (evt) {
 		hit = true;
 		match = feature;
 		layer_match = layer;
-		// alert (feature.get ('type'));
 
-		// area
-		//	todo
-		//	done
-		//	whole
-		//	hull
-		// line
-		//	hike
-		//	todo
-		//	variant
-		//	route
-		//	river
-		// icon
-		//	ferry
-		//	waves
-		//	tent
-		//	hut
-		//	hotel
-		//	start
-		//	end
-		// peak
-		//	done
-		//	todo
+		var type = feature.get ('type');
+		var text;
 
-		$('#name')       .html (feature.get ('name')        || '');
-		$('#description').html (feature.get ('description') || '');
-		$('#type')       .html (feature.get ('type')        || '');
-		$('#tag')        .html (feature.get ('tag')         || '');
-
-		if (feature.get ('type') == 'hull') {
+		if (type == 'hull') {
 			return false;
+		} else if (type == 'area') {
+			text = show_area (feature, layer);
+		} else if (type == 'icon') {
+			text = show_icon (feature, layer);
+		} else if (type == 'line') {
+			text = show_line (feature, layer);
+		} else if (type == 'peak') {
+			text = show_peak (feature, layer);
+		} // XXX else alert
+
+		if (text) {
+			msg2.html (text);
 		}
-		try {
-			msg2.html (html_route (feature));
-		} catch(e) {
-		}
-		// msg2.html (html_camp (feature));
-		// msg2.html (html_start (feature));
-		// msg2.html (html_distance (feature));
+
 		return true;
 	});
 
