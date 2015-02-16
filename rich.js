@@ -462,18 +462,14 @@ function dd_select (route)
 
 function set_defaults()
 {
-	layers.area_done    .setVisible (false);
-	layers.area_hull    .setVisible (false);
-	layers.area_hull    .setVisible (false);
-	layers.area_todo    .setVisible (false);
-	layers.area_whole   .setVisible (false);
-	layers.area_whole   .setVisible (false);
+	layers.area_done    .setVisible (true);
+	layers.area_hull    .setVisible (true);
+	layers.area_todo    .setVisible (true);
+	layers.area_whole   .setVisible (true);
 
-	layers.extra        .setVisible (false);
+	layers.extra        .setVisible (true);
 
 	layers.icon_end     .setVisible (true);
-	layers.icon_end     .setVisible (true);
-	layers.icon_ferry   .setVisible (true);
 	layers.icon_ferry   .setVisible (true);
 	layers.icon_hotel   .setVisible (true);
 	layers.icon_hut     .setVisible (true);
@@ -481,18 +477,15 @@ function set_defaults()
 	layers.icon_start   .setVisible (true);
 	layers.icon_tent    .setVisible (true);
 	layers.icon_waves   .setVisible (true);
-	layers.icon_waves   .setVisible (true);
 
-	layers.line_hike    .setVisible (false);
-	layers.line_river   .setVisible (false);
-	layers.line_route   .setVisible (false);
-	layers.line_route   .setVisible (false);
-	layers.line_todo    .setVisible (false);
-	layers.line_variant .setVisible (false);
-	layers.line_variant .setVisible (false);
+	layers.line_hike    .setVisible (true);
+	layers.line_river   .setVisible (true);
+	layers.line_route   .setVisible (true);
+	layers.line_todo    .setVisible (true);
+	layers.line_variant .setVisible (true);
 
-	layers.peak_done    .setVisible (false);
-	layers.peak_todo    .setVisible (false);
+	layers.peak_done    .setVisible (true);
+	layers.peak_todo    .setVisible (true);
 }
 
 /**
@@ -731,9 +724,9 @@ function format_date (datestr)
 	return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
 }
 
-function html_date (feature, key, newline)
+function html_date (feature, newline)
 {
-	if (!feature || !key) {
+	if (!feature) {
 		return '';
 	}
 
@@ -826,7 +819,7 @@ function html_camp (feature)
 	var output = '';
 
 	output += html_title       (feature);
-	output += html_date        (feature, 'datetime', true);
+	output += html_date        (feature, true);
 	output += html_description (feature, true);
 	output += html_gridref     (feature, false);
 
@@ -899,6 +892,10 @@ function html_camps (route, newline)
 	var other  = route.days_other  || 0;
 	var camped = route.days_camped || 0;
 	var total  = camped + other;
+
+	if (total == 0) {
+		return '';
+	}
 
 	output += '<span>Camped</span>: ' + total + ' night';
 	if (total != 1) {
@@ -1014,7 +1011,7 @@ function get_date (feature)
 		return '';
 	}
 
-	var date = feature.get ('date') || feature.get ('datetime');
+	var date = feature.get ('date');
 	if (!date) {
 		return '';
 	}
@@ -1029,7 +1026,7 @@ function get_date2 (feature)
 		return '';
 	}
 
-	var date = feature.get ('date') || feature.get ('datetime');
+	var date = feature.get ('date');
 	if (!date) {
 		return '';
 	}
@@ -1182,6 +1179,37 @@ function show_area (feature, layer)
 	//	done
 	//	whole
 	//	hull
+
+	// name
+	// type
+	// tag
+	// hike_id
+	// hike_dir
+
+	// Climbed:
+	// 	24 of the 214 Wainwrights
+	// 	7 of the 116 Wainwright Outliers
+	// 	34 of the 323 Other hills
+
+	// To Climb:
+	// 	190 of the 214 Wainwrights
+	// 	109 of the 116 Wainwright Outliers
+	// 	289 of the 323 Other hills
+
+	var tag = feature.get ('tag');
+	if (tag == 'hull') {
+		return true;
+	}
+
+	var output = '';
+
+	output += feature.get('name') + '<br>';
+	output += feature.get('type') + '<br>';
+	output += feature.get('tag') + '<br>';
+	output += feature.get('hike_id') + '<br>';
+	output += feature.get('hike_dir') + '<br>';
+
+	return output;
 }
 
 function show_icon (feature, layer)
@@ -1198,9 +1226,6 @@ function show_icon (feature, layer)
 	if (!feature) {
 		return '';
 	}
-
-	// var k = feature.getKeys();
-	// alert (k.join());
 
 	var tag = feature.get ('tag');
 	if ((tag == 'start') || (tag == 'end')) {
@@ -1230,6 +1255,12 @@ function show_icon (feature, layer)
 
 function show_line (feature)
 {
+	// line
+	//	hike
+	//	todo
+	//	variant
+	//	route
+	//	river
 	if (!feature) {
 		return '';
 	}
@@ -1250,6 +1281,19 @@ function show_peak (feature, layer)
 	// peak
 	//	done
 	//	todo
+	if (!feature) {
+		return '';
+	}
+
+	var output = '';
+	output += get_bold_name   (feature);
+	output += get_description (feature);
+	output += get_part_of     (feature);
+	output += get_date        (feature);
+	output += get_day_length  (feature);
+	output += get_id          (feature, 'Line');
+
+	return output;
 }
 
 
@@ -1264,6 +1308,11 @@ $(map.getViewport()).on ('mousemove', function (evt) {
 	var match;
 
 	map.forEachFeatureAtPixel (pixel, function (feature, layer) {
+		var tag = feature.get ('tag');
+		if (tag == 'hull') {
+			return true;
+		}
+
 		hit = true;
 		match = feature;
 		layer_match = layer;
@@ -1271,9 +1320,7 @@ $(map.getViewport()).on ('mousemove', function (evt) {
 		var type = feature.get ('type');
 		var text;
 
-		if (type == 'hull') {
-			return false;
-		} else if (type == 'area') {
+		if (type == 'area') {
 			text = show_area (feature, layer);
 		} else if (type == 'icon') {
 			text = show_icon (feature, layer);
@@ -1293,17 +1340,6 @@ $(map.getViewport()).on ('mousemove', function (evt) {
 	var t = $('#map')[0];
 	if (hit) {
 		t.style.cursor = 'pointer';
-
-		try {
-			// var x = layer_match.getStyle();
-			// var y = x.getImage();
-			// var z = y.getSrc();
-			// alert(z);
-		} catch(e) {
-			// var n = match.get ('name') || 'unknown';
-			// var d = match.get ('type') || 'unknown';
-			// alert ('non-icon: ' + n + ' ' + d);
-		}
 	} else {
 		t.style.cursor = '';
 		// msg2.html ('');
