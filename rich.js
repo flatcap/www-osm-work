@@ -137,16 +137,27 @@ function map_init_icons()
 		'start':     'paddle_start',
 		'tent':      'map_tent',
 		'waves':     'map_waves',
+		'red_x':     'red_cross',
+		'green_x':   'green_cross',
 	};
 
 	$.each (names, function (name, filename) {
 		var scale = 0.5;
-		if ((name == 'start') || (name == 'end')) {
+		if ((name == 'start') || (name == 'end') || (name == 'red_x') || (name == 'green_x')) {
 			scale = 1.0;
 		}
 
+		var ax = 0.5;
+		var ay = 1.0;
+
+		if ((name == 'red_x') || (name == 'green_x')) {
+			scale = 0.75;
+			ax = 0.5;
+			ay = 0.5;
+		}
+
 		var icon = new ol.style.Icon({
-			anchor: [0.5, 1.0],
+			anchor: [ax, ay],
 			anchorXUnits: 'fraction',
 			anchorYUnits: 'fraction',
 			src: 'gfx/'+filename+'.png',
@@ -463,18 +474,18 @@ function dd_select (route)
 function set_defaults()
 {
 	layers.area_done    .setVisible (true);
-	layers.area_hull    .setVisible (true);
+	layers.area_hull    .setVisible (false);
 	layers.area_todo    .setVisible (true);
-	layers.area_whole   .setVisible (true);
+	layers.area_whole   .setVisible (false);
 
 	layers.extra        .setVisible (true);
 
-	layers.icon_end     .setVisible (true);
+	layers.icon_end     .setVisible (false);
 	layers.icon_ferry   .setVisible (true);
 	layers.icon_hotel   .setVisible (true);
 	layers.icon_hut     .setVisible (true);
 	layers.icon_rich    .setVisible (true);
-	layers.icon_start   .setVisible (true);
+	layers.icon_start   .setVisible (false);
 	layers.icon_tent    .setVisible (true);
 	layers.icon_waves   .setVisible (true);
 
@@ -685,9 +696,13 @@ function load_kml (route)
 				var clone = feature.clone();
 				clone.setId (id);
 
-				if (layer == layers.misc) {
-					// var style = layer.getStyle();
-					// clone.setStyle (style);
+				if (layer == layers.extra) {
+					var name = feature.get ('set_name');
+					if (name.substring (0, 5) == 'todo_') {
+						clone.setStyle (icons.red_x);
+					} else {
+						clone.setStyle (icons.green_x);
+					}
 				}
 
 				src.addFeature (clone);
@@ -730,7 +745,7 @@ function html_date (feature, newline)
 		return '';
 	}
 
-	var str = format_date (feature.get (key));
+	var str = format_date (feature.get ('date'));
 
 	if (newline) {
 		str += '<br />';
@@ -893,7 +908,7 @@ function html_camps (route, newline)
 	var camped = route.days_camped || 0;
 	var total  = camped + other;
 
-	if (total == 0) {
+	if (total === 0) {
 		return '';
 	}
 
@@ -1105,9 +1120,9 @@ function get_bold_name (feature)
 	var str = '';
 	var tag = feature.get('tag');
 	if (tag == 'start') {
-		str = "Start of the ";
+		str = 'Start of the ';
 	} else if (tag == 'end') {
-		str = "End of the ";
+		str = 'End of the ';
 	}
 
 	var name = feature.get('name');
