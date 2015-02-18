@@ -1253,9 +1253,16 @@ function show_icon (feature, layer)
 	var x = layer.getStyle();
 	var y = x.getImage();
 	var z = y.getSrc();
-	output += '<img style="float: left" src="' + z + '" />';
+	var s = y.getSize();
 
-	output += '<div style="float: left">';
+	// output += '<img style="border: 1px solid red; float: left" src="' + z + '" />';
+
+	output += '<div style="' +
+		' padding-left: ' + (s[0]+3) + 'px;' +
+		' background-image: url(\'' + z + '\');' +
+		' background-repeat: no-repeat;' +
+		' background-position: left top;' +
+		'">';
 
 	output += get_bold_name   (feature);
 	output += get_description (feature);
