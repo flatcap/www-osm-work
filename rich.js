@@ -473,21 +473,21 @@ function dd_select (route)
 
 function set_defaults()
 {
-	layers.area_done    .setVisible (true);
+	layers.area_done    .setVisible (false);
 	layers.area_hull    .setVisible (false);
-	layers.area_todo    .setVisible (true);
+	layers.area_todo    .setVisible (false);
 	layers.area_whole   .setVisible (false);
 
-	layers.extra        .setVisible (true);
+	layers.extra        .setVisible (false);
 
 	layers.icon_end     .setVisible (false);
-	layers.icon_ferry   .setVisible (true);
-	layers.icon_hotel   .setVisible (true);
-	layers.icon_hut     .setVisible (true);
-	layers.icon_rich    .setVisible (true);
+	layers.icon_ferry   .setVisible (false);
+	layers.icon_hotel   .setVisible (false);
+	layers.icon_hut     .setVisible (false);
+	layers.icon_rich    .setVisible (false);
 	layers.icon_start   .setVisible (false);
 	layers.icon_tent    .setVisible (true);
-	layers.icon_waves   .setVisible (true);
+	layers.icon_waves   .setVisible (false);
 
 	layers.line_hike    .setVisible (true);
 	layers.line_river   .setVisible (true);
@@ -739,128 +739,6 @@ function format_date (datestr)
 	return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
 }
 
-function html_date (feature, newline)
-{
-	if (!feature) {
-		return '';
-	}
-
-	var str = format_date (feature.get ('date'));
-
-	if (newline) {
-		str += '<br />';
-	}
-
-	return str;
-}
-
-function html_description (feature, newline)
-{
-	if (!feature) {
-		return '';
-	}
-
-	var desc = feature.get ('description');
-	if (!desc) {
-		return '';
-	}
-
-	if (newline) {
-		desc += '<br />';
-	}
-
-	return desc;
-}
-
-function html_gridref (feature, newline)
-{
-	if (!feature) {
-		return '';
-	}
-
-	var gridref = feature.get ('gridref');
-	if (!gridref) {
-		return '';
-	}
-
-	var output = gridref;
-
-	var coords = feature.get ('coords');
-	if (coords) {
-		var c = coords.split (',');
-		if (c.length == 3) {
-			output += ' (' + c[2] + 'm)';
-		}
-	}
-
-	if (newline) {
-		output += '<br />';
-	}
-
-	return output;
-}
-
-function html_title (feature)
-{
-	if (!feature) {
-		return '';
-	}
-
-	var name = feature.get ('name');
-	if (!name) {
-		return '';
-	}
-
-	// var bits = name.split (', ');
-	// var as = "<a href='' class='route'>";
-	// var ae = '</a>';
-	// var title = as + bits.join (ae+', '+as) + ae;
-	var title = name;
-
-	var where = feature.get ('where');
-	if (where) {
-		title += ' - ' + where;
-	}
-
-	return '<h2>' + title + '</h2>';
-}
-
-function html_camp (feature)
-{
-	if (!feature) {
-		return '';
-	}
-
-	var output = '';
-
-	output += html_title       (feature);
-	output += html_date        (feature, true);
-	output += html_description (feature, true);
-	output += html_gridref     (feature, false);
-
-	return output;
-}
-
-function html_length (feature, newline)
-{
-	if (!feature) {
-		return '';
-	}
-
-	var len = feature.get ('day_length');
-	if (!len) {
-		return '';
-	}
-
-	var str = 'Day length: ' + len + ' miles';
-
-	if (newline) {
-		str += '<br />';
-	}
-
-	return str;
-}
-
 
 function html_distance (route, newline)
 {
@@ -930,17 +808,6 @@ function html_camps (route, newline)
 }
 
 
-function html_start (feature)
-{
-	if (!feature) {
-		return '';
-	}
-
-	var dir = feature.get ('route');
-
-	return html_route_info (dir);
-}
-
 function html_route_info (dir)
 {
 	if (!dir) {
@@ -1002,21 +869,6 @@ function get_line_title (feature)
 	else if (tag == 'river')   { tag = 'River Crossing';     }
 
 	var str = '<span>Type:</span> ' + tag + '<br />';
-	return str;
-}
-
-function get_part_of (feature)
-{
-	if (!feature) {
-		return '';
-	}
-
-	var name = feature.get('name');
-	if (!name) {
-		return '';
-	}
-
-	var str = '<span>Part&nbsp;of:</span> ' + name + '<br />';
 	return str;
 }
 
@@ -1095,18 +947,27 @@ function get_id2 (feature, name)
 	return str;
 }
 
-function get_description (feature)
+
+function get_text (feature, key, title)
 {
-	if (!feature) {
+	if (!feature || !key) {
 		return '';
 	}
 
-	var desc = feature.get ('description');
-	if (!desc) {
+	var str = feature.get (key);
+	if (!str) {
 		return '';
 	}
 
-	desc += '<br />';
+	var desc = '';
+	if (typeof title !== 'undefined') {
+		if (title.length === 0) {
+			title = '&nbsp;';
+		}
+		desc += '<span>'+title+'</span> ';
+	}
+
+	desc += str + '<br />';
 	return desc;
 }
 
@@ -1152,31 +1013,19 @@ function get_location (feature)
 		return '';
 	}
 
-	var str = '';
-	var lat, lon, alt;
+	var str    = '';
 	var coords = feature.get('coords');
-	if (coords) {
-		var c = coords.split (',');
-		if (c.length > 1) {
-			lon = c[0];
-			lat = c[1];
-		}
-		if (c.length > 2) {
-			alt = c[2];
-		}
-	}
+	var elev   = feature.get('elevation');
+	var gr     = feature.get('gridref');
 
-	var gr = feature.get('gridref');
 	if (gr) {
 		str += gr;
 	} else {
-		if (lon && lat) {
-			str += lon + ',' + lat;
-		}
+		str += coords;
 	}
 
-	if (alt && str) {
-		str += ' (' + alt + 'm)';
+	if (elev && str) {
+		str += ' (' + elev + 'm)';
 	}
 
 	if (str) {
@@ -1255,8 +1104,6 @@ function show_icon (feature, layer)
 	var z = y.getSrc();
 	var s = y.getSize();
 
-	// output += '<img style="border: 1px solid red; float: left" src="' + z + '" />';
-
 	output += '<div style="' +
 		' padding-left: ' + (s[0]+3) + 'px;' +
 		' background-image: url(\'' + z + '\');' +
@@ -1265,7 +1112,7 @@ function show_icon (feature, layer)
 		'">';
 
 	output += get_bold_name   (feature);
-	output += get_description (feature);
+	output += get_text        (feature, 'description');
 	output += get_date2       (feature);
 	output += get_location    (feature);
 	output += get_id2         (feature, 'Icon');
@@ -1289,9 +1136,9 @@ function show_line (feature)
 
 	var output = '';
 	output += get_line_title  (feature);
-	output += get_description (feature);
-	output += get_part_of     (feature);
-	output += get_date        (feature);
+	output += get_text        (feature, 'description', '');
+	output += get_text        (feature, 'name', 'Part of');
+	output += get_text        (feature, 'date', 'Date');
 	output += get_day_length  (feature);
 	output += get_id          (feature, 'Line');
 
@@ -1309,11 +1156,15 @@ function show_peak (feature, layer)
 
 	var output = '';
 	output += get_bold_name   (feature);
-	output += get_description (feature);
-	output += get_part_of     (feature);
+	output += get_text        (feature, 'description', '');
 	output += get_date        (feature);
 	output += get_day_length  (feature);
-	output += get_id          (feature, 'Line');
+	output += get_location    (feature);
+	output += get_id          (feature, 'Peak');
+
+	output += get_text (feature, 'dobih',      'DoBIH');
+	output += get_text (feature, 'categories', 'Categories');
+	output += get_text (feature, 'coords',     'Long/Lat');
 
 	return output;
 }
