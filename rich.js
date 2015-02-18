@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Richard Russon (flatcap)
+ * Copyright (c) 2013-2015 Richard Russon (flatcap)
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -15,27 +15,20 @@
  * this program. If not, see http://www.gnu.org/licenses/
  */
 
-			// Options:
-var opt_one     = true;		// Only show one route at a time
-var opt_zoom    = true;		// Zoom in to the current route
-			// Show list of:
-var show_comp   = true;		// Completed routes
-var show_inco   = true;		// Incomplete routes
-var show_unst   = false;	// Unstarted routes
-var show_hill   = true;		// Sets of hills
-var show_join   = true;		// Non-route joins
+				// Options:
+var opt_one     = true;		//	Only show one route at a time
+var opt_zoom    = true;		//	Zoom in to the current route
+				// Show list of:
+var show_comp   = true;		//	Completed routes
+var show_inco   = true;		//	Incomplete routes
+var show_unst   = false;	//	Unstarted routes
+var show_hill   = true;		//	Sets of hills
+var show_join   = true;		//	Non-route joins
 
-var show_html = {	// Keep the select HTML to rebuild the dropdown
-	comp: '',		// Completed routes
-	inco: '',		// Incomplete routes
-	unst: '',		// Unstarted routes
-	hill: '',		// Sets of hills
-	join: ''		// Non-route joins
-};
+var show_html = {};		// Keep the select HTML to rebuild the dropdown
 
 var map;
 var route_list;
-var proj = ol.proj.get ('EPSG:3857');
 
 var maps   = {};
 var layers = {};
@@ -43,25 +36,9 @@ var styles = {};
 var icons  = {};
 var areas  = {};
 
-var uk_convex_hull = [[
-	[ -6.224408, 56.725261 ],
-	[ -5.191198, 58.587064 ],
-	[ -3.028093, 58.646065 ],
-	[ -1.823329, 57.612691 ],
-	[  1.781172, 52.562703 ],
-	[  1.400427, 51.152562 ],
-	[  0.247893, 50.725720 ],
-	[ -5.203043, 49.958145 ],
-	[ -5.708586, 50.045477 ],
-	[ -5.026403, 53.977312 ],
-	[ -6.224408, 56.725261 ]
-]];
-
-var uk = new ol.geom.Polygon (uk_convex_hull);
-uk.transform ('EPSG:4326', 'EPSG:3857');
-
-var msg1 = $('#route');
-var msg2 = $('#item');
+var uk_hull;
+var msg1;
+var msg2;
 
 //------------------------------------------------------------------------------
 
@@ -74,6 +51,22 @@ function route_sort (a, b)
 	} else {
 		return 0;
 	}
+}
+
+function format_date (datestr)
+{
+	var months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+
+	if (!datestr) {
+		return '';
+	}
+
+	var d = new Date (datestr);
+	if (!d) {
+		return '';
+	}
+
+	return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
 }
 
 
@@ -563,7 +556,7 @@ function map_zoom_route (route)
 			});
 		}
 	} else {
-		view.fitGeometry (uk, size);
+		view.fitGeometry (uk_hull, size);
 	}
 }
 
@@ -587,33 +580,10 @@ function set_map_type()
 	});
 }
 
-function on_click_hike()
-{
-	var option = this.value;
-
-	if (opt_zoom) {
-		map_zoom_route (option);
-	}
-}
-
-function on_change_hike()
-{
-	var option = this.value;
-
-	if (opt_zoom) {
-		map_zoom_route (option);
-	}
-
-	if (opt_one) {
-		map_clear();
-	}
-	msg1.html (html_route_info (option));
-	load_kml (option);
-}
-
 
 function load_kml (route)
 {
+	var proj = ol.proj.get ('EPSG:3857');
 	var load;
 	var key;
 
@@ -668,23 +638,6 @@ function load_kml (route)
 			alert (state);
 		}
 	});
-}
-
-
-function format_date (datestr)
-{
-	var months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
-
-	if (!datestr) {
-		return '';
-	}
-
-	var d = new Date (datestr);
-	if (!d) {
-		return '';
-	}
-
-	return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
 }
 
 
@@ -754,7 +707,6 @@ function html_camps (route, newline)
 	return output;
 
 }
-
 
 function html_route_info (dir)
 {
@@ -891,7 +843,6 @@ function get_id2 (feature, name)
 	return str;
 }
 
-
 function get_text (feature, key, title)
 {
 	if (!feature || !key) {
@@ -914,7 +865,6 @@ function get_text (feature, key, title)
 	desc += str + '<br />';
 	return desc;
 }
-
 
 function get_bold_name (feature)
 {
@@ -1161,6 +1111,30 @@ function on_resize()
 	map.updateSize();
 }
 
+function on_click_hike()
+{
+	var option = this.value;
+
+	if (opt_zoom) {
+		map_zoom_route (option);
+	}
+}
+
+function on_change_hike()
+{
+	var option = this.value;
+
+	if (opt_zoom) {
+		map_zoom_route (option);
+	}
+
+	if (opt_one) {
+		map_clear();
+	}
+	msg1.html (html_route_info (option));
+	load_kml (option);
+}
+
 
 function main()
 {
@@ -1187,6 +1161,26 @@ function main()
 	$('#tabs').tabs();
 	$(map.getViewport()).on ('mousemove', on_mousemove);
 	$(window).on ('resize', on_resize);
+
+	var uk_convex_hull = [[
+		[ -6.224408, 56.725261 ],
+		[ -5.191198, 58.587064 ],
+		[ -3.028093, 58.646065 ],
+		[ -1.823329, 57.612691 ],
+		[  1.781172, 52.562703 ],
+		[  1.400427, 51.152562 ],
+		[  0.247893, 50.725720 ],
+		[ -5.203043, 49.958145 ],
+		[ -5.708586, 50.045477 ],
+		[ -5.026403, 53.977312 ],
+		[ -6.224408, 56.725261 ]
+	]];
+
+	uk_hull = new ol.geom.Polygon (uk_convex_hull);
+	uk_hull.transform ('EPSG:4326', 'EPSG:3857');
+
+	msg1 = $('#route');
+	msg2 = $('#item');
 }
 
 
