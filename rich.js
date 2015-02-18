@@ -60,18 +60,6 @@ var coords = [[
 var uk = new ol.geom.Polygon (coords);
 uk.transform ('EPSG:4326', 'EPSG:3857');
 
-/**
- * route_sort - Sort two route_list items by fullname
- * @a: Item 1
- * @b: Item 2
- *
- * Sort helper function.
- * Sort the route_list by fullname.
- *
- * Return: -1	a precedes b
- *	    0	a identical to b
- *	    1	a follows b
- */
 function route_sort (a, b)
 {
 	if (a.fullname > b.fullname) {
@@ -335,13 +323,6 @@ function map_init()
 }
 
 
-/**
- * dd_init - Create HTML for dropdown
- *
- * Create the HTML for the dropdown from the route_list.
- *
- * Return: DOM select object
- */
 function dd_init()
 {
 	var c = [];
@@ -431,14 +412,6 @@ function dd_init()
 	return dd_populate();
 }
 
-/**
- * dd_populate - Populate the dropdown box
- *
- * Dropdown contents depend on four bools (show_*).
- * After the rebuild, try to keep the previous selected item.
- *
- * Return: DOM select object
- */
 function dd_populate()
 {
 	var dd = $('#dropdown');
@@ -459,12 +432,6 @@ function dd_populate()
 	return dd;
 }
 
-/**
- * dd_select - Pick a dropdown entry by value
- * @route: Name of the route
- *
- * Select entry in dropdown by route name
- */
 function dd_select (route)
 {
 	$('#dropdown').val (route);
@@ -499,11 +466,6 @@ function set_defaults()
 	layers.peak_todo    .setVisible (true);
 }
 
-/**
- * init_options - Set the default checkbox values
- *
- * Set some sensible defaults for the checkboxes.
- */
 function init_options()
 {
 	$('#show_comp').prop ('checked', show_comp);
@@ -575,10 +537,6 @@ function map_reset()
 	dd_select ('');
 }
 
-/**
- * map_zoom_route - Frame a route in the map
- * @route: Route name
- */
 function map_zoom_route (route)
 {
 	var view = map.getView();
