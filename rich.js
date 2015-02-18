@@ -43,7 +43,7 @@ var styles = {};
 var icons  = {};
 var areas  = {};
 
-var coords = [[
+var uk_convex_hull = [[
 	[ -6.224408, 56.725261 ],
 	[ -5.191198, 58.587064 ],
 	[ -3.028093, 58.646065 ],
@@ -57,7 +57,7 @@ var coords = [[
 	[ -6.224408, 56.725261 ]
 ]];
 
-var uk = new ol.geom.Polygon (coords);
+var uk = new ol.geom.Polygon (uk_convex_hull);
 uk.transform ('EPSG:4326', 'EPSG:3857');
 
 function route_sort (a, b)
@@ -631,7 +631,7 @@ function load_kml (route)
 		extractStyles: false,
 	});
 
-	key = load.on ('change', function(e) {
+	key = load.on ('change', function() {
 		var state = load.getState();
 		if (state == 'ready') {
 			load.forEachFeature (function (feature) {
@@ -990,7 +990,7 @@ function get_location (feature)
 }
 
 
-function show_area (feature, layer)
+function show_area (feature)
 {
 	// area
 	//	todo
@@ -1099,7 +1099,7 @@ function show_line (feature)
 	return output;
 }
 
-function show_peak (feature, layer)
+function show_peak (feature)
 {
 	// peak
 	//	done
@@ -1124,12 +1124,9 @@ function show_peak (feature, layer)
 }
 
 
-var layer_match;
-
 $(map.getViewport()).on ('mousemove', function (evt) {
 	var pixel = map.getEventPixel (evt.originalEvent);
 	var hit = false;
-	var match;
 
 	map.forEachFeatureAtPixel (pixel, function (feature, layer) {
 		var tag = feature.get ('tag');
@@ -1138,20 +1135,18 @@ $(map.getViewport()).on ('mousemove', function (evt) {
 		}
 
 		hit = true;
-		match = feature;
-		layer_match = layer;
 
 		var type = feature.get ('type');
 		var text;
 
 		if (type == 'area') {
-			text = show_area (feature, layer);
+			text = show_area (feature);
 		} else if (type == 'icon') {
 			text = show_icon (feature, layer);
 		} else if (type == 'line') {
-			text = show_line (feature, layer);
+			text = show_line (feature);
 		} else if (type == 'peak') {
-			text = show_peak (feature, layer);
+			text = show_peak (feature);
 		} // XXX else alert
 
 		if (text) {
