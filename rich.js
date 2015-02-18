@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2013-2014 Richard Russon (flatcap)
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -59,6 +59,11 @@ var uk_convex_hull = [[
 
 var uk = new ol.geom.Polygon (uk_convex_hull);
 uk.transform ('EPSG:4326', 'EPSG:3857');
+
+var msg1 = $('#route');
+var msg2 = $('#item');
+
+//------------------------------------------------------------------------------
 
 function route_sort (a, b)
 {
@@ -607,18 +612,6 @@ function on_change_hike()
 }
 
 
-$.getJSON ('output/routes.json', function (data) {
-	route_list = data;
-	dd_init();
-})
-.fail (function() {
-	alert ('Couldn\'t load route data');
-});
-
-map_init();
-set_defaults();
-init_options();
-
 function load_kml (route)
 {
 	var load;
@@ -677,9 +670,6 @@ function load_kml (route)
 	});
 }
 
-
-var msg1 = $('#route');
-var msg2 = $('#item');
 
 function format_date (datestr)
 {
@@ -1124,7 +1114,8 @@ function show_peak (feature)
 }
 
 
-$(map.getViewport()).on ('mousemove', function (evt) {
+function on_mousemove(evt)
+{
 	var pixel = map.getEventPixel (evt.originalEvent);
 	var hit = false;
 
@@ -1163,13 +1154,16 @@ $(map.getViewport()).on ('mousemove', function (evt) {
 		t.style.cursor = '';
 		// msg2.html ('');
 	}
-});
+}
 
-$(window).on ('resize', function(){
+function on_resize()
+{
 	map.updateSize();
-});
+}
 
-$(function() {
+
+function main()
+{
 	$('body').layout({
 		east__size: 400,
 		east__minSize: 250,
@@ -1177,8 +1171,24 @@ $(function() {
 		north__closable: false,
 		center__onresize: function() { map.updateSize(); }
 	});
+	map_init();
+	set_defaults();
+	init_options();
 	map.updateSize();
 
+	$.getJSON ('output/routes.json', function (data) {
+		route_list = data;
+		dd_init();
+	})
+	.fail (function() {
+		alert ('Couldn\'t load route data');
+	});
+
 	$('#tabs').tabs();
-});
+	$(map.getViewport()).on ('mousemove', on_mousemove);
+	$(window).on ('resize', on_resize);
+}
+
+
+$(main);
 
