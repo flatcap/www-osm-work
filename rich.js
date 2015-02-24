@@ -1086,10 +1086,14 @@ function estimate_exists (feature)
 
 	var keys = feature.getKeys();
 
-	return (('wp'         in keys) &&
-		('percentage' in keys) &&
-		('latitude'   in keys) &&
-		('longitude'  in keys));
+	var search = [ 'est_wp', 'est_percentage', 'est_latitude', 'est_longitude' ];
+	for (var x in search) {
+		if (keys.indexOf(search[x]) < 0) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 function create_message (feature)
@@ -1154,14 +1158,14 @@ function create_message (feature)
 		latitude   = feature.get('est_latitude');
 		longitude  = feature.get('est_longitude');
 	} else {
-		percentage = feature.get('.percentage');
-		latitude   = feature.get('.latitude');
-		longitude  = feature.get('.longitude');
+		percentage = feature.get('percentage');
+		latitude   = feature.get('latitude');
+		longitude  = feature.get('longitude');
 	}
 
 	var route      = feature.get('route');
 	var date_route = feature.get('date_route');
-	 
+
 	if (route) {
 		if (date_route) {
 			var d = since.diff (date_route) + 1;
@@ -1225,11 +1229,11 @@ function show_rich (feature, layer)
 
 	output += create_message (feature);
 
-	// output += "<h2>Where's Rich?</h2>";
-	output += "blah<br>";
-	output += "blah<br>";
-	output += "blah<br>";
-	output += "blah<br>";
+	// output += '<h2>Where's Rich?</h2>';
+	output += 'blah<br>';
+	output += 'blah<br>';
+	output += 'blah<br>';
+	output += 'blah<br>';
 
 	// output += get_bold_name   (feature);
 	// output += get_text        (feature, 'description');
@@ -1357,8 +1361,6 @@ function get_estimate_data (feature)
 			// Transfer all the json data to the feature
 			f.set (name, value);
 		});
-
-		// alert (f.getKeys());
 
 		var l = layers.icon_rich;
 		var s = l.getSource();
