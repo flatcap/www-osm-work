@@ -69,6 +69,13 @@ function format_date (datestr)
 	return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
 }
 
+Date.prototype.diff = function (str)
+{
+	var d = new Date(str);
+
+	return Math.floor ((this - d) / 86400000);
+};
+
 
 function map_init_area_styles()
 {
@@ -527,6 +534,9 @@ function init_options()
 function map_clear()
 {
 	$.each (layers, function (name, layer) {
+		if (name == 'icon_rich') {
+			return true;
+		}
 		layer.setSource (new ol.source.Vector());
 	});
 	msg1.html ('');
@@ -1067,6 +1077,130 @@ function show_peak (feature)
 	return output;
 }
 
+
+function estimate_exists (feature)
+{
+	if (!feature) {
+		return false;
+	}
+
+	var keys = feature.getKeys();
+
+	return (('wp'         in keys) &&
+		('percentage' in keys) &&
+		('latitude'   in keys) &&
+		('longitude'  in keys));
+}
+
+function create_message (feature)
+{
+	// "date_seen":      "2015-01-27",
+	// "latitude":       51.763237,
+	// "longitude":      -1.269080,
+	// "percentage":     0,
+	// "date_bed":       "",
+	// "message":        "",
+	// "route":          "",
+	// "date_route":     "",
+	// "wp":             ""
+
+	// "est_wp":         123,
+	// "est_percentage": 75,
+	// "est_latitude":   54.699234,
+	// "est_longitude":  -3.143848
+
+	var message = '';
+	var elapsed = 0;
+	var today = new Date();
+	var since = null;
+
+	var latitude   = 0;
+	var longitude  = 0;
+	var percentage = 0;
+
+	var estimate = estimate_exists (feature);
+
+	var date_seen = feature.get('date_seen');
+	if (estimate) {
+		since = today;
+	} else {
+		since = new Date(date_seen);
+	}
+
+	// message += '<img style="float: left;" src="../gfx/flatcap.png">';
+	// message += '<div style="margin-left: 70px;">';
+	message += '<h2>Rich';
+
+	if (estimate) {
+		message += ' <span class="estimate">(estimated position)</span>';
+	} else {
+		message += ' <span class="lastseen">(checked in ';
+		elapsed = today.diff (date_seen);
+		if (elapsed < 1) {
+			message += 'today';
+		} else if (elapsed < 2) {
+			message += 'yesterday';
+		} else if (elapsed < 8) {
+			message += elapsed + ' days ago';
+		} else {
+			message += 'on ' + date_seen;
+		}
+		message += ')</span>';
+	}
+	message += '</h2>';
+
+	if (estimate) {
+		percentage = feature.get('est_percentage');
+		latitude   = feature.get('est_latitude');
+		longitude  = feature.get('est_longitude');
+	} else {
+		percentage = feature.get('.percentage');
+		latitude   = feature.get('.latitude');
+		longitude  = feature.get('.longitude');
+	}
+
+	var route      = feature.get('route');
+	var date_route = feature.get('date_route');
+	 
+	if (route) {
+		if (date_route) {
+			var d = since.diff (date_route) + 1;
+			message += '<b>Day ' + d + '</b> of the <b>' + route_list[route].fullname + '</b>';
+
+			if (percentage) {
+				message += ' (' + percentage + '%)';
+			}
+		} else {
+			message += 'Walking the <b>' + route_list[route].fullname + '</b>';
+		}
+		message += '<br>';
+	} else {
+		message += 'Not currently on a route<br>';
+	}
+
+	if (latitude && longitude) {
+		var lat = parseFloat (latitude);
+		var lon = parseFloat (longitude);
+		message += '<span class="subtle">lat/long: ' + lat.toFixed(6) + ',' + lon.toFixed(6) + '</span><br>';
+	}
+
+	//message += '<br>';
+
+	var date_bed = feature.get('date_bed');
+	elapsed = since.diff (date_bed);
+	if (elapsed > 7) {
+		message += 'Last saw a bed ' + elapsed + ' days ago.<br>';
+	}
+
+	var msg = feature.get('message');
+	if (msg) {
+		message += '<b>&ldquo;' + msg + '&rdquo;</b>';
+	}
+
+	message += '</div>';
+	return message;
+}
+
 function show_rich (feature, layer)
 {
 	if (!feature) {
@@ -1075,7 +1209,7 @@ function show_rich (feature, layer)
 
 	var output = '';
 
-	var x = layer.getStyle();
+	var x = feature.getStyle() || layer.getStyle();
 	var y = x.getImage();
 	var z = y.getSrc();
 	var s = y.getSize();
@@ -1089,11 +1223,14 @@ function show_rich (feature, layer)
 
 	// alert (feature.getKeys());
 
-	output += "<h2>Where's Rich?</h2>";
+	output += create_message (feature);
+
+	// output += "<h2>Where's Rich?</h2>";
 	output += "blah<br>";
 	output += "blah<br>";
 	output += "blah<br>";
 	output += "blah<br>";
+
 	// output += get_bold_name   (feature);
 	// output += get_text        (feature, 'description');
 	// output += get_date2       (feature);
@@ -1187,10 +1324,47 @@ function get_estimate_data (feature)
 	}
 
 	$.getJSON ('estimate.json', function (estimate) {
+		var pt;
+
+		var lon = parseFloat (estimate.est_longitude);
+		var lat = parseFloat (estimate.est_latitude);
+
+		if (!lon || !lat) {
+			alert ('bad coords');
+			return;
+		}
+
+		pt = [lon, lat];
+		// alert(pt);
+
+		var f = new ol.Feature({
+			geometry: new ol.geom.Point(ol.proj.transform(pt, 'EPSG:4326', 'EPSG:3857'))
+		});
+
+		var keys = feature.getKeys();
+		$.each (keys, function (index, name) {
+			if (name == 'geometry') {
+				return true;
+			}
+			// Transfer all the json data from the rich feature
+			f.set (name, feature.get(name));
+		});
+
+		f.set ('type', 'rich');
+		f.set ('tag',  'estimate');
+
 		$.each (estimate, function (name, value) {
 			// Transfer all the json data to the feature
-			feature.set (name, value);
+			f.set (name, value);
 		});
+
+		// alert (f.getKeys());
+
+		var l = layers.icon_rich;
+		var s = l.getSource();
+
+		f.setStyle (icons.r_yellow);
+		s.addFeature(f);
 	})
 	.fail (function() {
 		alert ('Couldn\'t load Rich\'s estimated position');
@@ -1209,7 +1383,7 @@ function get_rich_data()
 		var lat = parseFloat (rich.latitude);
 
 		if (!lon || !lat) {
-			alert ("bad coords");
+			alert ('bad coords');
 			return;
 		}
 
@@ -1225,6 +1399,7 @@ function get_rich_data()
 		});
 
 		f.set ('type', 'rich');
+		f.set ('tag',  'seen');
 
 		var l = layers.icon_rich;
 		var s = l.getSource();
