@@ -1087,6 +1087,8 @@ function show_rich (feature, layer)
 		' background-position: left top;' +
 		'">';
 
+	// alert (feature.getKeys());
+
 	output += "<h2>Where's Rich?</h2>";
 	output += "blah<br>";
 	output += "blah<br>";
@@ -1178,10 +1180,26 @@ function on_change_hike()
 }
 
 
+function get_estimate_data (feature)
+{
+	if (!feature) {
+		return;
+	}
+
+	$.getJSON ('estimate.json', function (estimate) {
+		$.each (estimate, function (name, value) {
+			// Transfer all the json data to the feature
+			feature.set (name, value);
+		});
+	})
+	.fail (function() {
+		alert ('Couldn\'t load Rich\'s estimated position');
+	});
+}
+
 function get_rich_data()
 {
-	$.getJSON ('rich.json', function (data) {
-		var rich = data;
+	$.getJSON ('rich.json', function (rich) {
 		// alert (rich.longitude);
 		// alert (rich.latitude);
 
@@ -1211,6 +1229,8 @@ function get_rich_data()
 		var l = layers.icon_rich;
 		var s = l.getSource();
 		s.addFeature(f);
+
+		get_estimate_data(f);
 	})
 	.fail (function() {
 		alert ('Couldn\'t load Rich\'s location data');
