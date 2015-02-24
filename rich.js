@@ -142,6 +142,10 @@ function map_init_icons()
 			ay = 0.5;
 		}
 
+		if ((name == 'r_green') || (name == 'r_yellow') || (name == 'r_red')) {
+			scale = 1.0;
+		}
+
 		var icon = new ol.style.Icon({
 			anchor: [ax, ay],
 			anchorXUnits: 'fraction',
@@ -445,14 +449,14 @@ function set_defaults()
 
 	layers.extra        .setVisible (false);
 
-	layers.icon_end     .setVisible (false);
-	layers.icon_ferry   .setVisible (false);
-	layers.icon_hotel   .setVisible (false);
-	layers.icon_hut     .setVisible (false);
-	layers.icon_rich    .setVisible (false);
-	layers.icon_start   .setVisible (false);
+	layers.icon_end     .setVisible (true);
+	layers.icon_ferry   .setVisible (true);
+	layers.icon_hotel   .setVisible (true);
+	layers.icon_hut     .setVisible (true);
+	layers.icon_rich    .setVisible (true);
+	layers.icon_start   .setVisible (true);
 	layers.icon_tent    .setVisible (true);
-	layers.icon_waves   .setVisible (false);
+	layers.icon_waves   .setVisible (true);
 
 	layers.line_hike    .setVisible (true);
 	layers.line_river   .setVisible (true);
@@ -1063,6 +1067,42 @@ function show_peak (feature)
 	return output;
 }
 
+function show_rich (feature, layer)
+{
+	if (!feature) {
+		return '';
+	}
+
+	var output = '';
+
+	var x = layer.getStyle();
+	var y = x.getImage();
+	var z = y.getSrc();
+	var s = y.getSize();
+
+	output += '<div style="' +
+		' padding-left: ' + (s[0]+3) + 'px;' +
+		' background-image: url(\'' + z + '\');' +
+		' background-repeat: no-repeat;' +
+		' background-position: left top;' +
+		'">';
+
+	output += "<h2>Where's Rich?</h2>";
+	output += "blah<br>";
+	output += "blah<br>";
+	output += "blah<br>";
+	output += "blah<br>";
+	// output += get_bold_name   (feature);
+	// output += get_text        (feature, 'description');
+	// output += get_date2       (feature);
+	// output += get_location    (feature);
+	// output += get_id2         (feature, 'Icon');
+
+	output += '</div>';
+
+	return output;
+}
+
 
 function on_mousemove(evt)
 {
@@ -1088,6 +1128,8 @@ function on_mousemove(evt)
 			text = show_line (feature);
 		} else if (type == 'peak') {
 			text = show_peak (feature);
+		} else if (type == 'rich') {
+			text = show_rich (feature, layer);
 		} // XXX else alert
 
 		if (text) {
@@ -1136,6 +1178,45 @@ function on_change_hike()
 }
 
 
+function get_rich_data()
+{
+	$.getJSON ('rich.json', function (data) {
+		var rich = data;
+		// alert (rich.longitude);
+		// alert (rich.latitude);
+
+		var pt;
+
+		var lon = parseFloat (rich.longitude);
+		var lat = parseFloat (rich.latitude);
+
+		if (!lon || !lat) {
+			alert ("bad coords");
+			return;
+		}
+
+		pt = [lon, lat];
+
+		var f = new ol.Feature({
+			geometry: new ol.geom.Point(ol.proj.transform(pt, 'EPSG:4326', 'EPSG:3857'))
+		});
+
+		$.each (rich, function (name, value) {
+			// Transfer all the json data to the feature
+			f.set (name, value);
+		});
+
+		f.set ('type', 'rich');
+
+		var l = layers.icon_rich;
+		var s = l.getSource();
+		s.addFeature(f);
+	})
+	.fail (function() {
+		alert ('Couldn\'t load Rich\'s location data');
+	});
+}
+
 function main()
 {
 	$('body').layout({
@@ -1181,6 +1262,8 @@ function main()
 
 	msg1 = $('#route');
 	msg2 = $('#item');
+
+	get_rich_data();
 }
 
 
