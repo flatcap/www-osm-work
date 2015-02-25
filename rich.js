@@ -456,14 +456,14 @@ function set_defaults()
 
 	layers.extra        .setVisible (false);
 
-	layers.icon_end     .setVisible (true);
-	layers.icon_ferry   .setVisible (true);
-	layers.icon_hotel   .setVisible (true);
-	layers.icon_hut     .setVisible (true);
+	layers.icon_end     .setVisible (false);
+	layers.icon_ferry   .setVisible (false);
+	layers.icon_hotel   .setVisible (false);
+	layers.icon_hut     .setVisible (false);
 	layers.icon_rich    .setVisible (true);
-	layers.icon_start   .setVisible (true);
-	layers.icon_tent    .setVisible (true);
-	layers.icon_waves   .setVisible (true);
+	layers.icon_start   .setVisible (false);
+	layers.icon_tent    .setVisible (false);
+	layers.icon_waves   .setVisible (false);
 
 	layers.line_hike    .setVisible (true);
 	layers.line_river   .setVisible (true);
@@ -671,7 +671,7 @@ function html_distance (route, newline)
 		dist = route.dist_walked;
 	}
 
-	output += '<span>Route</span>: ' + dist + ' miles';
+	output += '<span>Route</span> ' + dist + ' miles';
 
 	if (complete) {
 		if (complete == 100) {
@@ -705,7 +705,7 @@ function html_camps (route, newline)
 		return '';
 	}
 
-	output += '<span>Camped</span>: ' + total + ' night';
+	output += '<span>Camped</span> ' + total + ' night';
 	if (total != 1) {
 		output += 's';
 	}
@@ -733,22 +733,24 @@ function html_route_info (dir)
 		return '';
 	}
 
-	var output = '<h1>' + r.fullname + '</h1>';
+	var output = '<div class="format">';
+
+	output += '<h1>' + r.fullname + '</h1>';
 	output += html_distance (r, true);
 
 	var start = r.date_start;
 	if (start) {
-		output += '<span>Started</span>: ' + format_date (start) + '<br />';
+		output += '<span>Started</span> ' + format_date (start) + '<br />';
 	}
 
 	var end = r.date_end;
 	if (end) {
-		output += '<span>Finished</span>: ' + format_date (end) + '<br />';
+		output += '<span>Finished</span> ' + format_date (end) + '<br />';
 	}
 
 	var walked = r.days_walked;
 	if (walked) {
-		output += '<span>Hiked</span>: ' + walked + ' day';
+		output += '<span>Hiked</span> ' + walked + ' day';
 		if (walked != 1) {
 			output += 's';
 		}
@@ -756,6 +758,7 @@ function html_route_info (dir)
 	}
 
 	output += html_camps (r, true);
+	output += '</div>';
 
 	return output;
 }
@@ -778,7 +781,7 @@ function get_line_title (feature)
 	else if (tag == 'variant') { tag = 'Alternate Route';    }
 	else if (tag == 'river')   { tag = 'River Crossing';     }
 
-	var str = '<span>Type:</span> ' + tag + '<br />';
+	var str = '<span>Type</span> ' + tag + '<br />';
 	return str;
 }
 
@@ -793,7 +796,7 @@ function get_date (feature)
 		return '';
 	}
 
-	var str = '<span>Date:</span> ' + format_date (date) + '<br />';
+	var str = '<span>Date</span> ' + format_date (date) + '<br />';
 	return str;
 }
 
@@ -823,7 +826,7 @@ function get_day_length (feature)
 		return '';
 	}
 
-	var str = '<span>Length:</span> ' + len + ' miles<br />';
+	var str = '<span>Walked</span> ' + len + ' miles<br />';
 	return str;
 }
 
@@ -838,7 +841,7 @@ function get_id (feature, name)
 		return '';
 	}
 
-	var str = '<span>' + name + '&nbsp;ID:</span> ' + id + '<br />';
+	var str = '<span><span class="subtle">' + name + '&nbsp;ID</span></span> <span class="subtle">' + id + '</span><br />';
 	return str;
 }
 
@@ -853,7 +856,7 @@ function get_id2 (feature, name)
 		return '';
 	}
 
-	var str = name + ' ID: ' + id + '<br />';
+	var str = '<span class="subtle">' + name + '&nbsp;ID ' + id + '</span><br />';
 	return str;
 }
 
@@ -1005,7 +1008,7 @@ function show_icon (feature, layer)
 		msg1.html (html_route_info (route));
 	}
 
-	var output = '';
+	var output = '<div class="format">';
 
 	var x = layer.getStyle();
 	var y = x.getImage();
@@ -1026,6 +1029,7 @@ function show_icon (feature, layer)
 	output += get_id2         (feature, 'Icon');
 
 	output += '</div>';
+	output += '</div>';
 
 	return output;
 }
@@ -1042,11 +1046,11 @@ function show_line (feature)
 		return '';
 	}
 
-	var output = '';
+	var output = '<div class="format">';
 	output += get_line_title  (feature);
 	output += get_text        (feature, 'description', '');
 	output += get_text        (feature, 'name', 'Part of');
-	output += get_text        (feature, 'date', 'Date');
+	output += get_date        (feature);
 	output += get_day_length  (feature);
 	output += get_id          (feature, 'Line');
 
@@ -1131,8 +1135,6 @@ function create_message (feature)
 		since = new Date(date_seen);
 	}
 
-	// message += '<img style="float: left;" src="../gfx/flatcap.png">';
-	// message += '<div style="margin-left: 70px;">';
 	message += '<h2>Rich';
 
 	if (estimate) {
@@ -1152,6 +1154,7 @@ function create_message (feature)
 		message += ')</span>';
 	}
 	message += '</h2>';
+	// alert(message);
 
 	if (estimate) {
 		percentage = feature.get('est_percentage');
@@ -1198,10 +1201,9 @@ function create_message (feature)
 
 	var msg = feature.get('message');
 	if (msg) {
-		message += '<b>&ldquo;' + msg + '&rdquo;</b>';
+		message += '<b>&ldquo;' + msg + '&rdquo;</b><br>';
 	}
 
-	message += '</div>';
 	return message;
 }
 
@@ -1230,6 +1232,7 @@ function show_rich (feature, layer)
 	output += create_message (feature);
 
 	// output += '<h2>Where's Rich?</h2>';
+
 	output += 'blah<br>';
 	output += 'blah<br>';
 	output += 'blah<br>';
@@ -1246,6 +1249,13 @@ function show_rich (feature, layer)
 	return output;
 }
 
+
+function update_long_lat (evt)
+{
+	var coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+	var str = coords[0].toFixed(6) + ", " + coords[1].toFixed(6);
+	$('#ll').html(str);
+}
 
 function on_mousemove(evt)
 {
@@ -1278,6 +1288,9 @@ function on_mousemove(evt)
 		if (text) {
 			msg2.html (text);
 		}
+
+		var coords = feature.get('coords') || '';
+		$('#ll').html(coords);
 
 		return true;
 	});
@@ -1461,6 +1474,8 @@ function main()
 	msg2 = $('#item');
 
 	get_rich_data();
+
+	map.on('click', update_long_lat);
 }
 
 

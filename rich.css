@@ -67,7 +67,7 @@ hr {
 	clear: both;
 }
 
-#route span, #item span {
+div.format > span {
 	display: block;
 	width: 6em;
 	float: left;
@@ -75,3 +75,14 @@ hr {
 	font-size: 90%;
 }
 
+#item span {
+	font-weight: bold;
+	font-size: 90%;
+}
+
+#ll {
+	font-size: 90%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
