@@ -38,8 +38,8 @@ var icons  = {};
 var areas  = {};
 
 var uk_hull;
-var msg1;
-var msg2;
+var route_info;
+var item_info;
 
 //------------------------------------------------------------------------------
 
@@ -143,8 +143,8 @@ function map_clear()
 		}
 		layer.setSource (new ol.source.Vector());
 	});
-	msg1.html ('');
-	msg2.html ('');
+	route_info.html ('');
+	item_info.html ('');
 }
 
 function map_reset()
@@ -190,66 +190,6 @@ function map_show_all()
 	$.each (route_list, function (dir, route) {
 		if (route.dist_walked > 0) {
 			load_kml (dir);
-		}
-	});
-}
-
-
-function load_kml (route)
-{
-	var proj = ol.proj.get ('EPSG:3857');
-	var load;
-	var key;
-
-	var url = 'output/'+route+'.kml';
-	load = new ol.source.KML({
-		projection: proj,
-		url: url,
-		extractStyles: false,
-	});
-
-	key = load.on ('change', function() {
-		var state = load.getState();
-		if (state == 'ready') {
-			load.forEachFeature (function (feature) {
-				var type = feature.get ('type');
-				var tag  = feature.get ('tag');
-				if (!type || !tag) {
-					return false;
-				}
-
-				var l = type + '_' + tag;
-				var layer = layers[l] || layers.extra;
-
-				var id = feature.getId();
-				var src = layer.getSource();
-				if (id) {
-					if (src.getFeatureById (id)) {
-						return false;
-					}
-				}
-				var clone = feature.clone();
-				clone.setId (id);
-
-				if (layer == layers.extra) {
-					var name = feature.get ('set_name');
-					if (name.substring (0, 5) == 'todo_') {
-						clone.setStyle (icons.red_x);
-					} else {
-						clone.setStyle (icons.green_x);
-					}
-				}
-
-				src.addFeature (clone);
-			});
-
-			load.unByKey (key);
-			load = null;
-			if (opt_zoom) {
-				map_zoom_route (route);
-			}
-		} else {
-			alert (state + ': loading "' + route + '"');
 		}
 	});
 }
@@ -322,15 +262,15 @@ function html_camps (route, newline)
 
 }
 
-function html_route_info (dir)
+function show_route_info (dir)
 {
 	if (!dir) {
-		return '';
+		return;
 	}
 
 	var r = route_list[dir];
 	if (!r) {
-		return '';
+		return;
 	}
 
 	var output = '<div class="format">';
@@ -360,7 +300,7 @@ function html_route_info (dir)
 	output += html_camps (r, true);
 	output += '</div>';
 
-	return output;
+	route_info.html (output);
 }
 
 
@@ -547,141 +487,6 @@ function get_location (feature)
 }
 
 
-function show_area (feature)
-{
-	// area
-	//	todo
-	//	done
-	//	whole
-	//	hull
-
-	// name
-	// type
-	// tag
-	// hike_id
-	// hike_dir
-
-	// Climbed:
-	// 	24 of the 214 Wainwrights
-	// 	7 of the 116 Wainwright Outliers
-	// 	34 of the 323 Other hills
-
-	// To Climb:
-	// 	190 of the 214 Wainwrights
-	// 	109 of the 116 Wainwright Outliers
-	// 	289 of the 323 Other hills
-
-	var tag = feature.get ('tag');
-	if (tag == 'hull') {
-		return true;
-	}
-
-	var output = '';
-
-	output += feature.get('name') + '<br>';
-	output += feature.get('type') + '<br>';
-	output += feature.get('tag') + '<br>';
-	output += feature.get('hike_id') + '<br>';
-	output += feature.get('hike_dir') + '<br>';
-
-	return output;
-}
-
-function show_icon (feature, layer)
-{
-	// icon
-	//	ferry
-	//	waves
-	//	tent
-	//	hut
-	//	hotel
-	//	start
-	//	end
-
-	if (!feature) {
-		return '';
-	}
-
-	var tag = feature.get ('tag');
-	if ((tag == 'start') || (tag == 'end')) {
-		var route = feature.get ('route');
-		msg1.html (html_route_info (route));
-	}
-
-	var output = '<div class="format">';
-
-	var x = layer.getStyle();
-	var y = x.getImage();
-	var z = y.getSrc();
-	var s = y.getSize();
-
-	output += '<div style="' +
-		' padding-left: ' + (s[0]+3) + 'px;' +
-		' background-image: url(\'' + z + '\');' +
-		' background-repeat: no-repeat;' +
-		' background-position: left top;' +
-		'">';
-
-	output += get_bold_name   (feature);
-	output += get_text        (feature, 'description');
-	output += get_date2       (feature);
-	output += get_location    (feature);
-	output += get_id2         (feature, 'Icon');
-
-	output += '</div>';
-	output += '</div>';
-
-	return output;
-}
-
-function show_line (feature)
-{
-	// line
-	//	hike
-	//	todo
-	//	variant
-	//	route
-	//	river
-	if (!feature) {
-		return '';
-	}
-
-	var output = '<div class="format">';
-	output += get_line_title  (feature);
-	output += get_text        (feature, 'description', '');
-	output += get_text        (feature, 'name', 'Part of');
-	output += get_date        (feature);
-	output += get_day_length  (feature);
-	output += get_id          (feature, 'Line');
-
-	return output;
-}
-
-function show_peak (feature)
-{
-	// peak
-	//	done
-	//	todo
-	if (!feature) {
-		return '';
-	}
-
-	var output = '';
-	output += get_bold_name   (feature);
-	output += get_text        (feature, 'description', '');
-	output += get_date        (feature);
-	output += get_day_length  (feature);
-	output += get_location    (feature);
-	output += get_id          (feature, 'Peak');
-
-	output += get_text (feature, 'dobih',      'DoBIH');
-	output += get_text (feature, 'categories', 'Categories');
-	output += get_text (feature, 'coords',     'Long/Lat');
-
-	return output;
-}
-
-
 function estimate_exists (feature)
 {
 	if (!feature) {
@@ -807,6 +612,142 @@ function create_message (feature)
 	return message;
 }
 
+
+// -----------------------------------------------------------------------------
+
+function show_area (feature)
+{
+	// area
+	//	todo
+	//	done
+	//	whole
+	//	hull
+
+	// name
+	// type
+	// tag
+	// hike_id
+	// hike_dir
+
+	// Climbed:
+	// 	24 of the 214 Wainwrights
+	// 	7 of the 116 Wainwright Outliers
+	// 	34 of the 323 Other hills
+
+	// To Climb:
+	// 	190 of the 214 Wainwrights
+	// 	109 of the 116 Wainwright Outliers
+	// 	289 of the 323 Other hills
+
+	var tag = feature.get ('tag');
+	if (tag == 'hull') {
+		return true;
+	}
+
+	var output = '';
+
+	output += feature.get('name') + '<br>';
+	output += feature.get('type') + '<br>';
+	output += feature.get('tag') + '<br>';
+	output += feature.get('hike_id') + '<br>';
+	output += feature.get('hike_dir') + '<br>';
+
+	return output;
+}
+
+function show_icon (feature, layer)
+{
+	// icon
+	//	ferry
+	//	waves
+	//	tent
+	//	hut
+	//	hotel
+	//	start
+	//	end
+
+	if (!feature) {
+		return '';
+	}
+
+	var tag = feature.get ('tag');
+	if ((tag == 'start') || (tag == 'end')) {
+		show_route_info (feature.get ('route'));
+	}
+
+	var output = '<div class="format">';
+
+	var x = layer.getStyle();
+	var y = x.getImage();
+	var z = y.getSrc();
+	var s = y.getSize();
+
+	output += '<div style="' +
+		' padding-left: ' + (s[0]+3) + 'px;' +
+		' background-image: url(\'' + z + '\');' +
+		' background-repeat: no-repeat;' +
+		' background-position: left top;' +
+		'">';
+
+	output += get_bold_name   (feature);
+	output += get_text        (feature, 'description');
+	output += get_date2       (feature);
+	output += get_location    (feature);
+	output += get_id2         (feature, 'Icon');
+
+	output += '</div>';
+	output += '</div>';
+
+	return output;
+}
+
+function show_line (feature)
+{
+	// line
+	//	hike
+	//	todo
+	//	variant
+	//	route
+	//	river
+	if (!feature) {
+		return '';
+	}
+
+	var output = '<div class="format">';
+	output += get_line_title  (feature);
+	output += get_text        (feature, 'description', '');
+	output += get_text        (feature, 'name', 'Part of');
+	output += get_date        (feature);
+	output += get_day_length  (feature);
+	output += get_id          (feature, 'Line');
+
+	return output;
+}
+
+function show_peak (feature)
+{
+	// peak
+	//	done
+	//	todo
+	if (!feature) {
+		return '';
+	}
+
+	var output = '';
+	output += get_bold_name   (feature);
+	output += get_text        (feature, 'description', '');
+	output += get_date        (feature);
+	output += get_day_length  (feature);
+	output += get_location    (feature);
+	output += get_id          (feature, 'Peak');
+
+	output += get_text (feature, 'dobih',      'DoBIH');
+	output += get_text (feature, 'categories', 'Categories');
+	output += get_text (feature, 'coords',     'Long/Lat');
+
+	return output;
+}
+
 function show_rich (feature, layer)
 {
 	if (!feature) {
@@ -852,124 +793,6 @@ function show_rich (feature, layer)
 
 // -----------------------------------------------------------------------------
 
-function get_uk_hull()
-{
-	var uk_convex_hull = [[
-		[ -6.224408, 56.725261 ],
-		[ -5.191198, 58.587064 ],
-		[ -3.028093, 58.646065 ],
-		[ -1.823329, 57.612691 ],
-		[  1.781172, 52.562703 ],
-		[  1.400427, 51.152562 ],
-		[  0.247893, 50.725720 ],
-		[ -5.203043, 49.958145 ],
-		[ -5.708586, 50.045477 ],
-		[ -5.026403, 53.977312 ],
-		[ -6.224408, 56.725261 ]
-	]];
-
-	var hull = new ol.geom.Polygon (uk_convex_hull);
-	hull.transform ('EPSG:4326', 'EPSG:3857');
-
-	return hull;
-}
-
-function get_estimate_data (feature)
-{
-	if (!feature) {
-		return;
-	}
-
-	$.getJSON ('estimate.json', function (estimate) {
-		var pt;
-
-		var lon = parseFloat (estimate.est_longitude);
-		var lat = parseFloat (estimate.est_latitude);
-
-		if (!lon || !lat) {
-			alert ('bad coords');
-			return;
-		}
-
-		pt = [lon, lat];
-		// alert(pt);
-
-		var f = new ol.Feature({
-			geometry: new ol.geom.Point(ol.proj.transform(pt, 'EPSG:4326', 'EPSG:3857'))
-		});
-
-		var keys = feature.getKeys();
-		$.each (keys, function (index, name) {
-			if (name == 'geometry') {
-				return true;
-			}
-			// Transfer all the json data from the rich feature
-			f.set (name, feature.get(name));
-		});
-
-		f.set ('type', 'rich');
-		f.set ('tag',  'estimate');
-
-		$.each (estimate, function (name, value) {
-			// Transfer all the json data to the feature
-			f.set (name, value);
-		});
-
-		var l = layers.icon_rich;
-		var s = l.getSource();
-
-		f.setStyle (icons.r_yellow);
-		s.addFeature(f);
-	})
-	.fail (function() {
-		alert ('Couldn\'t load Rich\'s estimated position');
-	});
-}
-
-function get_rich_data()
-{
-	$.getJSON ('rich.json', function (rich) {
-		// alert (rich.longitude);
-		// alert (rich.latitude);
-
-		var pt;
-
-		var lon = parseFloat (rich.longitude);
-		var lat = parseFloat (rich.latitude);
-
-		if (!lon || !lat) {
-			alert ('bad coords');
-			return;
-		}
-
-		pt = [lon, lat];
-
-		var f = new ol.Feature({
-			geometry: new ol.geom.Point(ol.proj.transform(pt, 'EPSG:4326', 'EPSG:3857'))
-		});
-
-		$.each (rich, function (name, value) {
-			// Transfer all the json data to the feature
-			f.set (name, value);
-		});
-
-		f.set ('type', 'rich');
-		f.set ('tag',  'seen');
-
-		var l = layers.icon_rich;
-		var s = l.getSource();
-		s.addFeature(f);
-
-		get_estimate_data(f);
-	})
-	.fail (function() {
-		alert ('Couldn\'t load Rich\'s location data');
-	});
-}
-
-
-// -----------------------------------------------------------------------------
-
 function on_change_hike()
 {
 	opt_alldone = false;
@@ -982,7 +805,7 @@ function on_change_hike()
 	if (opt_one) {
 		map_clear();
 	}
-	msg1.html (html_route_info (option));
+	show_route_info (option);
 	load_kml (option);
 }
 
@@ -1041,7 +864,7 @@ function on_mouse_move(evt)
 		} // XXX else alert
 
 		if (text) {
-			msg2.html (text);
+			item_info.html (text);
 		}
 
 		var coords = feature.get('coords') || '';
@@ -1055,13 +878,202 @@ function on_mouse_move(evt)
 		t.style.cursor = 'pointer';
 	} else {
 		t.style.cursor = '';
-		// msg2.html ('');
+		// item_info.html ('');
 	}
 }
 
 function on_window_resize()
 {
 	map.updateSize();
+}
+
+
+// -----------------------------------------------------------------------------
+
+function get_uk_hull()
+{
+	var uk_convex_hull = [[
+		[ -6.224408, 56.725261 ],
+		[ -5.191198, 58.587064 ],
+		[ -3.028093, 58.646065 ],
+		[ -1.823329, 57.612691 ],
+		[  1.781172, 52.562703 ],
+		[  1.400427, 51.152562 ],
+		[  0.247893, 50.725720 ],
+		[ -5.203043, 49.958145 ],
+		[ -5.708586, 50.045477 ],
+		[ -5.026403, 53.977312 ],
+		[ -6.224408, 56.725261 ]
+	]];
+
+	var hull = new ol.geom.Polygon (uk_convex_hull);
+	hull.transform ('EPSG:4326', 'EPSG:3857');
+
+	return hull;
+}
+
+
+function load_estimate_data (feature)
+{
+	if (!feature) {
+		return;
+	}
+
+	$.getJSON ('estimate.json', function (estimate) {
+		var pt;
+
+		var lon = parseFloat (estimate.est_longitude);
+		var lat = parseFloat (estimate.est_latitude);
+
+		if (!lon || !lat) {
+			alert ('bad coords');
+			return;
+		}
+
+		pt = [lon, lat];
+		// alert(pt);
+
+		var f = new ol.Feature({
+			geometry: new ol.geom.Point(ol.proj.transform(pt, 'EPSG:4326', 'EPSG:3857'))
+		});
+
+		var keys = feature.getKeys();
+		$.each (keys, function (index, name) {
+			if (name == 'geometry') {
+				return true;
+			}
+			// Transfer all the json data from the rich feature
+			f.set (name, feature.get(name));
+		});
+
+		f.set ('type', 'rich');
+		f.set ('tag',  'estimate');
+
+		$.each (estimate, function (name, value) {
+			// Transfer all the json data to the feature
+			f.set (name, value);
+		});
+
+		var l = layers.icon_rich;
+		var s = l.getSource();
+
+		f.setStyle (icons.r_yellow);
+		s.addFeature(f);
+	})
+	.fail (function() {
+		alert ('Couldn\'t load Rich\'s estimated position');
+	});
+}
+
+function load_kml (route)
+{
+	var proj = ol.proj.get ('EPSG:3857');
+	var load;
+	var key;
+
+	var url = 'output/'+route+'.kml';
+	load = new ol.source.KML({
+		projection: proj,
+		url: url,
+		extractStyles: false,
+	});
+
+	key = load.on ('change', function() {
+		var state = load.getState();
+		if (state == 'ready') {
+			load.forEachFeature (function (feature) {
+				var type = feature.get ('type');
+				var tag  = feature.get ('tag');
+				if (!type || !tag) {
+					return false;
+				}
+
+				var l = type + '_' + tag;
+				var layer = layers[l] || layers.extra;
+
+				var id = feature.getId();
+				var src = layer.getSource();
+				if (id) {
+					if (src.getFeatureById (id)) {
+						return false;
+					}
+				}
+				var clone = feature.clone();
+				clone.setId (id);
+
+				if (layer == layers.extra) {
+					var name = feature.get ('set_name');
+					if (name.substring (0, 5) == 'todo_') {
+						clone.setStyle (icons.red_x);
+					} else {
+						clone.setStyle (icons.green_x);
+					}
+				}
+
+				src.addFeature (clone);
+			});
+
+			load.unByKey (key);
+			load = null;
+			if (opt_zoom) {
+				map_zoom_route (route);
+			}
+		} else {
+			alert (state + ': loading "' + route + '"');
+		}
+	});
+}
+
+function load_rich_data()
+{
+	$.getJSON ('rich.json', function (rich) {
+		// alert (rich.longitude);
+		// alert (rich.latitude);
+
+		var pt;
+
+		var lon = parseFloat (rich.longitude);
+		var lat = parseFloat (rich.latitude);
+
+		if (!lon || !lat) {
+			alert ('bad coords');
+			return;
+		}
+
+		pt = [lon, lat];
+
+		var f = new ol.Feature({
+			geometry: new ol.geom.Point(ol.proj.transform(pt, 'EPSG:4326', 'EPSG:3857'))
+		});
+
+		$.each (rich, function (name, value) {
+			// Transfer all the json data to the feature
+			f.set (name, value);
+		});
+
+		f.set ('type', 'rich');
+		f.set ('tag',  'seen');
+
+		var l = layers.icon_rich;
+		var s = l.getSource();
+		s.addFeature(f);
+
+		load_estimate_data(f);
+	})
+	.fail (function() {
+		alert ('Couldn\'t load Rich\'s location data');
+	});
+}
+
+function load_route_data()
+{
+	$.getJSON ('output/routes.json', function (data) {
+		route_list = data;
+		init_dropdown();
+	})
+	.fail (function() {
+		alert ('Couldn\'t load route data');
+	});
 }
 
 
@@ -1478,29 +1490,23 @@ function main()
 		center__onresize: function() { map.updateSize(); }
 	});
 	init_map();
-	set_defaults();
 	init_options();
 	init_events();
 	init_bind_controls();
 
 	map.updateSize();
 
-	$.getJSON ('output/routes.json', function (data) {
-		route_list = data;
-		init_dropdown();
-	})
-	.fail (function() {
-		alert ('Couldn\'t load route data');
-	});
+	load_route_data();
 
 	$('#tabs').tabs();
 
 	uk_hull = get_uk_hull();
 
-	msg1 = $('#route');
-	msg2 = $('#item');
+	route_info = $('#route_info');
+	item_info = $('#item_info');
 
-	get_rich_data();
+	set_defaults();
+	load_rich_data();
 }
 
 
