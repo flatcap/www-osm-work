@@ -78,349 +78,7 @@ Date.prototype.diff = function (str)
 };
 
 
-function map_init_area_styles()
-{
-	areas.done = new ol.style.Style({
-		fill: new ol.style.Fill({
-			color: [0, 255, 0, 0.2]
-		}),
-		stroke: new ol.style.Stroke({
-			color: '#00FF00',
-			width: 2
-		})
-	});
-	areas.hull = new ol.style.Style({
-		stroke: new ol.style.Stroke({
-			color: '#00FFFF',
-			width: 2
-		})
-	});
-	areas.todo = new ol.style.Style({
-		fill: new ol.style.Fill({
-			color: [255, 0, 0, 0.2]
-		}),
-		stroke: new ol.style.Stroke({
-			color: '#FF0000',
-			width: 2
-		})
-	});
-	areas.whole = new ol.style.Style({
-		fill: new ol.style.Fill({
-			color: [255, 255, 0, 0.2]
-		}),
-		stroke: new ol.style.Stroke({
-			color: '#FFFF00',
-			width: 2
-		})
-	});
-}
-
-function map_init_icons()
-{
-	var names = {
-		// Map tags to filenames
-		'end':       'paddle_end',
-		'ferry':     'map_ferry',
-		'hotel':     'map_hotel',
-		'hut':       'map_hut',
-		'peak_done': 'diamond_green',
-		'peak_todo': 'diamond_red',
-		'r_green':   'r_green',
-		'r_red':     'r_red',
-		'r_yellow':  'r_yellow',
-		'start':     'paddle_start',
-		'tent':      'map_tent',
-		'waves':     'map_waves',
-		'red_x':     'red_cross',
-		'green_x':   'green_cross',
-	};
-
-	$.each (names, function (name, filename) {
-		var scale = 0.5;
-		if ((name == 'start') || (name == 'end') || (name == 'red_x') || (name == 'green_x')) {
-			scale = 1.0;
-		}
-
-		var ax = 0.5;
-		var ay = 1.0;
-
-		if ((name == 'red_x') || (name == 'green_x')) {
-			scale = 0.75;
-			ax = 0.5;
-			ay = 0.5;
-		}
-
-		if ((name == 'r_green') || (name == 'r_yellow') || (name == 'r_red')) {
-			scale = 1.0;
-		}
-
-		var icon = new ol.style.Icon({
-			anchor: [ax, ay],
-			anchorXUnits: 'fraction',
-			anchorYUnits: 'fraction',
-			src: 'gfx/'+filename+'.png',
-			scale: scale
-		});
-
-		icons[name] = new ol.style.Style({
-			image: icon
-		});
-	});
-}
-
-function map_init_layers()
-{
-	// Route layers								    Default Line Style
-	layers.line_hike    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.hike     });
-	layers.line_river   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.river    });
-	layers.line_route   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.route    });
-	layers.line_todo    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.todo     });
-	layers.line_variant = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.variant  });
-
-	// Icon layers								    Default Icon
-	layers.icon_end     = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.end       });
-	layers.icon_ferry   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.ferry     });
-	layers.icon_hotel   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.hotel     });
-	layers.icon_hut     = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.hut       });
-	layers.icon_rich    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.r_green   });
-	layers.icon_start   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.start     });
-	layers.icon_tent    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.tent      });
-	layers.icon_waves   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.waves     });
-	layers.peak_done    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.peak_done });
-	layers.peak_todo    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.peak_todo });
-
-	// Areas								    Default Area Styles
-	layers.area_done    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: areas.done      });
-	layers.area_hull    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: areas.hull      });
-	layers.area_todo    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: areas.todo      });
-	layers.area_whole   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: areas.whole     });
-
-	// Misc									    No Defaults
-	layers.extra        = new ol.layer.Vector ({ source: new ol.source.Vector()                         });
-}
-
-function map_init_line_styles()
-{
-	styles.route = new ol.style.Style({
-		stroke: new ol.style.Stroke({
-			color: '#FF00FF',
-			width: 2
-		})
-	});
-	styles.variant = new ol.style.Style({
-		stroke: new ol.style.Stroke({
-			color: '#FFFF00',
-			width: 2
-		})
-	});
-	styles.river = new ol.style.Style({
-		stroke: new ol.style.Stroke({
-			color: '#00FFFF',
-			width: 2
-		})
-	});
-	styles.todo = new ol.style.Style({
-		stroke: new ol.style.Stroke({
-			color: '#FF0000',
-			width: 2
-		})
-	});
-	styles.hike = new ol.style.Style({
-		stroke: new ol.style.Stroke({
-			color: '#00FF00',
-			width: 2
-		})
-	});
-}
-
-function map_init_maps()
-{
-	maps.aerial = new ol.layer.Tile({
-		source: new ol.source.BingMaps({
-			key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
-			imagerySet: 'Aerial',
-		}),
-		visible: true,
-	});
-
-	maps.hybrid = new ol.layer.Tile({
-		source: new ol.source.BingMaps({
-			key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
-			imagerySet: 'AerialWithLabels',
-		}),
-		visible: false,
-	});
-
-	maps.street = new ol.layer.Tile({
-		source: new ol.source.OSM(),
-		visible: false,
-	});
-
-	maps.os = new ol.layer.Group({
-		layers: [
-			new ol.layer.Tile({
-				source: new ol.source.BingMaps({
-					key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
-					imagerySet: 'ordnanceSurvey',
-				}),
-				minResolution: 1.18,
-				maxResolution: 40,
-			}),
-			new ol.layer.Tile({
-				source: new ol.source.OSM(),
-				minResolution: 40,
-				maxResolution: 20000,
-			})
-		],
-		visible: false,
-	});
-
-	maps.pastel = new ol.layer.Tile({
-		source: new ol.source.Stamen({
-			layer: 'watercolor'
-		}),
-		visible: false,
-	});
-
-	maps.toner = new ol.layer.Tile({
-		source: new ol.source.Stamen({
-			layer: 'toner-background'
-		}),
-		visible: false,
-	});
-
-	maps.black = new ol.layer.Tile({
-		source: new ol.source.TileJSON({
-			url: 'http://api.tiles.mapbox.com/v3/mapbox.world-black.jsonp',
-		}),
-		visible: false,
-	});
-}
-
-function map_init()
-{
-	map_init_area_styles();
-	map_init_icons();
-	map_init_maps();
-	map_init_line_styles();
-	map_init_layers();
-
-	map = new ol.Map({
-		target: 'map',
-		layers: [
-			// Layers grouped by depth
-			layers.area_hull,
-			maps.aerial, maps.hybrid, maps.street, maps.os, maps.pastel, maps.toner, maps.black,
-			layers.area_whole, layers.area_todo, layers.area_done,
-			layers.line_route, layers.line_variant,
-			layers.line_river, layers.icon_ferry, layers.icon_waves,
-			layers.line_todo, layers.peak_todo,
-			layers.line_hike, layers.peak_done,
-			layers.icon_hotel, layers.icon_hut, layers.icon_tent,
-			layers.icon_end, layers.icon_start, layers.extra,
-			layers.icon_rich,
-		],
-		view: new ol.View({
-			center: ol.proj.transform ([-3.143848, 54.699234], 'EPSG:4326', 'EPSG:3857'),
-			zoom: 6,
-			minZoom: 1,
-			maxZoom: 19,
-		}),
-		controls: ol.control.defaults().extend ([
-			new ol.control.FullScreen()
-		]),
-	});
-}
-
-
-function dd_init()
-{
-	var c = [];
-	var i = [];
-	var u = [];
-	var h = [];
-	var j = [];
-
-	var c_html = '';
-	var i_html = '';
-	var u_html = '';
-	var h_html = '';
-	var j_html = '';
-
-	$.each (route_list, function (index, route) {
-		if ((typeof (route.dist_route) !== undefined) && (route.dist_route > 0)) {
-			if (typeof (route.complete) !== undefined) {
-				if (route.complete == 100) {
-					if (index.substring (0, 5) == 'join.') {
-						j.push ({ key: index, fullname: route.fullname });
-					} else {
-						c.push ({ key: index, fullname: route.fullname });
-					}
-				} else if (route.complete > 0) {
-					i.push ({ key: index, fullname: route.fullname  + ' (' + route.complete + '%)' });
-				} else {
-					u.push ({ key: index, fullname: route.fullname });
-				}
-			}
-		} else {
-			h.push ({ key: index, fullname: route.fullname  + ' (' + route.complete + '%)' });
-		}
-	});
-
-	c.sort (route_sort);
-	i.sort (route_sort);
-	u.sort (route_sort);
-	h.sort (route_sort);
-	j.sort (route_sort);
-
-	if (c.length) {
-		c_html += '<optgroup id="complete" label="Complete">';
-		$.each (c, function (index, route) {
-			c_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
-		});
-		c_html += '</optgroup>';
-	}
-
-	if (i.length) {
-		i_html += '<optgroup id="incomplete" label="Incomplete">';
-		$.each (i, function (index, route) {
-			i_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
-		});
-		i_html += '</optgroup>';
-	}
-
-	if (u.length) {
-		u_html += '<optgroup id="unstarted" label="Unstarted">';
-		$.each (u, function (index, route) {
-			u_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
-		});
-		u_html += '</optgroup>';
-	}
-
-	if (h.length) {
-		h_html += '<optgroup id="hills" label="Hills">';
-		$.each (h, function (index, route) {
-			h_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
-		});
-		h_html += '</optgroup>';
-	}
-
-	if (j.length) {
-		j_html += '<optgroup id="join" label="Join Ups">';
-		$.each (j, function (index, route) {
-			j_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
-		});
-		j_html += '</optgroup>';
-	}
-
-	show_html.comp = c_html;
-	show_html.inco = i_html;
-	show_html.unst = u_html;
-	show_html.hill = h_html;
-	show_html.join = j_html;
-
-	return dd_populate();
-}
+//------------------------------------------------------------------------------
 
 function dd_populate()
 {
@@ -474,61 +132,6 @@ function set_defaults()
 
 	layers.peak_done    .setVisible (true);
 	layers.peak_todo    .setVisible (true);
-}
-
-function init_options()
-{
-	$('#show_comp').prop ('checked', show_comp);
-	$('#show_inco').prop ('checked', show_inco);
-	$('#show_unst').prop ('checked', show_unst);
-	$('#show_hill').prop ('checked', show_hill);
-	$('#show_join').prop ('checked', show_join);
-
-	$('#opt_one')  .prop ('checked', opt_one);
-	$('#opt_zoom') .prop ('checked', opt_zoom);
-
-	$('#show_comp').change (function() { show_comp = this.checked; dd_populate(); });
-	$('#show_hill').change (function() { show_hill = this.checked; dd_populate(); });
-	$('#show_inco').change (function() { show_inco = this.checked; dd_populate(); });
-	$('#show_join').change (function() { show_join = this.checked; dd_populate(); });
-	$('#show_unst').change (function() { show_unst = this.checked; dd_populate(); });
-
-	$('#opt_one')  .change (function() { opt_one  = this.checked; });
-	$('#opt_zoom') .change (function() { opt_zoom = this.checked; });
-
-	$('input[name=map_type]').change (set_map_type);
-
-	$('#button_centre') .click (function() { map_zoom_route(); });
-	$('#button_done')   .click (function() { map_show_all();   });
-	$('#button_clear')  .click (function() { map_reset();      });
-	$('#button_options').click (function() { $('#dialog').dialog ({ width: 450 }); });
-
-	$('#dropdown').change (on_change_hike);
-	$('#dropdown').click (on_click_hike);
-
-	var line_hike    = new ol.dom.Input (document.getElementById ('line_hike'));    line_hike.bindTo    ('checked', layers.line_hike,    'visible');
-	var line_river   = new ol.dom.Input (document.getElementById ('line_river'));   line_river.bindTo   ('checked', layers.line_river,   'visible');
-	var line_route   = new ol.dom.Input (document.getElementById ('line_route'));   line_route.bindTo   ('checked', layers.line_route,   'visible');
-	var line_todo    = new ol.dom.Input (document.getElementById ('line_todo'));    line_todo.bindTo    ('checked', layers.line_todo,    'visible');
-	var line_variant = new ol.dom.Input (document.getElementById ('line_variant')); line_variant.bindTo ('checked', layers.line_variant, 'visible');
-
-	var icon_end     = new ol.dom.Input (document.getElementById ('icon_end'));     icon_end.bindTo     ('checked', layers.icon_end,     'visible');
-	var icon_ferry   = new ol.dom.Input (document.getElementById ('icon_ferry'));   icon_ferry.bindTo   ('checked', layers.icon_ferry,   'visible');
-	var icon_hotel   = new ol.dom.Input (document.getElementById ('icon_hotel'));   icon_hotel.bindTo   ('checked', layers.icon_hotel,   'visible');
-	var icon_hut     = new ol.dom.Input (document.getElementById ('icon_hut'));     icon_hut.bindTo     ('checked', layers.icon_hut,     'visible');
-	var icon_rich    = new ol.dom.Input (document.getElementById ('icon_rich'));    icon_rich.bindTo    ('checked', layers.icon_rich,    'visible');
-	var icon_start   = new ol.dom.Input (document.getElementById ('icon_start'));   icon_start.bindTo   ('checked', layers.icon_start,   'visible');
-	var icon_tent    = new ol.dom.Input (document.getElementById ('icon_tent'));    icon_tent.bindTo    ('checked', layers.icon_tent,    'visible');
-	var icon_waves   = new ol.dom.Input (document.getElementById ('icon_waves'));   icon_waves.bindTo   ('checked', layers.icon_waves,   'visible');
-
-	var peak_done    = new ol.dom.Input (document.getElementById ('peak_done'));    peak_done.bindTo    ('checked', layers.peak_done,    'visible');
-	var peak_todo    = new ol.dom.Input (document.getElementById ('peak_todo'));    peak_todo.bindTo    ('checked', layers.peak_todo,    'visible');
-
-	var area_done    = new ol.dom.Input (document.getElementById ('area_done'));    area_done.bindTo    ('checked', layers.area_done,    'visible');
-	var area_todo    = new ol.dom.Input (document.getElementById ('area_todo'));    area_todo.bindTo    ('checked', layers.area_todo,    'visible');
-	var area_whole   = new ol.dom.Input (document.getElementById ('area_whole'));   area_whole.bindTo   ('checked', layers.area_whole,   'visible');
-
-	var extra        = new ol.dom.Input (document.getElementById ('extra'));        extra.bindTo        ('checked', layers.extra,        'visible');
 }
 
 
@@ -588,16 +191,6 @@ function map_show_all()
 		if (route.dist_walked > 0) {
 			load_kml (dir);
 		}
-	});
-}
-
-
-function set_map_type()
-{
-	var opt = this.value;
-
-	$.each (maps, function (index, layer) {
-		layer.setVisible (opt == index);
 	});
 }
 
@@ -1257,91 +850,29 @@ function show_rich (feature, layer)
 }
 
 
-function update_long_lat (evt)
+// -----------------------------------------------------------------------------
+
+function get_uk_hull()
 {
-	var coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-	var str = coords[0].toFixed(6) + ", " + coords[1].toFixed(6);
-	$('#ll').html(str);
+	var uk_convex_hull = [[
+		[ -6.224408, 56.725261 ],
+		[ -5.191198, 58.587064 ],
+		[ -3.028093, 58.646065 ],
+		[ -1.823329, 57.612691 ],
+		[  1.781172, 52.562703 ],
+		[  1.400427, 51.152562 ],
+		[  0.247893, 50.725720 ],
+		[ -5.203043, 49.958145 ],
+		[ -5.708586, 50.045477 ],
+		[ -5.026403, 53.977312 ],
+		[ -6.224408, 56.725261 ]
+	]];
+
+	var hull = new ol.geom.Polygon (uk_convex_hull);
+	hull.transform ('EPSG:4326', 'EPSG:3857');
+
+	return hull;
 }
-
-function on_mousemove(evt)
-{
-	var pixel = map.getEventPixel (evt.originalEvent);
-	var hit = false;
-
-	map.forEachFeatureAtPixel (pixel, function (feature, layer) {
-		var tag = feature.get ('tag');
-		if (tag == 'hull') {
-			return true;
-		}
-
-		hit = true;
-
-		var type = feature.get ('type');
-		var text;
-
-		if (type == 'area') {
-			text = show_area (feature);
-		} else if (type == 'icon') {
-			text = show_icon (feature, layer);
-		} else if (type == 'line') {
-			text = show_line (feature);
-		} else if (type == 'peak') {
-			text = show_peak (feature);
-		} else if (type == 'rich') {
-			text = show_rich (feature, layer);
-		} // XXX else alert
-
-		if (text) {
-			msg2.html (text);
-		}
-
-		var coords = feature.get('coords') || '';
-		$('#ll').html(coords);
-
-		return true;
-	});
-
-	var t = $('#map')[0];
-	if (hit) {
-		t.style.cursor = 'pointer';
-	} else {
-		t.style.cursor = '';
-		// msg2.html ('');
-	}
-}
-
-function on_resize()
-{
-	map.updateSize();
-}
-
-function on_click_hike()
-{
-	opt_alldone = false;
-	var option = this.value;
-
-	if (opt_zoom) {
-		map_zoom_route (option);
-	}
-}
-
-function on_change_hike()
-{
-	opt_alldone = false;
-	var option = this.value;
-
-	if (opt_zoom) {
-		map_zoom_route (option);
-	}
-
-	if (opt_one) {
-		map_clear();
-	}
-	msg1.html (html_route_info (option));
-	load_kml (option);
-}
-
 
 function get_estimate_data (feature)
 {
@@ -1436,6 +967,507 @@ function get_rich_data()
 	});
 }
 
+
+// -----------------------------------------------------------------------------
+
+function on_change_hike()
+{
+	opt_alldone = false;
+	var option = this.value;
+
+	if (opt_zoom) {
+		map_zoom_route (option);
+	}
+
+	if (opt_one) {
+		map_clear();
+	}
+	msg1.html (html_route_info (option));
+	load_kml (option);
+}
+
+function on_change_map_type()
+{
+	var opt = this.value;
+
+	$.each (maps, function (index, layer) {
+		layer.setVisible (opt == index);
+	});
+}
+
+function on_click_hike()
+{
+	opt_alldone = false;
+	var option = this.value;
+
+	if (opt_zoom) {
+		map_zoom_route (option);
+	}
+}
+
+function on_map_click (evt)
+{
+	var coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+	var str = coords[0].toFixed(6) + ', ' + coords[1].toFixed(6);
+	$('#ll').html(str);
+}
+
+function on_mouse_move(evt)
+{
+	var pixel = map.getEventPixel (evt.originalEvent);
+	var hit = false;
+
+	map.forEachFeatureAtPixel (pixel, function (feature, layer) {
+		var tag = feature.get ('tag');
+		if (tag == 'hull') {
+			return true;
+		}
+
+		hit = true;
+
+		var type = feature.get ('type');
+		var text;
+
+		if (type == 'area') {
+			text = show_area (feature);
+		} else if (type == 'icon') {
+			text = show_icon (feature, layer);
+		} else if (type == 'line') {
+			text = show_line (feature);
+		} else if (type == 'peak') {
+			text = show_peak (feature);
+		} else if (type == 'rich') {
+			text = show_rich (feature, layer);
+		} // XXX else alert
+
+		if (text) {
+			msg2.html (text);
+		}
+
+		var coords = feature.get('coords') || '';
+		$('#ll').html(coords);
+
+		return true;
+	});
+
+	var t = $('#map')[0];
+	if (hit) {
+		t.style.cursor = 'pointer';
+	} else {
+		t.style.cursor = '';
+		// msg2.html ('');
+	}
+}
+
+function on_window_resize()
+{
+	map.updateSize();
+}
+
+
+//------------------------------------------------------------------------------
+
+function init_bind_controls()
+{
+	var names = [ 'line_hike', 'line_river', 'line_route', 'line_todo', 'line_variant', 'icon_end', 'icon_ferry',
+		      'icon_hotel', 'icon_hut', 'icon_rich', 'icon_start', 'icon_tent', 'icon_waves', 'peak_done',
+		      'peak_todo', 'area_done', 'area_todo', 'area_whole', 'extra' ];
+
+	var len = names.length;
+	for (var i = 0; i < len; i++) {
+		var name = names[i];
+		var control = new ol.dom.Input (document.getElementById (name));
+		control.bindTo ('checked', layers[name], 'visible');
+	}
+}
+
+function init_dropdown()
+{
+	var c = [];
+	var i = [];
+	var u = [];
+	var h = [];
+	var j = [];
+
+	var c_html = '';
+	var i_html = '';
+	var u_html = '';
+	var h_html = '';
+	var j_html = '';
+
+	$.each (route_list, function (index, route) {
+		if ((typeof (route.dist_route) !== undefined) && (route.dist_route > 0)) {
+			if (typeof (route.complete) !== undefined) {
+				if (route.complete == 100) {
+					if (index.substring (0, 5) == 'join.') {
+						j.push ({ key: index, fullname: route.fullname });
+					} else {
+						c.push ({ key: index, fullname: route.fullname });
+					}
+				} else if (route.complete > 0) {
+					i.push ({ key: index, fullname: route.fullname  + ' (' + route.complete + '%)' });
+				} else {
+					u.push ({ key: index, fullname: route.fullname });
+				}
+			}
+		} else {
+			h.push ({ key: index, fullname: route.fullname  + ' (' + route.complete + '%)' });
+		}
+	});
+
+	c.sort (route_sort);
+	i.sort (route_sort);
+	u.sort (route_sort);
+	h.sort (route_sort);
+	j.sort (route_sort);
+
+	if (c.length) {
+		c_html += '<optgroup id="complete" label="Complete">';
+		$.each (c, function (index, route) {
+			c_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+		});
+		c_html += '</optgroup>';
+	}
+
+	if (i.length) {
+		i_html += '<optgroup id="incomplete" label="Incomplete">';
+		$.each (i, function (index, route) {
+			i_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+		});
+		i_html += '</optgroup>';
+	}
+
+	if (u.length) {
+		u_html += '<optgroup id="unstarted" label="Unstarted">';
+		$.each (u, function (index, route) {
+			u_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+		});
+		u_html += '</optgroup>';
+	}
+
+	if (h.length) {
+		h_html += '<optgroup id="hills" label="Hills">';
+		$.each (h, function (index, route) {
+			h_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+		});
+		h_html += '</optgroup>';
+	}
+
+	if (j.length) {
+		j_html += '<optgroup id="join" label="Join Ups">';
+		$.each (j, function (index, route) {
+			j_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+		});
+		j_html += '</optgroup>';
+	}
+
+	show_html.comp = c_html;
+	show_html.inco = i_html;
+	show_html.unst = u_html;
+	show_html.hill = h_html;
+	show_html.join = j_html;
+
+	return dd_populate();
+}
+
+function init_events()
+{
+	$('#show_comp').change (function() { show_comp = this.checked; dd_populate(); });
+	$('#show_hill').change (function() { show_hill = this.checked; dd_populate(); });
+	$('#show_inco').change (function() { show_inco = this.checked; dd_populate(); });
+	$('#show_join').change (function() { show_join = this.checked; dd_populate(); });
+	$('#show_unst').change (function() { show_unst = this.checked; dd_populate(); });
+
+	$('#opt_one')  .change (function() { opt_one  = this.checked; });
+	$('#opt_zoom') .change (function() { opt_zoom = this.checked; });
+
+	$('input[name=map_type]').change (on_change_map_type);
+
+	$('#button_centre') .click (function() { map_zoom_route(); });
+	$('#button_done')   .click (function() { map_show_all();   });
+	$('#button_clear')  .click (function() { map_reset();      });
+	$('#button_options').click (function() { $('#dialog').dialog ({ width: 450 }); });
+
+	$('#dropdown').change (on_change_hike);
+	$('#dropdown').click (on_click_hike);
+
+	$(map.getViewport()).on ('mousemove', on_mouse_move);
+	map.on('click', on_map_click);
+	$(window).on ('resize', on_window_resize);
+}
+
+function init_options()
+{
+	$('#show_comp').prop ('checked', show_comp);
+	$('#show_inco').prop ('checked', show_inco);
+	$('#show_unst').prop ('checked', show_unst);
+	$('#show_hill').prop ('checked', show_hill);
+	$('#show_join').prop ('checked', show_join);
+
+	$('#opt_one')  .prop ('checked', opt_one);
+	$('#opt_zoom') .prop ('checked', opt_zoom);
+}
+
+
+//------------------------------------------------------------------------------
+
+function init_map_area_styles()
+{
+	areas.done = new ol.style.Style({
+		fill: new ol.style.Fill({
+			color: [0, 255, 0, 0.2]
+		}),
+		stroke: new ol.style.Stroke({
+			color: '#00FF00',
+			width: 2
+		})
+	});
+	areas.hull = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: '#00FFFF',
+			width: 2
+		})
+	});
+	areas.todo = new ol.style.Style({
+		fill: new ol.style.Fill({
+			color: [255, 0, 0, 0.2]
+		}),
+		stroke: new ol.style.Stroke({
+			color: '#FF0000',
+			width: 2
+		})
+	});
+	areas.whole = new ol.style.Style({
+		fill: new ol.style.Fill({
+			color: [255, 255, 0, 0.2]
+		}),
+		stroke: new ol.style.Stroke({
+			color: '#FFFF00',
+			width: 2
+		})
+	});
+}
+
+function init_map_icons()
+{
+	var names = {
+		// Map tags to filenames
+		'end':       'paddle_end',
+		'ferry':     'map_ferry',
+		'hotel':     'map_hotel',
+		'hut':       'map_hut',
+		'peak_done': 'diamond_green',
+		'peak_todo': 'diamond_red',
+		'r_green':   'r_green',
+		'r_red':     'r_red',
+		'r_yellow':  'r_yellow',
+		'start':     'paddle_start',
+		'tent':      'map_tent',
+		'waves':     'map_waves',
+		'red_x':     'red_cross',
+		'green_x':   'green_cross',
+	};
+
+	$.each (names, function (name, filename) {
+		var scale = 0.5;
+		if ((name == 'start') || (name == 'end') || (name == 'red_x') || (name == 'green_x')) {
+			scale = 1.0;
+		}
+
+		var ax = 0.5;
+		var ay = 1.0;
+
+		if ((name == 'red_x') || (name == 'green_x')) {
+			scale = 0.75;
+			ax = 0.5;
+			ay = 0.5;
+		}
+
+		if ((name == 'r_green') || (name == 'r_yellow') || (name == 'r_red')) {
+			scale = 1.0;
+		}
+
+		var icon = new ol.style.Icon({
+			anchor: [ax, ay],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'fraction',
+			src: 'gfx/'+filename+'.png',
+			scale: scale
+		});
+
+		icons[name] = new ol.style.Style({
+			image: icon
+		});
+	});
+}
+
+function init_map_layers()
+{
+	// Route layers								    Default Line Style
+	layers.line_hike    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.hike     });
+	layers.line_river   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.river    });
+	layers.line_route   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.route    });
+	layers.line_todo    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.todo     });
+	layers.line_variant = new ol.layer.Vector ({ source: new ol.source.Vector(), style: styles.variant  });
+
+	// Icon layers								    Default Icon
+	layers.icon_end     = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.end       });
+	layers.icon_ferry   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.ferry     });
+	layers.icon_hotel   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.hotel     });
+	layers.icon_hut     = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.hut       });
+	layers.icon_rich    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.r_green   });
+	layers.icon_start   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.start     });
+	layers.icon_tent    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.tent      });
+	layers.icon_waves   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.waves     });
+	layers.peak_done    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.peak_done });
+	layers.peak_todo    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: icons.peak_todo });
+
+	// Areas								    Default Area Styles
+	layers.area_done    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: areas.done      });
+	layers.area_hull    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: areas.hull      });
+	layers.area_todo    = new ol.layer.Vector ({ source: new ol.source.Vector(), style: areas.todo      });
+	layers.area_whole   = new ol.layer.Vector ({ source: new ol.source.Vector(), style: areas.whole     });
+
+	// Misc									    No Defaults
+	layers.extra        = new ol.layer.Vector ({ source: new ol.source.Vector()                         });
+}
+
+function init_map_line_styles()
+{
+	styles.route = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: '#FF00FF',
+			width: 2
+		})
+	});
+	styles.variant = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: '#FFFF00',
+			width: 2
+		})
+	});
+	styles.river = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: '#00FFFF',
+			width: 2
+		})
+	});
+	styles.todo = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: '#FF0000',
+			width: 2
+		})
+	});
+	styles.hike = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: '#00FF00',
+			width: 2
+		})
+	});
+}
+
+function init_map_maps()
+{
+	maps.aerial = new ol.layer.Tile({
+		source: new ol.source.BingMaps({
+			key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+			imagerySet: 'Aerial',
+		}),
+		visible: true,
+	});
+
+	maps.hybrid = new ol.layer.Tile({
+		source: new ol.source.BingMaps({
+			key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+			imagerySet: 'AerialWithLabels',
+		}),
+		visible: false,
+	});
+
+	maps.street = new ol.layer.Tile({
+		source: new ol.source.OSM(),
+		visible: false,
+	});
+
+	maps.os = new ol.layer.Group({
+		layers: [
+			new ol.layer.Tile({
+				source: new ol.source.BingMaps({
+					key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+					imagerySet: 'ordnanceSurvey',
+				}),
+				minResolution: 1.18,
+				maxResolution: 40,
+			}),
+			new ol.layer.Tile({
+				source: new ol.source.OSM(),
+				minResolution: 40,
+				maxResolution: 20000,
+			})
+		],
+		visible: false,
+	});
+
+	maps.pastel = new ol.layer.Tile({
+		source: new ol.source.Stamen({
+			layer: 'watercolor'
+		}),
+		visible: false,
+	});
+
+	maps.toner = new ol.layer.Tile({
+		source: new ol.source.Stamen({
+			layer: 'toner-background'
+		}),
+		visible: false,
+	});
+
+	maps.black = new ol.layer.Tile({
+		source: new ol.source.TileJSON({
+			url: 'http://api.tiles.mapbox.com/v3/mapbox.world-black.jsonp',
+		}),
+		visible: false,
+	});
+}
+
+function init_map()
+{
+	init_map_area_styles();
+	init_map_icons();
+	init_map_maps();
+	init_map_line_styles();
+	init_map_layers();
+
+	map = new ol.Map({
+		target: 'map',
+		layers: [
+			// Layers grouped by depth
+			layers.area_hull,
+			maps.aerial, maps.hybrid, maps.street, maps.os, maps.pastel, maps.toner, maps.black,
+			layers.area_whole, layers.area_todo, layers.area_done,
+			layers.line_route, layers.line_variant,
+			layers.line_river, layers.icon_ferry, layers.icon_waves,
+			layers.line_todo, layers.peak_todo,
+			layers.line_hike, layers.peak_done,
+			layers.icon_hotel, layers.icon_hut, layers.icon_tent,
+			layers.icon_end, layers.icon_start, layers.extra,
+			layers.icon_rich,
+		],
+		view: new ol.View({
+			center: ol.proj.transform ([-3.143848, 54.699234], 'EPSG:4326', 'EPSG:3857'),
+			zoom: 6,
+			minZoom: 1,
+			maxZoom: 19,
+		}),
+		controls: ol.control.defaults().extend ([
+			new ol.control.FullScreen()
+		]),
+	});
+}
+
+
+// -----------------------------------------------------------------------------
+
 function main()
 {
 	$('body').layout({
@@ -1445,46 +1477,30 @@ function main()
 		north__closable: false,
 		center__onresize: function() { map.updateSize(); }
 	});
-	map_init();
+	init_map();
 	set_defaults();
 	init_options();
+	init_events();
+	init_bind_controls();
+
 	map.updateSize();
 
 	$.getJSON ('output/routes.json', function (data) {
 		route_list = data;
-		dd_init();
+		init_dropdown();
 	})
 	.fail (function() {
 		alert ('Couldn\'t load route data');
 	});
 
 	$('#tabs').tabs();
-	$(map.getViewport()).on ('mousemove', on_mousemove);
-	$(window).on ('resize', on_resize);
 
-	var uk_convex_hull = [[
-		[ -6.224408, 56.725261 ],
-		[ -5.191198, 58.587064 ],
-		[ -3.028093, 58.646065 ],
-		[ -1.823329, 57.612691 ],
-		[  1.781172, 52.562703 ],
-		[  1.400427, 51.152562 ],
-		[  0.247893, 50.725720 ],
-		[ -5.203043, 49.958145 ],
-		[ -5.708586, 50.045477 ],
-		[ -5.026403, 53.977312 ],
-		[ -6.224408, 56.725261 ]
-	]];
-
-	uk_hull = new ol.geom.Polygon (uk_convex_hull);
-	uk_hull.transform ('EPSG:4326', 'EPSG:3857');
+	uk_hull = get_uk_hull();
 
 	msg1 = $('#route');
 	msg2 = $('#item');
 
 	get_rich_data();
-
-	map.on('click', update_long_lat);
 }
 
 
