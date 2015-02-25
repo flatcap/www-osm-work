@@ -18,6 +18,7 @@
 				// Options:
 var opt_one     = true;		//	Only show one route at a time
 var opt_zoom    = true;		//	Zoom in to the current route
+var opt_alldone = false;
 				// Show list of:
 var show_comp   = true;		//	Completed routes
 var show_inco   = true;		//	Incomplete routes
@@ -551,6 +552,10 @@ function map_reset()
 
 function map_zoom_route (route)
 {
+	if (opt_alldone) {
+		return;
+	}
+
 	var view = map.getView();
 	var size = map.getSize();
 
@@ -576,7 +581,9 @@ function map_zoom_route (route)
 
 function map_show_all()
 {
+	dd_select();
 	map_zoom_route();
+	opt_alldone = true;
 	$.each (route_list, function (dir, route) {
 		if (route.dist_walked > 0) {
 			load_kml (dir);
@@ -649,7 +656,7 @@ function load_kml (route)
 				map_zoom_route (route);
 			}
 		} else {
-			alert (state);
+			alert (state + ': loading "' + route + '"');
 		}
 	});
 }
@@ -1311,6 +1318,7 @@ function on_resize()
 
 function on_click_hike()
 {
+	opt_alldone = false;
 	var option = this.value;
 
 	if (opt_zoom) {
@@ -1320,6 +1328,7 @@ function on_click_hike()
 
 function on_change_hike()
 {
+	opt_alldone = false;
 	var option = this.value;
 
 	if (opt_zoom) {
