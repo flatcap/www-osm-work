@@ -15,7 +15,6 @@ h1 {
 
 h2 {
 	font-size: 100%;
-	margin-bottom: 0px;
 	margin: 0;
 	padding: 0;
 }
@@ -69,10 +68,15 @@ hr {
 
 div.format > span {
 	display: block;
-	width: 6em;
+	width: 7em;
 	float: left;
 	font-weight: bold;
 	font-size: 90%;
+}
+
+span.climbed {
+	font-size: 110%;
+	color: green;
 }
 
 #item span {

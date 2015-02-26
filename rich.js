@@ -21,10 +21,10 @@ var opt_zoom    = true;		//	Zoom in to the current route
 var opt_alldone = false;
 				// Show list of:
 var show_comp   = true;		//	Completed routes
-var show_inco   = true;		//	Incomplete routes
+var show_inco   = false;		//	Incomplete routes
 var show_unst   = false;	//	Unstarted routes
-var show_hill   = true;		//	Sets of hills
-var show_join   = true;		//	Non-route joins
+var show_hill   = false;		//	Sets of hills
+var show_join   = false;		//	Non-route joins
 
 var show_html = {};		// Keep the select HTML to rebuild the dropdown
 
@@ -116,22 +116,22 @@ function set_defaults()
 	layers.extra        .setVisible (false);
 
 	layers.icon_end     .setVisible (false);
-	layers.icon_ferry   .setVisible (true);
-	layers.icon_hotel   .setVisible (true);
-	layers.icon_hut     .setVisible (true);
+	layers.icon_ferry   .setVisible (false);
+	layers.icon_hotel   .setVisible (false);
+	layers.icon_hut     .setVisible (false);
 	layers.icon_rich    .setVisible (false);
 	layers.icon_start   .setVisible (false);
-	layers.icon_tent    .setVisible (true);
-	layers.icon_waves   .setVisible (true);
+	layers.icon_tent    .setVisible (false);
+	layers.icon_waves   .setVisible (false);
 
-	layers.line_hike    .setVisible (true);
+	layers.line_hike    .setVisible (false);
 	layers.line_river   .setVisible (true);
 	layers.line_route   .setVisible (false);
 	layers.line_todo    .setVisible (false);
 	layers.line_variant .setVisible (false);
 
-	layers.peak_done    .setVisible (false);
-	layers.peak_todo    .setVisible (false);
+	layers.peak_done    .setVisible (true);
+	layers.peak_todo    .setVisible (true);
 }
 
 
@@ -325,6 +325,21 @@ function get_line_title (feature)
 	return str;
 }
 
+function get_climbed (feature)
+{
+	if (!feature) {
+		return '';
+	}
+
+	var date = feature.get ('date');
+	if (!date) {
+		return '';
+	}
+
+	var str = '<span class="climbed">Climbed: ' + format_date (date) + '</span><br>';
+	return str;
+}
+
 function get_date (feature)
 {
 	if (!feature) {
@@ -453,7 +468,7 @@ function get_bold_name (feature)
 	return str;
 }
 
-function get_location (feature)
+function get_location (feature, title)
 {
 	if (!feature) {
 		return '';
@@ -475,7 +490,8 @@ function get_location (feature)
 		str += coords;
 	}
 
-	if (elev && str) {
+	var type = feature.get('type');
+	if (elev && (type != 'peak') && str) {
 		str += ' (' + elev + 'm)';
 	}
 
@@ -483,6 +499,28 @@ function get_location (feature)
 		str += '<br />';
 	}
 
+	if (typeof title !== 'undefined') {
+		if (title.length === 0) {
+			title = '&nbsp;';
+		}
+		str = '<span>'+title+'</span> ' + str;
+	}
+
+	return str;
+}
+
+function get_height (feature)
+{
+	if (!feature) {
+		return '';
+	}
+
+	var elev = feature.get('elevation');
+	if (!elev) {
+		return '';
+	}
+
+	var str = '<span>Height</span> ' + elev + 'm<br>';
 	return str;
 }
 
@@ -693,7 +731,7 @@ function show_icon (feature, layer)
 	output += get_text        (feature, 'description');
 	output += get_date2       (feature);
 	output += get_location    (feature);
-	output += get_id2         (feature, 'Icon');
+	// output += get_id2         (feature, 'Icon');
 
 	output += '</div>';
 	output += '</div>';
@@ -734,17 +772,20 @@ function show_peak (feature)
 	}
 
 	var output = '';
+
 	output += get_bold_name   (feature);
-	output += get_text        (feature, 'description', '');
-	output += get_date        (feature);
-	output += get_day_length  (feature);
-	output += get_location    (feature);
-	output += get_id          (feature, 'Peak');
+	output += get_climbed     (feature);
+	output += '<br>';
 
-	output += get_text (feature, 'dobih',      'DoBIH');
-	output += get_text (feature, 'categories', 'Categories');
-	output += get_text (feature, 'coords',     'Long/Lat');
+	output += '<div class="format">';
 
+	output += get_height      (feature);
+	output += get_text        (feature, 'categories', 'Categories');
+	output += get_location    (feature, 'Grid Ref');
+	output += get_text        (feature, 'coords',     'Long/Lat');
+	output += get_text        (feature, 'dobih',      'DoBIH');
+
+	output += '</div>';
 	return output;
 }
 
