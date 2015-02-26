@@ -116,22 +116,22 @@ function set_defaults()
 	layers.extra        .setVisible (false);
 
 	layers.icon_end     .setVisible (false);
-	layers.icon_ferry   .setVisible (false);
-	layers.icon_hotel   .setVisible (false);
-	layers.icon_hut     .setVisible (false);
-	layers.icon_rich    .setVisible (true);
+	layers.icon_ferry   .setVisible (true);
+	layers.icon_hotel   .setVisible (true);
+	layers.icon_hut     .setVisible (true);
+	layers.icon_rich    .setVisible (false);
 	layers.icon_start   .setVisible (false);
-	layers.icon_tent    .setVisible (false);
-	layers.icon_waves   .setVisible (false);
+	layers.icon_tent    .setVisible (true);
+	layers.icon_waves   .setVisible (true);
 
 	layers.line_hike    .setVisible (true);
 	layers.line_river   .setVisible (true);
-	layers.line_route   .setVisible (true);
-	layers.line_todo    .setVisible (true);
-	layers.line_variant .setVisible (true);
+	layers.line_route   .setVisible (false);
+	layers.line_todo    .setVisible (false);
+	layers.line_variant .setVisible (false);
 
-	layers.peak_done    .setVisible (true);
-	layers.peak_todo    .setVisible (true);
+	layers.peak_done    .setVisible (false);
+	layers.peak_todo    .setVisible (false);
 }
 
 
@@ -677,7 +677,7 @@ function show_icon (feature, layer)
 
 	var output = '<div class="format">';
 
-	var x = layer.getStyle();
+	var x = feature.getStyle() || layer.getStyle();
 	var y = x.getImage();
 	var z = y.getSrc();
 	var s = y.getSize();
@@ -1009,6 +1009,12 @@ function load_kml (route)
 						clone.setStyle (icons.green_x);
 					}
 				}
+				if (type == 'icon') {
+					var name = feature.get('name');
+					if (name == 'Camp site') {
+						clone.setStyle (icons.site);
+					}
+				}
 
 				src.addFeature (clone);
 			});
@@ -1275,6 +1281,7 @@ function init_map_icons()
 		'r_yellow':  'r_yellow',
 		'start':     'paddle_start',
 		'tent':      'map_tent',
+		'site':      'map_site',
 		'waves':     'map_waves',
 		'red_x':     'red_cross',
 		'green_x':   'green_cross',
