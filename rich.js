@@ -15,6 +15,7 @@
  * this program. If not, see http://www.gnu.org/licenses/
  */
 
+var DEBUG       = false;
 				// Options:
 var opt_one     = true;		//	Only show one route at a time
 var opt_zoom    = true;		//	Zoom in to the current route
@@ -731,7 +732,9 @@ function show_icon (feature, layer)
 	output += get_text        (feature, 'description');
 	output += get_date2       (feature);
 	output += get_location    (feature);
-	// output += get_id2         (feature, 'Icon');
+	if (DEBUG) {
+		output += get_id2         (feature, 'Icon');
+	}
 
 	output += '</div>';
 	output += '</div>';
@@ -757,7 +760,9 @@ function show_line (feature)
 	output += get_text        (feature, 'name', 'Part of');
 	output += get_date        (feature);
 	output += get_day_length  (feature);
-	output += get_id          (feature, 'Line');
+	if (DEBUG) {
+		output += get_id          (feature, 'Line');
+	}
 
 	return output;
 }
@@ -784,6 +789,9 @@ function show_peak (feature)
 	output += get_location    (feature, 'Grid Ref');
 	output += get_text        (feature, 'coords',     'Long/Lat');
 	output += get_text        (feature, 'dobih',      'DoBIH');
+	if (DEBUG) {
+		output += get_id  (feature, 'Peak');
+	}
 
 	output += '</div>';
 	return output;
@@ -1042,8 +1050,9 @@ function load_kml (route)
 				var clone = feature.clone();
 				clone.setId (id);
 
+				var name;
 				if (layer == layers.extra) {
-					var name = feature.get ('set_name');
+					name = feature.get ('set_name');
 					if (name.substring (0, 5) == 'todo_') {
 						clone.setStyle (icons.red_x);
 					} else {
@@ -1051,7 +1060,7 @@ function load_kml (route)
 					}
 				}
 				if (type == 'icon') {
-					var name = feature.get('name');
+					name = feature.get('name');
 					if (name == 'Camp site') {
 						clone.setStyle (icons.site);
 					}
