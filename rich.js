@@ -274,9 +274,14 @@ function show_route_info (dir)
 		return;
 	}
 
-	var output = '<div class="format">';
+	var output;
 
-	output += '<h1>' + r.fullname + '</h1>';
+	output = '<h1>' + r.fullname + '</h1>';
+	if (r.description) {
+		output += '<span class="desc">' + r.description + '</span><br><br>';
+	}
+
+	output += '<div class="format">';
 	output += html_distance (r, true);
 
 	var start = r.date_start;

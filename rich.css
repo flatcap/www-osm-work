@@ -11,6 +11,8 @@ body {
 
 h1 {
 	font-size: 120%;
+	margin: 0;
+	padding: 0;
 }
 
 h2 {
