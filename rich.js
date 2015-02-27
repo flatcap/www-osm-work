@@ -114,7 +114,7 @@ function set_defaults()
 	layers.area_todo    .setVisible (false);
 	layers.area_whole   .setVisible (false);
 
-	layers.extra        .setVisible (false);
+	layers.extra        .setVisible (true);
 
 	layers.icon_end     .setVisible (false);
 	layers.icon_ferry   .setVisible (false);
@@ -1057,11 +1057,12 @@ function load_kml (route)
 
 				var name;
 				if (layer == layers.extra) {
-					name = feature.get ('set_name');
-					if (name.substring (0, 5) == 'todo_') {
-						clone.setStyle (icons.red_x);
-					} else {
-						clone.setStyle (icons.green_x);
+					var s = feature.get('style');
+					if (s) {
+						var style = icons[s];
+						if (style) {
+							clone.setStyle (style);
+						}
 					}
 				}
 				if (type == 'icon') {
@@ -1325,21 +1326,22 @@ function init_map_icons()
 {
 	var names = {
 		// Map tags to filenames
-		'end':       'paddle_end',
-		'ferry':     'map_ferry',
-		'hotel':     'map_hotel',
-		'hut':       'map_hut',
-		'peak_done': 'diamond_green',
-		'peak_todo': 'diamond_red',
-		'r_green':   'r_green',
-		'r_red':     'r_red',
-		'r_yellow':  'r_yellow',
-		'start':     'paddle_start',
-		'tent':      'map_tent',
-		'site':      'map_site',
-		'waves':     'map_waves',
-		'red_x':     'red_cross',
-		'green_x':   'green_cross',
+		'end':         'paddle_end',
+		'ferry':       'map_ferry',
+		'hotel':       'map_hotel',
+		'hut':         'map_hut',
+		'peak_done':   'diamond_green',
+		'peak_todo':   'diamond_red',
+		'r_green':     'r_green',
+		'r_red':       'r_red',
+		'r_yellow':    'r_yellow',
+		'start':       'paddle_start',
+		'tent':        'map_tent',
+		'site':        'map_site',
+		'waves':       'map_waves',
+		'red_cross':   'red_cross',
+		'green_cross': 'green_cross',
+		'blue_cross':  'blue_cross',
 	};
 
 	$.each (names, function (name, filename) {
