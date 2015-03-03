@@ -1185,27 +1185,27 @@ function init_dropdown()
 	var u_html = '';
 	var h_html = '';
 	var j_html = '';
+	var complete;
 
 	$.each (route_list, function (index, route) {
+		complete = route.complete || 0;
 		if ((typeof (route.dist_route) !== undefined) && (route.dist_route > 0)) {
-			if (typeof (route.complete) !== undefined) {
-				if (route.complete == 100) {
-					if (index.substring (0, 5) == 'join.') {
-						j.push ({ key: index, name: route.name });
-					} else {
-						c.push ({ key: index, name: route.name });
-					}
-				} else if (route.complete > 0) {
-					i.push ({ key: index, name: route.name  + ' (' + route.complete + '%)' });
+			if (complete == 100) {
+				if (index.substring (0, 5) == 'join.') {
+					j.push ({ key: index, name: route.name });
 				} else {
-					u.push ({ key: index, name: route.name });
+					c.push ({ key: index, name: route.name });
 				}
+			} else if (complete > 0) {
+				i.push ({ key: index, name: route.name  + ' (' + complete + '%)' });
+			} else {
+				u.push ({ key: index, name: route.name });
 			}
 		} else {
-			if (route.complete == 100) {
+			if (complete == 100) {
 				c.push ({ key: index, name: route.name });
 			} else {
-				h.push ({ key: index, name: route.name  + ' (' + route.complete + '%)' });
+				h.push ({ key: index, name: route.name  + ' (' + complete + '%)' });
 			}
 		}
 	});
