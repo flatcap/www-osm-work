@@ -22,10 +22,10 @@ var opt_zoom    = true;		//	Zoom in to the current route
 var opt_alldone = false;
 				// Show list of:
 var show_comp   = true;		//	Completed routes
-var show_inco   = false;		//	Incomplete routes
+var show_inco   = true;		//	Incomplete routes
 var show_unst   = false;	//	Unstarted routes
-var show_hill   = false;		//	Sets of hills
-var show_join   = false;		//	Non-route joins
+var show_hill   = true;		//	Sets of hills
+var show_join   = true;		//	Non-route joins
 
 var show_html = {};		// Keep the select HTML to rebuild the dropdown
 
@@ -46,9 +46,9 @@ var item_info;
 
 function route_sort (a, b)
 {
-	if (a.fullname > b.fullname) {
+	if (a.name_short > b.name_short) {
 		return 1;
-	} else if (a.fullname < b.fullname) {
+	} else if (a.name_short < b.name_short) {
 		return -1;
 	} else {
 		return 0;
@@ -276,7 +276,7 @@ function show_route_info (dir)
 
 	var output;
 
-	output = '<h1>' + r.fullname + '</h1>';
+	output = '<h1>' + r.name + '</h1>';
 	if (r.description) {
 		output += '<span class="desc">' + r.description + '</span><br><br>';
 	}
@@ -632,13 +632,13 @@ function create_message (feature)
 	if (route) {
 		if (date_route) {
 			var d = since.diff (date_route) + 1;
-			message += '<b>Day ' + d + '</b> of the <b>' + route_list[route].fullname + '</b>';
+			message += '<b>Day ' + d + '</b> of the <b>' + route_list[route].name + '</b>';
 
 			if (percentage) {
 				message += ' (' + percentage + '%)';
 			}
 		} else {
-			message += 'Walking the <b>' + route_list[route].fullname + '</b>';
+			message += 'Walking the <b>' + route_list[route].name + '</b>';
 		}
 		message += '<br>';
 	} else {
@@ -1142,6 +1142,12 @@ function load_route_data()
 {
 	$.getJSON ('output/routes.json', function (data) {
 		route_list = data;
+		$.each (route_list, function (index, route) {
+			if (!route.name_short) {
+				route.name_short = route.name;
+			}
+		});
+
 		init_dropdown();
 	})
 	.fail (function() {
@@ -1185,18 +1191,18 @@ function init_dropdown()
 			if (typeof (route.complete) !== undefined) {
 				if (route.complete == 100) {
 					if (index.substring (0, 5) == 'join.') {
-						j.push ({ key: index, fullname: route.fullname });
+						j.push ({ key: index, name: route.name });
 					} else {
-						c.push ({ key: index, fullname: route.fullname });
+						c.push ({ key: index, name: route.name });
 					}
 				} else if (route.complete > 0) {
-					i.push ({ key: index, fullname: route.fullname  + ' (' + route.complete + '%)' });
+					i.push ({ key: index, name: route.name  + ' (' + route.complete + '%)' });
 				} else {
-					u.push ({ key: index, fullname: route.fullname });
+					u.push ({ key: index, name: route.name });
 				}
 			}
 		} else {
-			h.push ({ key: index, fullname: route.fullname  + ' (' + route.complete + '%)' });
+			h.push ({ key: index, name: route.name  + ' (' + route.complete + '%)' });
 		}
 	});
 
@@ -1209,7 +1215,7 @@ function init_dropdown()
 	if (c.length) {
 		c_html += '<optgroup id="complete" label="Complete">';
 		$.each (c, function (index, route) {
-			c_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+			c_html += '<option value="' + route.key +'">' + route.name + '</option>';
 		});
 		c_html += '</optgroup>';
 	}
@@ -1217,7 +1223,7 @@ function init_dropdown()
 	if (i.length) {
 		i_html += '<optgroup id="incomplete" label="Incomplete">';
 		$.each (i, function (index, route) {
-			i_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+			i_html += '<option value="' + route.key +'">' + route.name + '</option>';
 		});
 		i_html += '</optgroup>';
 	}
@@ -1225,7 +1231,7 @@ function init_dropdown()
 	if (u.length) {
 		u_html += '<optgroup id="unstarted" label="Unstarted">';
 		$.each (u, function (index, route) {
-			u_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+			u_html += '<option value="' + route.key +'">' + route.name + '</option>';
 		});
 		u_html += '</optgroup>';
 	}
@@ -1233,7 +1239,7 @@ function init_dropdown()
 	if (h.length) {
 		h_html += '<optgroup id="hills" label="Hills">';
 		$.each (h, function (index, route) {
-			h_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+			h_html += '<option value="' + route.key +'">' + route.name + '</option>';
 		});
 		h_html += '</optgroup>';
 	}
@@ -1241,7 +1247,7 @@ function init_dropdown()
 	if (j.length) {
 		j_html += '<optgroup id="join" label="Join Ups">';
 		$.each (j, function (index, route) {
-			j_html += '<option value="' + route.key +'">' + route.fullname + '</option>';
+			j_html += '<option value="' + route.key +'">' + route.name + '</option>';
 		});
 		j_html += '</optgroup>';
 	}
