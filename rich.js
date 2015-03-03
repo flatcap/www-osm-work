@@ -1202,7 +1202,11 @@ function init_dropdown()
 				}
 			}
 		} else {
-			h.push ({ key: index, name: route.name  + ' (' + route.complete + '%)' });
+			if (route.complete == 100) {
+				c.push ({ key: index, name: route.name });
+			} else {
+				h.push ({ key: index, name: route.name  + ' (' + route.complete + '%)' });
+			}
 		}
 	});
 
