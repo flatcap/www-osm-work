@@ -170,7 +170,7 @@ function map_zoom_route (route)
 
 		if (fts.length > 0) {
 			$.each (fts, function (index, item) {
-				var dir = item.get ('hike_dir');
+				var dir = item.get ('routes');
 				if (dir == route) {
 					var geom = item.getGeometry();
 					view.fitGeometry (geom, size, { padding: [10, 10, 10, 10] });
@@ -304,6 +304,17 @@ function show_route_info (dir)
 	}
 
 	output += html_camps (r, true);
+
+	var ferries = r.ferries;
+	if (ferries) {
+		output += '<span>Ferries</span> ' + ferries + '<br />';
+	}
+
+	var rivers = r.rivers;
+	if (rivers) {
+		output += '<span>Rivers</span> ' + rivers + '<br />';
+	}
+
 	output += '</div>';
 
 	route_info.html (output);
