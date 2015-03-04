@@ -109,30 +109,30 @@ function dd_select (route)
 
 function set_defaults()
 {
-	layers.area_done    .setVisible (false);
+	layers.area_done    .setVisible (true);
 	layers.area_hull    .setVisible (false);
-	layers.area_todo    .setVisible (false);
+	layers.area_todo    .setVisible (true);
 	layers.area_whole   .setVisible (false);
 
 	layers.extra        .setVisible (false);
 
 	layers.icon_end     .setVisible (false);
-	layers.icon_ferry   .setVisible (false);
-	layers.icon_hotel   .setVisible (false);
-	layers.icon_hut     .setVisible (false);
+	layers.icon_ferry   .setVisible (true);
+	layers.icon_hotel   .setVisible (true);
+	layers.icon_hut     .setVisible (true);
 	layers.icon_rich    .setVisible (false);
-	layers.icon_start   .setVisible (false);
-	layers.icon_tent    .setVisible (false);
-	layers.icon_waves   .setVisible (false);
+	layers.icon_start   .setVisible (true);
+	layers.icon_tent    .setVisible (true);
+	layers.icon_waves   .setVisible (true);
 
-	layers.line_hike    .setVisible (false);
-	layers.line_river   .setVisible (false);
-	layers.line_route   .setVisible (false);
-	layers.line_todo    .setVisible (false);
-	layers.line_variant .setVisible (false);
+	layers.line_hike    .setVisible (true);
+	layers.line_river   .setVisible (true);
+	layers.line_route   .setVisible (true);
+	layers.line_todo    .setVisible (true);
+	layers.line_variant .setVisible (true);
 
-	layers.peak_done    .setVisible (false);
-	layers.peak_todo    .setVisible (false);
+	layers.peak_done    .setVisible (true);
+	layers.peak_todo    .setVisible (true);
 }
 
 
