@@ -717,22 +717,6 @@ function show_area (feature)
 	//	whole
 	//	hull
 
-	// name
-	// type
-	// tag
-	// hike_id
-	// hike_dir
-
-	// Climbed:
-	// 	24 of the 214 Wainwrights
-	// 	7 of the 116 Wainwright Outliers
-	// 	34 of the 323 Other hills
-
-	// To Climb:
-	// 	190 of the 214 Wainwrights
-	// 	109 of the 116 Wainwright Outliers
-	// 	289 of the 323 Other hills
-
 	var tag = feature.get ('tag');
 	if (tag == 'hull') {
 		return true;
@@ -740,11 +724,26 @@ function show_area (feature)
 
 	var output = '';
 
-	output += feature.get('name') + '<br>';
-	output += feature.get('type') + '<br>';
-	output += feature.get('tag') + '<br>';
-	output += feature.get('hike_id') + '<br>';
-	output += feature.get('hike_dir') + '<br>';
+	output += get_bold_name (feature);
+
+	if (tag == 'todo') {
+		output += 'To Climb:<br>';
+	} else if (tag == 'done') {
+		output += 'Climbed:<br>';
+	}
+
+	output += '<ul>';
+	for (var i = 1; i < 10; i++) {
+		var key   = 'notes' + i;
+		var value = feature.get(key);
+
+		if (!value) {
+			break;
+		}
+		output += '<li>' + value + '</li>';
+
+	}
+	output += '</ul>';
 
 	return output;
 }
