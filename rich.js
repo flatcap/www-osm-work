@@ -114,7 +114,7 @@ function set_defaults()
 	layers.area_todo    .setVisible (false);
 	layers.area_whole   .setVisible (false);
 
-	layers.extra        .setVisible (true);
+	layers.extra        .setVisible (false);
 
 	layers.icon_end     .setVisible (false);
 	layers.icon_ferry   .setVisible (false);
@@ -126,13 +126,13 @@ function set_defaults()
 	layers.icon_waves   .setVisible (false);
 
 	layers.line_hike    .setVisible (false);
-	layers.line_river   .setVisible (true);
+	layers.line_river   .setVisible (false);
 	layers.line_route   .setVisible (false);
 	layers.line_todo    .setVisible (false);
 	layers.line_variant .setVisible (false);
 
-	layers.peak_done    .setVisible (true);
-	layers.peak_todo    .setVisible (true);
+	layers.peak_done    .setVisible (false);
+	layers.peak_todo    .setVisible (false);
 }
 
 
@@ -208,6 +208,10 @@ function html_distance (route, newline)
 	var walk     = route.dist_walked || 0;
 	var dist     = route.dist_route;
 
+	if (!dist) {
+		return '';
+	}
+
 	if ((complete == 100) && (walk > 0)) {
 		dist = route.dist_walked;
 	}
@@ -225,6 +229,37 @@ function html_distance (route, newline)
 	if (newline) {
 		output += '<br />';
 	}
+
+	return output;
+
+}
+
+function html_peaks (route)
+{
+	if (!route) {
+		return '';
+	}
+
+	if (!route.peak_sets) {
+		return '';
+	}
+
+	var output = '';
+
+	var complete = route.complete   || 0;
+	var todo     = route.peaks_todo || 0;
+	var done     = route.peaks_done || 0;
+	var total    = todo + done;
+
+	if (complete == 100) {
+		output += '<span>Peaks</span> ' + total + ' (Complete)';
+	} else if (complete > 0) {
+		output += '<span>Peaks</span> ' + done + ' of ' + total + ' (' + complete + '%)';
+	} else {
+		output += '<span>Peaks</span> ' + total + ' (Not started)';
+	}
+
+	output += '<br />';
 
 	return output;
 
@@ -282,7 +317,11 @@ function show_route_info (dir)
 	}
 
 	output += '<div class="format">';
-	output += html_distance (r, true);
+	if (r.dist_route) {
+		output += html_distance (r, true);
+	} else {
+		output += html_peaks (r);
+	}
 
 	var start = r.date_start;
 	if (start) {
