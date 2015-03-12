@@ -975,19 +975,23 @@ function on_mouse_move(evt)
 		hit = true;
 
 		var type = feature.get ('type');
-		var text;
+		var text = feature.get ('cache');
 
-		if (type == 'area') {
-			text = show_area (feature);
-		} else if (type == 'icon') {
-			text = show_icon (feature, layer);
-		} else if (type == 'line') {
-			text = show_line (feature);
-		} else if (type == 'peak') {
-			text = show_peak (feature);
-		} else if (type == 'rich') {
-			text = show_rich (feature, layer);
-		} // XXX else alert
+		if (!text) {
+			if (type == 'area') {
+				text = show_area (feature);
+			} else if (type == 'icon') {
+				text = show_icon (feature, layer);
+			} else if (type == 'line') {
+				text = show_line (feature);
+			} else if (type == 'peak') {
+				text = show_peak (feature);
+			} else if (type == 'rich') {
+				text = show_rich (feature, layer);
+			} // XXX else alert
+
+			feature.set ('cache', text);
+		}
 
 		if (text) {
 			item_info.html (text);
