@@ -135,6 +135,28 @@ function set_defaults()
 	layers.peak_todo    .setVisible (true);
 }
 
+function set_all_defaults()
+{
+	layers.area_done   .setVisible (false);
+	layers.area_hull   .setVisible (false);
+	layers.area_todo   .setVisible (false);
+	layers.area_whole  .setVisible (false);
+	layers.extra       .setVisible (false);
+	layers.icon_end    .setVisible (false);
+	layers.icon_ferry  .setVisible (true);
+	layers.icon_hotel  .setVisible (true);
+	layers.icon_hut    .setVisible (true);
+	layers.icon_start  .setVisible (false);
+	layers.icon_tent   .setVisible (true);
+	layers.icon_waves  .setVisible (true);
+	layers.line_hike   .setVisible (true);
+	layers.line_river  .setVisible (true);
+	layers.line_route  .setVisible (false);
+	layers.line_todo   .setVisible (false);
+	layers.line_variant.setVisible (false);
+	layers.peak_done   .setVisible (true);
+	layers.peak_todo   .setVisible (false);
+}
 
 function map_clear()
 {
@@ -186,6 +208,7 @@ function map_zoom_route (route)
 function map_show_all()
 {
 	dd_select();
+	set_all_defaults();
 	map_zoom_route();
 	opt_alldone = true;
 	$.each (route_list, function (dir, route) {
