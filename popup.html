@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
+		<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<script type='text/javascript'>$(function() { $("#tabs").tabs({ event: "mouseover" }); $("#dialog").dialog({ width: 800 }); });</script>
+		<link rel="stylesheet" href="popup.css" />
+	</head>
+	<body>
+		<div id="dialog" title="Display Options">
+			<div class="tabs" id="tabs">
+
+				<ul>
+					<li> <a href="#tabs-1">Map</a> </li>
+					<li> <a href="#tabs-2">Routes</a> </li>
+					<li> <a href="#tabs-3">Icons</a> </li>
+					<li> <a href="#tabs-4">Areas</a> </li>
+					<li> <a href="#tabs-5">Extras</a> </li>
+				</ul>
+
+				<div id="tabs-1">
+					Aerial, Aerial with labels, Road map, Black, Pastel, Ordnance Survey
+					<label> <input type="radio" name="map" value="bing" checked>Bing</input> </label>
+					<label> <input type="radio" name="map" value="osm">OSM</input> </label>
+					<label> <input type="radio" name="map" value="terrain">Terrain</input> </label>
+					<label> <input type="radio" name="map" value="stamen">Stamen</input> </label>
+					<h2>List</h2>
+					<label> <input type="checkbox" name="show_comp" checked="checked">Completed</input> </label>
+					<label> <input type="checkbox" name="show_inco" checked="checked">Incomplete</input> </label>
+					<label> <input type="checkbox" name="show_unst" checked="checked">Unstarted</input> </label>
+					<label> <input type="checkbox" name="show_hill" checked="checked">Hills</input> </label>
+					<label> <input type="checkbox" name="show_join" checked="checked">Join-ups</input> </label>
+					<h2>List options</h2>
+					<label> <input type="checkbox" name="opt_one" checked="checked">One route at a time</input> </label>
+					<label> <input type="checkbox" name="opt_zoom" checked="checked">Zoom in on route</input> </label>
+				</div>
+
+				<div id="tabs-2">
+					<label> <img src="gfx/dot_green.png" /><input type="checkbox" name="line_hike" checked="checked">Hike</input> </label>
+					<label> <img src="gfx/dot_blue.png" /><input type="checkbox" name="line_river" checked="checked">River</input> </label>
+					<label> <img src="gfx/dot_red.png" /><input type="checkbox" name="line_todo" checked="checked">To do</input> </label>
+					<label> <img src="gfx/dot_purple.png" /><input type="checkbox" name="line_route">Route</input> </label>
+					<label> <img src="gfx/dot_yellow.png" /><input type="checkbox" name="line_variant">Variant</input> </label>
+				</div>
+
+				<div id="tabs-3">
+					<label> <img src="gfx/map_tent.png" /> <input type="checkbox" name="icon_tent" checked="checked"></input>Nights spent under canvas</label>
+					<label> <img src="gfx/map_hut.png" />  <input type="checkbox" name="icon_hut" checked="checked"></input>Nights in a bothy, barn, bird hide, etc</label>
+					<label> <img src="gfx/map_hotel.png" /><input type="checkbox" name="icon_todo" checked="checked"></input>Nights under a roof</label>
+					<br />
+					<label> <img src="gfx/map_ferry.png" /><input type="checkbox" name="icon_ferry" checked="checked"></input>Water (crossed the easy way)</label>
+					<label> <img src="gfx/map_waves.png" /><input type="checkbox" name="icon_waves" checked="checked"></input>Water (crossed the damp way)</label>
+					<br />
+					<label> <img src="gfx/paddle_start.png" /><input type="checkbox" name="icon_start" checked="checked"></input>The start of a route</label>
+					<label> <img src="gfx/paddle_end.png" /><input type="checkbox" name="icon_end"></input>The end of a route</label>
+					<label> <img src="gfx/r_green.png" /><input type="checkbox" name="icon_rich" checked="checked">Where's Rich?</input> </label>
+					<br />
+					<label> <img src="gfx/diamond_green.png" /><input type="checkbox" name="peak_done" checked="checked">Done</input> </label>
+					<label> <img src="gfx/diamond_red.png" /><input type="checkbox" name="peak_todo" checked="checked">To do</input> </label>
+				</div>
+
+				<div id="tabs-4">
+					<label> <img src="gfx/area_green.png" /><input type="checkbox" name="area_done" checked="checked">Done</input> </label>
+					<label> <img src="gfx/area_red.png" /><input type="checkbox" name="area_todo" checked="checked">To do</input> </label>
+					<label> <img src="gfx/area_yellow.png" /><input type="checkbox" name="area_whole">Whole</input> </label>
+				</div>
+
+				<div id="tabs-5">
+					<label> <input type="checkbox" name="extra">Extras</input> </label>
+				</div>
+
+			</div>
+		</div>
+	</body>
+</html>

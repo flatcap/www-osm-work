@@ -1,0 +1,46 @@
+			Show Map:
+map.bing			(*) Bing
+map.osm				( ) OSM
+map.terrain			( ) Terrain
+map.stamen			( ) Stamen
+
+			Show Routes:
+layer.line_hike			[X] Hike
+layer.line_river		[X] River
+layer.line_todo			[X] To do
+layer.line_route		[ ] Route
+layer.line_variant		[ ] Variant
+
+			Show Camping Icons:
+layer.icon_tent			[X] Tent
+layer.icon_hut			[X] Hut
+layer.icon_hotel		[X] Hotel
+
+			Show Misc Icons:
+layer.icon_ferry		[X] Ferry
+layer.icon_waves		[X] Waves
+layer.icon_start		[X] Start
+layer.icon_end			[ ] End
+layer.icon_rich			[X] Rich
+
+			Show Areas:
+layer.area_whole		[ ] Whole
+layer.area_todo			[X] To do
+layer.area_done			[X] Done
+
+			Show Hills:
+layer.peak_done			[X] Done
+layer.peak_todo			[X] To do
+
+layer.extra		Show Extras
+				[ ] All
+
+opt_one		One route at a time
+opt_zoom	Zoom in on route
+
+show_comp	Completed Hikes
+show_inco	Incomplete Hikes
+show_unst	Unstarted Hikes
+show_hill	Hills
+show_join	Join Ups
+

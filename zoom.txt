@@ -1,0 +1,26 @@
+               0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19
+
+Bing Aerial       X  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X
+
+Bing Aer/Road  o  o  o  o  o  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X
+
+OSM Street     o  o  o  o  o  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X
+
+OSM Street     o  o  o  o  o  X  X  X  X  X  X  X  .  .  .  .  .  .  .
+OS 1:50                             .  .  .  o  o  X  X  X  .  .  .  .
+OS 1:25                             .  .  .  .  .  .  .  .  X  X  X  .
+
+Stamen Water      X  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X
+
+Stamen Toner   X  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X  X
+
+MB Black       X  X  X  X  X  X  X  X  X  X  X  X  X
+
+--------------------------------------------------------------------------------
+
+MB Terrain     X  X  X  X  X  X  X  .  .  .  .  .  .  .  .  .  .  .  .
+
+Bing Road      o  o  o  o  o  X  X  X  X  X  X  X  X  X  X  X  X  X  X
+
+Collins Terr                        .  .  .  X  X  X  X  .  .  .
+

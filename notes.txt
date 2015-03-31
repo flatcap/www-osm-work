@@ -1,0 +1,63 @@
+complete    "79"
+custom      ""
+date_end    ""
+date_start  "2010-09-22"
+days_camped 0
+days_other  0
+days_walked 40
+dist_route  "890"
+dist_walked "700"
+fullname    "E2 Dover to Stranraer"
+latitude    "54.699200"
+ldwa        "0323"
+longitude   "-4.943850"
+name        "E2"
+zoom        "6"
+
+name        "Gritstone Trail"
+type        "icon"
+tag         "start"
+route       "gritstone.trail"
+coords      "-2.042572,53.358542,193"
+gridref     "SJ 973 846"
+
+name        "Wild camping"
+description "Grassy cliff"
+datetime    "2012-05-29T20:00:00Z"
+gridref     "SW 868 760"
+type        "icon"
+tag         "tent"
+where       ""
+coords      "-5.010925,50.544930,14"
+
+name        "Hostel"
+description ""
+datetime    "2012-06-08T20:00:00Z"
+gridref     "SW 811 319"
+type        "icon"
+tag         "hotel"
+where       "Falmouth"
+coords      "-5.065289,50.146545,24"
+
+name        "Camp site"
+description "On some woman's front lawn"
+datetime    "2010-09-23T20:00:00Z"
+gridref     "SD 960 460"
+type        "icon"
+tag         "tent"
+where       "Lothersdale"
+coords      "-2.061775,53.910507,202"
+
+622 miles (Complete)
+Started: 30 April 2012
+Finished: 23 June 2012
+Hiked: 36 days
+Camped: 36 nights (32 under canvas)
+
+39 miles (56% done)
+Started: 8 October 2012
+Hiked: 2 days
+Camped: 1 night
+
+94 miles
+
