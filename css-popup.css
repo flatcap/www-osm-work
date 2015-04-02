@@ -1,0 +1,43 @@
+div {
+	padding: 3px;
+	border: 1px solid black;
+}
+
+#popup {
+	color: #000;
+	background-color: #c0c0c0;
+}
+
+#popup a, #popup a:visited {
+	position: relative;
+	display: block;
+	width: 130px;
+	line-height: 30px;
+	padding: 0 10px;
+	border: 1px solid #666;
+	font-size: 1em;
+}
+
+#popup a span {
+	display: none;
+}
+
+#popup a:hover	{
+	color: #f00;
+	background-color: #e9e9e2;
+	text-indent: 0;
+}
+
+#popup a:hover span {
+	display: block;
+	position: absolute;
+	top: 0px;
+	left: 170px;
+	width: 320px;
+	margin: 0px;
+	padding: 10px;
+	color: #335500;
+	background: #e5e5e5;
+	border: 1px solid #666;
+}
+
